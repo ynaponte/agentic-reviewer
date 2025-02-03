@@ -1,0 +1,15 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Depurar Testes Python",
+            "type": "debugpy",
+            "request": "launch",
+            "module": "src.tests.${fileBasenameNoExtension}",
+            "cwd": "${workspaceFolder}",
+            "env": {
+                "PYTHONPATH": "${workspaceFolder}"
+            }
+        }
+    ]
+}
