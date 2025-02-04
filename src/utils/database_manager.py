@@ -24,8 +24,8 @@ class VectorDatabaseManager:
     def __init__(self, embedding_model: str = "nomic-embed-text:latest"):
         self.embedding = OllamaEmbeddings(model=embedding_model)
         self.text_splitter = RecursiveCharacterTextSplitter(
-            chunk_size=4000,
-            chunk_overlap=200,
+            chunk_size=2000,
+            chunk_overlap=20,
             length_function=len,
             is_separator_regex=False
         )
@@ -60,6 +60,8 @@ class VectorDatabaseManager:
         for filename in os.listdir(directory):
             if not filename.endswith(".pdf"):
                 continue
+            
+            doc_id = str(uuid.uuid4())
 
             try:
                 loader = PyMuPDFLoader(os.path.join(directory, filename))
@@ -67,15 +69,17 @@ class VectorDatabaseManager:
                 
                 for page in pages:
                     processed_docs = self._process_document(
-                        filename=filename,
+                        source=filename,
                         uploader=uploader,
+                        page=page.metadata['page'] + 1,
+                        total_pages=page.metadata['total_pages'],
                         content=page.page_content
                     )
                     
                     self.vectorstore.add_documents(
                         documents=processed_docs,
-                        ids=[str(uuid.uuid4()) for _ in processed_docs]
-                    )
+                        ids=doc_id
+                    )        
                     doc_loaded_count += len(processed_docs)
                 
             except Exception as e:
@@ -83,16 +87,20 @@ class VectorDatabaseManager:
                 continue
         
         return doc_loaded_count
-
+    
     def query(
         self,
         query: Optional[str] = "",
         uploader: Optional[str] = None,
         source: Optional[str] = None,
-        top_k: Optional[int] = 100
+        top_k: Optional[int] = 10
     ) -> List[Document]:
         
-        """Consulta flexível com filtros"""
+        """
+        Consulta flexível em todos os artigos da base de dados,
+        possibilitando utilizar todos os artigos para obteção de informações específicas.
+        Também permite a filtragem por uploader e por artigos específicos.
+        """
         
         if not self.vectorstore:
             raise RuntimeError("Database not initialized. Call initialize_db() first.")
@@ -112,7 +120,7 @@ class VectorDatabaseManager:
             filter=chroma_filters
         )
 
-        return [self._format_query_output(doc) for doc in query_output]
+        return [self._format_output(doc) for doc in query_output]
     
     def switch_current_collection(self, new_collection) -> 'VectorDatabaseManager':
         """Muda a coleção atual para a nova coleção"""
@@ -128,12 +136,20 @@ class VectorDatabaseManager:
 
     # ------------------------ Private Methods ------------------------
 
-    def _process_document(self, filename: str, uploader: str, content: str) -> List[Document]:
-        """Processa um documento em chunks com metadados"""
+    def _process_document(
+            self,
+            source: str,
+            uploader: str, 
+            page: int, 
+            total_pages: int, 
+            content: str
+    ) -> List[Document]:
+        """Processa a página de um documento, adicionando metadados e fatiando-a em chuncks"""
         base_metadata = {
-            "doc_id": str(uuid.uuid4()),
-            "source": filename,
+            "source": source,
             "uploader": uploader,
+            "page": page,
+            "total_pages": total_pages,
             "last_modified": datetime.now().isoformat()
         }
 
@@ -147,7 +163,7 @@ class VectorDatabaseManager:
         ]
     
     @staticmethod
-    def _format_query_output(doc: Document) -> Dict:
+    def _format_output(doc: Document) -> Dict:
         """Formatar a saída da consulta para um dicionário"""
         return {
             "content": doc.page_content,
