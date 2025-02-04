@@ -86,10 +86,10 @@ class VectorDatabaseManager:
 
     def query(
         self,
-        query: str,
+        query: Optional[str] = "",
         uploader: Optional[str] = None,
         source: Optional[str] = None,
-        top_k: Optional[int] = 10
+        top_k: Optional[int] = 100
     ) -> List[Document]:
         
         """Consulta flexível com filtros"""
@@ -98,11 +98,13 @@ class VectorDatabaseManager:
             raise RuntimeError("Database not initialized. Call initialize_db() first.")
             
         filters = [
-            {filter_argument: value} for filter_argument, value in {"uploader": uploader, "source": source}.items()
+            {filter_argument: value} for filter_argument, value in (("uploader", uploader), ("source", source))
             if value is not None
         ]
 
-        chroma_filters = None if filters == [] else {"$and": filters}
+        chroma_filters = None if filters == [] else (
+            {"$and": filters} if len(filters) > 1 else filters[0]
+        )
 
         query_output = self.vectorstore.similarity_search(
             query=query,
