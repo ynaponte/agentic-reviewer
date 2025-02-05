@@ -136,6 +136,8 @@ class VectorDatabaseManager:
         source: Optional[str] = None,
         uploader: Optional[str] = None,
         page: Optional[int] = None,
+        limit_results: Optional[bool] = True,
+        full_dump: Optional[bool] = False
     ) -> List[Document]:
         """
         Método para obter as chunks de um artigo específico, identificado pelo nome(source).
@@ -157,12 +159,18 @@ class VectorDatabaseManager:
 
         where_filters = {"$and": filters} if len(filters) > 1 else filters[0]
 
-        doc_search_result = self.vectorstore._collection.get(
+        if full_dump:
+            include_fields = ["metadatas", "documents"]
+        else:
+            include_fields = ["metadatas"]
+
+        dump_result = self.vectorstore._collection.get(
             where=where_filters,
-            include=['metadatas']
+            include=include_fields,
+            limit=1 if limit_results else None
         )
 
-        return doc_search_result
+        return dump_result
 
     # ------------------------ Private Methods ------------------------
 
@@ -184,3 +192,4 @@ class VectorDatabaseManager:
             "chunck_idx": doc.metadata.get("chunck_idx"),
             "total_chunks": doc.metadata.get("total_chunks"),
         }
+
