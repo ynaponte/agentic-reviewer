@@ -23,7 +23,7 @@ class FetchArticlesToolInput(BaseModel):
 class FetchArticlesTool(BaseTool):
     name: str = "Fetch entire articles from the database"
     description: str = (
-        "Fetches all articles' chunks from the database that mach the given source and/or uploader"
+        "Fetches all articles' chunks from the database that mach the given source and/or uploader. "
         "Can fetch by document id, source, uploader, document id and uploader or source and uploader"
     )
 
