@@ -31,7 +31,7 @@ class FetchMetadataTool(BaseTool):
         "who uploaded the article to the database(uploader)."
     )
 
-    args_schema = Type[BaseModel] = FetchMetadataToolInput
+    args_schema: Type[BaseModel] = FetchMetadataToolInput
     _vectorstore: VectorDatabaseManager = PrivateAttr()
 
     def __init__(self, **kwargs):
