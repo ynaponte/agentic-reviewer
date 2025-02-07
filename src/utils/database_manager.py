@@ -65,7 +65,7 @@ class VectorDatabaseManager:
                 doc_id = self._gen_doc_id(source)
 
                 # Checa se o documento já existe no banco de dados
-                if self.search_doc_by_meta(doc_id=doc_id):
+                if not self._check_doc_existence(doc_id=doc_id):
                     continue
 
                 loader = PyMuPDFLoader(os.path.join(directory, filename))
@@ -187,6 +187,22 @@ class VectorDatabaseManager:
         )
 
     # ------------------------ Private Methods ------------------------
+
+    def _check_doc_existence(
+        self,
+        doc_id: str = None,
+    ) -> bool:
+        """
+        Verifica se um documento já existe na base de dados com base nos metadados.
+        Retorna True se encontrar correspondência, False caso contrário.
+        """
+        result = self.vectorstore.get(
+            where={"doc_id": {"$eq": doc_id}},
+            include=["metadatas"],
+            limit=1
+        )
+
+        return len(result["ids"]) > 0
 
     @staticmethod
     def _gen_doc_id(filename: str) -> str:
