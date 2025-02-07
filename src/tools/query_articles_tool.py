@@ -29,7 +29,7 @@ class QueryArticlesToolInput(BaseModel):
 class QueryArticlesTool(BaseTool):
     name: str = "Search the articles database"
     description: str = (
-        "Searches the articles database for chunks that are most similar to the given search query."
+        "Searches the articles database for chunks that are most similar to the given search query. "
         "Supports filtering by uploader (who uploaded the article to the database) and/or source (name of the article file)."
     )
 
