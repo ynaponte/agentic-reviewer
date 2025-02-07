@@ -211,9 +211,9 @@ class VectorDatabaseManager:
     def _format_meta_search_output(only_metadatas) -> List[Dict[str, Any]]:
         """Formatar a saída da consulta para uma lista de metadados únicos"""
         metadatas = only_metadatas['metadatas']
-        keys_to_search = ("doc_id", "source", "total_chunks", "total_pages", "uploader")
+        meta_to_search = ("doc_id", "source", "total_chunks", "total_pages", "uploader")
         unique_ocorrences = {
-            tuple(metadata[key] for key in keys_to_search)
+            tuple(metadata[meta] for meta in meta_to_search)
             for metadata in metadatas
         }
 
@@ -221,7 +221,7 @@ class VectorDatabaseManager:
         for metadata_value in unique_ocorrences:
             unique_metadata.append(
                 {
-                    key: value for key, value in zip(keys_to_search, metadata_value)
+                    metadata: value for metadata, value in zip(meta_to_search, metadata_value)
                 }
             )
         
