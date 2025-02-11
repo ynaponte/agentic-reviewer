@@ -65,7 +65,7 @@ class VectorDatabaseManager:
                 doc_id = self._gen_doc_id(source)
 
                 # Checa se o documento já existe no banco de dados
-                if not self._check_doc_existence(doc_id=doc_id):
+                if self._check_doc_existence(doc_id=doc_id):
                     continue
 
                 loader = PyMuPDFLoader(os.path.join(directory, filename))
