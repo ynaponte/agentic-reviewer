@@ -85,12 +85,12 @@ class VectorDatabaseManager:
                     'trapped'
                 ]
 
-                for chunk_idx, page_chunk in enumerate(pages):
+                for chunk_id, page_chunk in enumerate(pages):
                     page_chunk.metadata.update({
                         "doc_id":doc_id,
                         "source": filename,
                         "uploader": uploader,
-                        "chunk_idx": chunk_idx,
+                        "chunk_id": chunk_id,
                         "total_chunks": total_of_chunks,
                         "last_modified": datetime.now().isoformat()
                     })
@@ -219,7 +219,7 @@ class VectorDatabaseManager:
             "page": doc.metadata.get("page"),
             "total_pages": doc.metadata.get("total_pages"),
             "doc_id": doc.metadata.get("doc_id"),
-            "chunck_idx": doc.metadata.get("chunck_idx"),
+            "chunk_id": doc.metadata.get("chunk_id"),
             "total_chunks": doc.metadata.get("total_chunks"),
         }
 
