@@ -1,5 +1,6 @@
 import re
 from typing import Dict
+from langchain_core.documents import Document
 
 class SectionClassifier:
     def __init__(self):
@@ -10,13 +11,13 @@ class SectionClassifier:
         # Padrão para cabeçalho do Abstract: **Abstract: ...**
         self.abstract_pattern = re.compile(r'\*\*\s*Abstract\s*:\s*(.*?)\*\*', re.IGNORECASE)
 
-    def classify_chunk(self, chunk: Dict) -> Dict:
+    def classify_chunk(self, chunk: Document) -> Document:
         """
         Recebe um dicionário com a chave "text" (texto da chunk) e
         insere uma nova chave "sections" com uma lista de seções às quais
         o texto pertence, considerando a memória da última seção encontrada.
         """
-        text = chunk.get("text", "")
+        text = chunk.page_content
         sections_in_chunk = []
         
         # 1. Procura cabeçalho do Abstract
@@ -47,5 +48,28 @@ class SectionClassifier:
             sections_in_chunk.append(self.last_section)
         
         # Insere a lista de seções no dicionário e retorna-o.
-        chunk["sections"] = sections_in_chunk
+        chunk.metadata.update({'sections': sections_in_chunk}) 
         return chunk
+# Exemplo de uso:
+if __name__ == "__main__":
+    # Simula alguns chunks que podem ter sido gerados após o chunking com MarkdownTextSplitter
+    chunks = [
+        {"text": "Research Article Applied Optics 1\n\nConteúdo introdutório sem cabeçalho."},
+        {"text": "**Abstract: Digital multiplexers/demultiplexers (MUX/DEMUXes) are essential for computing,**\n\nDados do abstract..."},
+        {"text": "Parte do abstract que continua sem novo cabeçalho."},
+        {"text": "16 **1.** **Introduction**\n\nAll-optical data processing is one of the most promising solutions."},
+        {"text": "Continuação da introdução sem novo cabeçalho."},
+        {"text": "17 **2.** **Theoretical Model**\n\nDetalhes sobre o modelo teórico."},
+        {"text": "Chunk com texto antes e depois do cabeçalho:\nAlgum texto anterior.\n\n18 **3.** **Conclusion**\n\nConsiderações finais."},
+    ]
+    
+    classifier = SectionClassifier()
+    
+    for idx, chunk in enumerate(chunks, start=1):
+        classified_chunk = classifier.classify_chunk(chunk)
+        print(f"----- Chunk {idx} -----")
+        print("Texto:")
+        print(classified_chunk["text"])
+        print("Seções:")
+        print(classified_chunk["sections"])
+        print()
