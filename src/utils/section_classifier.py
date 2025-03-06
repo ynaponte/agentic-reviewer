@@ -7,7 +7,7 @@ class SectionClassifier:
         self.last_section = "pre-text"
         # Padrão para cabeçalho numerado em negrito: **1.** **INTRODUCTION**
         self.numbered_pattern = re.compile(
-            r'\*\*\s*(\d+\.)\s*\*\*\s*\*\*(.*?)\*\*',
+            r'\*\*\s*([\d\.]+)\s*\*\*\s*\*\*(.*?)\*\*',
             re.IGNORECASE | re.DOTALL
         )
         # Padrão para cabeçalho do Abstract, em negrito: **Abstract: ...**
@@ -18,7 +18,7 @@ class SectionClassifier:
         # Novo padrão para cabeçalhos em markdown: linhas iniciadas por "##" ou "###"
         # Exemplo: "## 1 Introduction" ou "### 1.1 Details"
         self.markdown_header_pattern = re.compile(
-            r'^(#{2,})\s*(\d+(?:\.\d+)*)\s+(.*)',
+            r'^(#{1,})\s*([\d\.]+)\s+(.*)',
             re.IGNORECASE | re.MULTILINE
         )
 
@@ -83,12 +83,16 @@ class SectionClassifier:
 if __name__ == "__main__":
     # Exemplo de conteúdo de Document com diferentes padrões de cabeçalho
     textos = [
-        "Research Article Applied Optics 1\n\nConteúdo pré-textual sem cabeçalho.",
-        "7 **Abstract: Digital multiplexers/demultiplexers (MUX/DEMUXes) are essential for computing,**\n\nDados do abstract...",
-        "Continuação do abstract sem novo cabeçalho.",
-        "16 **1.** **Introduction**\n\nAll-optical data processing is one of the most promising solutions.",
-        "## 2 Theoretical Model\n\nDetalhes sobre o modelo teórico...",
-        "Chunk com texto antes e depois do cabeçalho:\nTexto da seção anterior.\n\n### 3.1 Conclusion\n\nConsiderações finais."
+        "Journal of Artificial Intelligence Research\nVolume 32, Issue 4\n\n**Abstract: This paper presents a novel approach to automatic text classification using transformer models. We demonstrate superior performance on benchmark datasets while reducing computational requirements.**\n\nIn this study, we address the challenge of efficient text classification in resource-constrained environments.",
+        "## 1 Introduction\n\nNatural Language Processing (NLP) has seen tremendous advances in recent years, largely due to the development of transformer-based architectures. These models have revolutionized how machines understand and process human language, enabling unprecedented performance on a variety of tasks including text classification, sentiment analysis, and information extraction.\n\nDespite these advances, deploying state-of-the-art models in production environments remains challenging due to their substantial computational requirements. This is particularly problematic in edge computing scenarios where processing power and memory are limited.",
+        "### 1.1 Related Work\n\nPrevious approaches to efficient text classification can be broadly categorized into three groups:\n\n1. Model compression techniques\n2. Knowledge distillation methods\n3. Architectural innovations",
+        "**2.** **Methodology**\n\nOur approach combines aspects of these three categories to create a more efficient classification system. We start with a pre-trained transformer model and apply a novel pruning technique that selectively removes attention heads with minimal impact on performance.\n\n#### 2.1.1 Model Architecture\n\nThe base architecture consists of a 6-layer transformer encoder with 8 attention heads per layer. We propose a systematic method for identifying redundant attention patterns.\n\nEXPERIMENTAL SETUP\n\nAll experiments were conducted using the GLUE benchmark dataset. Models were trained on a single NVIDIA A100 GPU with 40GB of memory.",
+        "## 3 Results and Discussion\n\nTable 1 presents the main experimental results. Our pruned model achieves 98.7% of the full model's accuracy while reducing inference time by 43% and memory usage by 37%.",
+        "### 3.1 Ablation Studies\n\nTo understand the contribution of each component, we conducted a series of ablation studies. Removing the adaptive pruning threshold reduced performance by 2.3 percentage points.",
+        "IV. Limitations\n\nWhile our approach shows promise, several limitations should be noted:\n\n1. Performance degradation on long documents\n2. Domain-specific fine-tuning requirements",
+        "**4.1** **Future Work**\n\nThere are several promising directions for future research:\n\n__Extending Our Approach__\n\nWe plan to explore whether our techniques can be applied to other transformer architectures.",
+        "# 5 Conclusion\n\nIn this paper, we presented an efficient approach to text classification that maintains performance while significantly reducing computational requirements. Our method enables deployment of near-state-of-the-art models in resource-constrained environments.",
+        "Acknowledgments\n\nThis research was supported by grants from the National Science Foundation (Grant No. AI-2023-456).\n\nReferences\n\nSmith, J., & Johnson, P. (2023). Efficient Transformers: A Survey.\nZhang et al. (2022). Knowledge Distillation Techniques for NLP."
     ]
     
     # Cria objetos Document simulados
