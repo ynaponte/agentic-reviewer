@@ -27,7 +27,6 @@ class ReportCrew:
             config=self.tasks_config['results_writing_task'],
         )
 
-
     @crew
     def crew(self) -> Crew:
         return Crew(

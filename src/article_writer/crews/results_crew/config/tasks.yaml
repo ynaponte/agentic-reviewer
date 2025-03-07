@@ -20,6 +20,9 @@ results_writing_task:
     Ensure the text is **formal, objective, and academically precise**, avoiding 
     vague expressions and ensuring terminological consistency.
 
+    Here is the draft on which to act up on:
+    {draft}
+
   expected_output: >
     A refined and structured Results and Discussion section that:
     - Clearly presents the findings in a **logical sequence**.
