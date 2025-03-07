@@ -1,4 +1,5 @@
 from crewai import Agent, Crew, Process, Task
+from crewai.llm import LLM
 from crewai.project import CrewBase, agent, crew, task
 
 # If you want to run a snippet of code before or after the crew starts, 
@@ -9,25 +10,18 @@ from crewai.project import CrewBase, agent, crew, task
 class ConclusionCrew():
 	"""ConclusionCrew crew"""
 
-	# Learn more about YAML configuration files here:
-	# Agents: https://docs.crewai.com/concepts/agents#yaml-configuration-recommended
-	# Tasks: https://docs.crewai.com/concepts/tasks#yaml-configuration-recommended
 	agents_config = 'config/agents.yaml'
 	tasks_config = 'config/tasks.yaml'
-
-	# If you would like to add tools to your agents, you can learn more about it here:
-	# https://docs.crewai.com/concepts/agents#agent-tools
-	@agent
-	def researcher(self) -> Agent:
-		return Agent(
-			config=self.agents_config['researcher'],
-			verbose=True
-		)
+	llm = LLM(
+        model="ollama/llama3.1:latest",
+        base_url="http://localhost:11434"
+    )
 
 	@agent
-	def reporting_analyst(self) -> Agent:
+	def redator_conclusao(self) -> Agent:
 		return Agent(
-			config=self.agents_config['reporting_analyst'],
+			config=self.agents_config['redator_conclusao'],
+			llm=self.llm,
 			verbose=True
 		)
 
@@ -35,16 +29,9 @@ class ConclusionCrew():
 	# task dependencies, and task callbacks, check out the documentation:
 	# https://docs.crewai.com/concepts/tasks#overview-of-a-task
 	@task
-	def research_task(self) -> Task:
+	def redacao_conclusao(self) -> Task:
 		return Task(
-			config=self.tasks_config['research_task'],
-		)
-
-	@task
-	def reporting_task(self) -> Task:
-		return Task(
-			config=self.tasks_config['reporting_task'],
-			output_file='report.md'
+			config=self.tasks_config['redacao_conclusao'],
 		)
 
 	@crew
