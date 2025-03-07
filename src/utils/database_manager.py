@@ -153,7 +153,8 @@ class VectorDatabaseManager:
         doc_id: Optional[str] = None,
         source: Optional[str] = None,
         uploader: Optional[str] = None,
-        metadata_only: Optional[bool] = True
+        metadata_only: Optional[bool] = True,
+        chunk_id: Optional[int] = None
     ) -> List[Dict[str, Any]]:
         """
         Método para obter as chunks de um artigo específico, identificado pelo nome(source).
@@ -168,7 +169,8 @@ class VectorDatabaseManager:
             {filter_argument: spec} for filter_argument, spec in (
                 ("doc_id", {"$eq": doc_id}),
                 ("source", {"$eq": source}),
-                ("uploader", {"$eq": uploader})
+                ("uploader", {"$eq": uploader}),
+                ("chunk_id", {"$eq": chunk_id})
             )if spec['$eq'] is not None
         ]
         

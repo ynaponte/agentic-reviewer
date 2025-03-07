@@ -19,12 +19,17 @@ class FetchArticlesToolInput(BaseModel):
         )
     )
 
+    chunk_id: Optional[int] = Field(
+        None, "A integer corresponding to the id of the chunk to fetch from the document."
+    )
+
 
 class FetchArticlesTool(BaseTool):
     name: str = "Fetch entire articles from the database"
     description: str = (
         "Fetches all articles' chunks from the database that mach the given source and/or uploader. "
-        "Can fetch by document id, source, uploader, document id and uploader or source and uploader"
+        "Can fetch by document id, source, uploader, document id and uploader or source and uploader."
+        "Can also a fetch a specific chunk, if a chunk_id is provided. If not, all chunks are returned."
     )
 
     args_schema: Type[BaseModel] = FetchArticlesToolInput
@@ -39,11 +44,13 @@ class FetchArticlesTool(BaseTool):
         doc_id: Optional[str] = None,
         source: Optional[str] = None,
         uploader: Optional[str] = None,
+        chunk_id: Optional[int] = None
     ) -> List[Dict[str, Any]]:
         return self._vectordatabase.search_doc_by_meta(
             doc_id=doc_id, 
             source=source, 
             uploader=uploader,
-            metadata_only=False
+            metadata_only=False,
+            chunk_id=chunk_id
         )
     
