@@ -1,0 +1,71 @@
+results_section_writing_task:
+  description: >
+    Escreva a subseção de **Resultados** com base no relatório detalhado gerado
+    a partir da análise dos rascunhos acadêmicos.  
+    Garanta clareza, rigor acadêmico e uma estrutura lógica e coesa, seguindo as melhores
+    práticas de redação científica.  
+
+    **Regras para escrever uma boa seção de Resultados**:  
+    1. **Analisar o relatório de síntese** gerado pelo primeiro agente:  
+       - Identificar os **resultados-chave** e os **dados extraídos**.  
+    2. **Organizar os resultados em uma sequência lógica**, garantindo:  
+       - **Subtítulos claros e coerentes** para cada conjunto de achados.  
+       - **Descrição precisa** dos dados, relacionando-os diretamente com os objetivos da pesquisa.  
+       - Indicação de **figuras, tabelas ou gráficos**, se disponíveis, para ilustrar os resultados.  
+       - Evitar interpretações nesta etapa (a análise será feita na subseção Discussão).  
+    3. **Garantir precisão acadêmica e coesão textual**:  
+       - Adotar um estilo **formal e objetivo**.  
+       - Evitar expressões vagas e assegurar consistência na terminologia.  
+  expected_output: >
+    Um texto acadêmico refinado e estruturado para a subseção **Resultados**, contendo:  
+    - **Apresentação clara e lógica dos achados**.  
+    - **Referências a figuras, tabelas e gráficos**, quando aplicável.  
+    - **Uso adequado de linguagem acadêmica e precisão terminológica**.  
+  agent: results_and_discussion_writer
+   
+discussion_section_writing_task:
+  description: >
+    Escreva a subseção de **Discussão** com base no relatório detalhado gerado
+    a partir da análise dos rascunhos acadêmicos e da subseção de **Resultados**.  
+    Garanta clareza, rigor acadêmico e uma estrutura lógica e coesa, seguindo as melhores
+    práticas de redação científica.  
+
+    **Regras para boa escrita da seção de Discussão**:  
+    1. **Analisar o relatório de síntese e a subseção de Resultados**:  
+       - Compreender as **hipóteses, perguntas de pesquisa e os resultados-chave**.  
+       - Garantir que a **Discussão** utilize os dados corretamente sem alterar a apresentação dos Resultados.  
+    2. **Comparar os resultados com pesquisas anteriores**:  
+       - Destacar **similaridades, diferenças e possíveis explicações** para os achados.  
+       - **Usar a ferramenta QueryArticlesTool** para buscar referências científicas relevantes:  
+         - **Formule uma consulta eficiente** para encontrar artigos de comparação.  
+         - Cite e explique como esses estudos confirmam ou contrastam com os achados.  
+    3. **Discutir implicações e limitações**:  
+       - Analisar os impactos dos resultados na área de estudo.  
+       - Identificar possíveis **limitações metodológicas**.  
+       - Sugerir **melhorias e direções para pesquisas futuras**.  
+    4. **Garantir precisão acadêmica e coesão textual**:  
+       - Manter um estilo **formal e objetivo**.  
+       - Evitar expressões vagas e assegurar consistência terminológica.
+  expected_output: >
+    Um texto acadêmico refinado e estruturado para a subseção **Discussão**, contendo:  
+    - **Comparação dos resultados com estudos anteriores**, embasada em literatura relevante.  
+    - **Discussão de implicações, limitações e sugestões para futuras pesquisas**.  
+    - **Uso adequado de linguagem acadêmica e precisão terminológica**.  
+  agent: results_and_discussion_writer
+  context:
+    - draft_report_analysis_task
+    - results_section_writing_task
+
+final_section_writing:
+  description: >
+    Una as seções de **Resultados** e **Discussão** em um único texto coeso, garantindo que
+    a transição entre os dois trechos seja fluida e natural.  
+    Faça apenas ajustes pontuais para garantir a coesão, sem modificar o conteúdo original
+    dos resultados e da discussão.
+  expected_output: >
+    Um único texto acadêmico refinado, contendo ambas as seções **Resultados** e **Discussão** 
+    de forma coesa, clara e bem estruturada.
+  agent: results_and_discussion_writer
+  context:
+    - results_section_writing_task
+    - discussion_section_writing_task
