@@ -4,7 +4,7 @@ from langchain_chroma import Chroma
 from langchain_ollama import OllamaEmbeddings
 from langchain.text_splitter import MarkdownTextSplitter
 from langchain_core.documents import Document
-from typing import List, Dict, Optional, Any
+from typing import List, Dict, Optional, Any, Literal
 from src.utils.section_classifier import SectionClassifier
 from threading import Lock
 import os
@@ -118,7 +118,7 @@ class VectorDatabaseManager:
     def query(
         self,
         query: Optional[str] = "",
-        type: Optional[List[str]] = None,
+        type: Optional[Literal['draft', 'reference']] = None,
         source: Optional[List[str]] = None,
         top_k: Optional[int] = 10
     ) -> List[Dict[str, Any]]:
@@ -137,7 +137,7 @@ class VectorDatabaseManager:
         # Filtros para pesquisa avançada    
         filters = [
             {filter_argument: {"$in": value}} for filter_argument, value in (
-                ("uploader", type),
+                ("type", type),
                 ("source", source)
             )if value is not None
         ]
@@ -158,8 +158,9 @@ class VectorDatabaseManager:
         self, 
         doc_id: Optional[str] = None,
         source: Optional[str] = None,
-        uploader: Optional[str] = None,
-        metadata_only: Optional[bool] = True
+        type: Optional[Literal['draft', 'reference']] = None,
+        metadata_only: Optional[bool] = True,
+        chunk_id: Optional[int] = None
     ) -> List[Dict[str, Any]]:
         """
         Método para obter as chunks de um artigo específico, identificado pelo nome(source).
@@ -174,7 +175,8 @@ class VectorDatabaseManager:
             {filter_argument: spec} for filter_argument, spec in (
                 ("doc_id", {"$eq": doc_id}),
                 ("source", {"$eq": source}),
-                ("uploader", {"$eq": uploader})
+                ("type", {"$eq": type}),
+                ("chunk_id", {"$eq": chunk_id})
             )if spec['$eq'] is not None
         ]
         
@@ -185,7 +187,7 @@ class VectorDatabaseManager:
         )
 
         if search_result['ids'] == []:
-            return f"Artigo não encontrado. Dados da busca:\ndoc_id: {doc_id}\nsource: {source}\nuploader: {uploader}."
+            return f"Artigo não encontrado. Dados da busca:\ndoc_id: {doc_id}\nsource: {source}\ntype: {type}."
         
         return (
             self._format_meta_search_output(search_result)
@@ -233,7 +235,7 @@ class VectorDatabaseManager:
         return {
             "text": doc.page_content,
             "source": doc.metadata.get("source"),
-            "uploader": doc.metadata.get("uploader"),
+            "type": doc.metadata.get("type"),
             "page": doc.metadata.get("page"),
             "total_pages": doc.metadata.get("total_pages"),
             "doc_id": doc.metadata.get("doc_id"),
@@ -246,7 +248,7 @@ class VectorDatabaseManager:
     def _format_meta_search_output(only_metadatas) -> List[Dict[str, Any]]:
         """Formatar a saída da consulta para uma lista de metadados únicos"""
         metadatas = only_metadatas['metadatas']
-        meta_to_search = ("doc_id", "source", "total_chunks", "total_pages", "uploader")
+        meta_to_search = ("doc_id", "source", "total_chunks", "total_pages", "type")
         unique_ocorrences = {
             tuple(metadata[meta] for meta in meta_to_search)
             for metadata in metadatas
