@@ -99,12 +99,16 @@ class VectorDatabaseManager:
                     new_metadata['doc_id'] = doc_id
                     #new_metadata['tables'] = page.get('tables', [])
                     #new_metadata['images'] = page.get('images', [])
-                    new_metadata['source'] = c_source[:-4]
+                    new_metadata['source'] = c_source
                     new_metadata['type'] = type
                     pages_as_docs.append(Document(page_content=page.get('text',''), metadata=new_metadata))
 
                 chunks = self.text_splitter.split_documents(pages_as_docs)
-                for chunk in chunks:  # Classifica a qual seção o texto pertence e atribui um ID 
+                num_chunks = len(chunks)
+                for idx, chunk in enumerate(chunks):
+                    chunk.metadata['chunk_id'] = idx
+                    chunk.metadata['total_chunks'] = num_chunks
+                    # Classifica a qual seção o texto pertence e atribui um ID 
                     chunk = section_finder.classify_document(chunk)
                     chunk.id = str(uuid.uuid4())
 
@@ -237,7 +241,7 @@ class VectorDatabaseManager:
             "source": doc.metadata.get("source"),
             "type": doc.metadata.get("type"),
             "page": doc.metadata.get("page"),
-            "total_pages": doc.metadata.get("total_pages"),
+            "page_count": doc.metadata.get("page_count"),
             "doc_id": doc.metadata.get("doc_id"),
             "chunk_id": doc.metadata.get("chunk_id"),
             "total_chunks": doc.metadata.get("total_chunks"),
@@ -248,7 +252,7 @@ class VectorDatabaseManager:
     def _format_meta_search_output(only_metadatas) -> List[Dict[str, Any]]:
         """Formatar a saída da consulta para uma lista de metadados únicos"""
         metadatas = only_metadatas['metadatas']
-        meta_to_search = ("doc_id", "source", "total_chunks", "total_pages", "type")
+        meta_to_search = ("doc_id", "source", "total_chunks", "page_count", "uploader")
         unique_ocorrences = {
             tuple(metadata[meta] for meta in meta_to_search)
             for metadata in metadatas
