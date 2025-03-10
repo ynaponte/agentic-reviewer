@@ -1,15 +1,17 @@
 from datetime import datetime
+from multiprocessing import Pool, cpu_count
 from langchain_chroma import Chroma
-from langchain_community.document_loaders import PyMuPDFLoader
 from langchain_ollama import OllamaEmbeddings
-from langchain_text_splitters import RecursiveCharacterTextSplitter
+from langchain.text_splitter import MarkdownTextSplitter
 from langchain_core.documents import Document
-from typing import List, Dict, Optional, Any, Literal
+from typing import List, Dict, Optional, Any
+from src.utils.section_classifier import SectionClassifier
 from threading import Lock
 import os
 import hashlib
 import uuid
-
+import pymupdf4llm
+  
 
 class VectorDatabaseManager:
 
@@ -24,18 +26,16 @@ class VectorDatabaseManager:
 
     def __init__(self, embedding_model: str = "nomic-embed-text:latest"):
         if hasattr(self, '_initialized') and self._initialized:
-            return    
+            return
         self.embedding = OllamaEmbeddings(model=embedding_model)
-        self.text_splitter = RecursiveCharacterTextSplitter(
-            chunk_size=2000,
-            chunk_overlap=20,
+        self.text_splitter = MarkdownTextSplitter(
+            chunk_size=1500,
+            chunk_overlap=100,
             length_function=len,
-            is_separator_regex=False
         )
         self.vectorstore = None
         self.current_collection = None
         self._initialized = True
-
 
     # ------------------------ Public Methods ------------------------
 
@@ -55,62 +55,64 @@ class VectorDatabaseManager:
         self.current_collection = collection_name
         return self
     
-    def store_documents(self, directory: str, type: str) -> 'VectorDatabaseManager':
+    def store_documents(self, directory_list: List[str], type: str) -> 'VectorDatabaseManager':
         """Carrega documentos com chunking e metadados"""
         if not self.vectorstore:
             raise RuntimeError("Database not initialized. Call initialize_db() first.")
         
-        for filename in os.listdir(directory):
-            if not filename.endswith(".pdf"):
-                continue
+        for directory in directory_list:
+            sources = [
+                file for file in os.listdir(directory)
+                if file.endswith(".pdf") and not self._check_doc_existence(file)
+            ]
 
-            try:
-                source = filename[:-4].lower()  # Retira a extensão .pdf do nome do artigo e deixa em caixa baixa
-                doc_id = self._gen_doc_id(source)
+            if sources == []:
+                return self
 
-                # Checa se o documento já existe no banco de dados
-                if self._check_doc_existence(doc_id=doc_id):
-                    continue
-
-                loader = PyMuPDFLoader(os.path.join(directory, filename))
-                pages = loader.load_and_split(text_splitter=self.text_splitter)  # Retorna uma lista de chunks, contendo metadata do documento
-                total_of_chunks = len(pages)
-                metadata_to_delete = [
-                    'author',
-                    'creationDate',
-                    'creator',
-                    'file_path'
-                    'format',
-                    'keywords',
-                    'modDate',
-                    'producer',
-                    'subject',
-                    'title',
-                    'trapped'
+            documents_to_process = [
+                os.path.join(directory, source) for source in sources
+            ]
+                        
+            with Pool(processes=cpu_count()) as pool:
+                loaded_articles = pool.map(self._aload_documents, documents_to_process)
+            
+            section_finder = SectionClassifier()
+            docs_to_upload = []
+            for i in range(len(sources)):
+                # Endereça os arquivos a serem acessados c -> current
+                c_source = sources[i]
+                c_pages = loaded_articles[i]
+                
+                doc_id = hashlib.sha256(c_source.encode('utf-8')).hexdigest()
+                # Processamento de metadados
+                keys_to_del = [
+                    'format', 'title', 'author', 'subject', 'keywords', 'creator',
+                    'producer','trapped', 'encryption', 'toc_items', 'words'
                 ]
 
-                for chunk_id, page_chunk in enumerate(pages):
-                    page_chunk.metadata.update({
-                        "doc_id":doc_id,
-                        "source": filename,
-                        "type": type,
-                        "chunk_id": chunk_id,
-                        "total_chunks": total_of_chunks,
-                        "last_modified": datetime.now().isoformat()
-                    })
-                    for metadata in metadata_to_delete:
-                        page_chunk.metadata.pop(metadata, None)
+                pages_as_docs = []
+                for page in c_pages:
+                    new_metadata = {
+                        key: value for key, value in page['metadata'].items() if key not in keys_to_del 
+                    }
 
-                    page_chunk.id = str(uuid.uuid4())
-                
-                self.vectorstore.add_documents(
-                    documents=pages
-                )
-                
-            except Exception as e:
-                print(f"Erro processando {filename}: {str(e)}")
-                continue
-        
+                    new_metadata['doc_id'] = doc_id
+                    #new_metadata['tables'] = page.get('tables', [])
+                    #new_metadata['images'] = page.get('images', [])
+                    new_metadata['source'] = c_source[:-4]
+                    new_metadata['type'] = type
+                    pages_as_docs.append(Document(page_content=page.get('text',''), metadata=new_metadata))
+
+                chunks = self.text_splitter.split_documents(pages_as_docs)
+                for chunk in chunks:  # Classifica a qual seção o texto pertence e atribui um ID 
+                    chunk = section_finder.classify_document(chunk)
+                    chunk.id = str(uuid.uuid4())
+
+                section_finder.reset
+                docs_to_upload.extend(chunks)
+
+            self.vectorstore.add_documents(documents=docs_to_upload)
+
         return self
     
     def query(
@@ -124,8 +126,8 @@ class VectorDatabaseManager:
         """
         Consulta flexível em todos os artigos da base de dados,
         possibilitando utilizar todos os artigos para obteção de informações específicas.
-        Também permite a filtragem por tipo de documento e por artigos específicos. Caso especificado
-        tipo e/ou source, limita os artigos da consulta a apenas aqueles com tais dados
+        Também permite a filtragem por uploader e por artigos específicos. Caso especificado
+        uploader e/ou source, limita os artigos da consulta a apenas aqueles com tais dados
         em seus metadados.
         """
         
@@ -135,7 +137,7 @@ class VectorDatabaseManager:
         # Filtros para pesquisa avançada    
         filters = [
             {filter_argument: {"$in": value}} for filter_argument, value in (
-                ("type", type),
+                ("uploader", type),
                 ("source", source)
             )if value is not None
         ]
@@ -156,9 +158,8 @@ class VectorDatabaseManager:
         self, 
         doc_id: Optional[str] = None,
         source: Optional[str] = None,
-        type: Optional[Literal['draft', 'reference']] = None,
-        metadata_only: Optional[bool] = True,
-        chunk_id: Optional[int] = None
+        uploader: Optional[str] = None,
+        metadata_only: Optional[bool] = True
     ) -> List[Dict[str, Any]]:
         """
         Método para obter as chunks de um artigo específico, identificado pelo nome(source).
@@ -173,8 +174,7 @@ class VectorDatabaseManager:
             {filter_argument: spec} for filter_argument, spec in (
                 ("doc_id", {"$eq": doc_id}),
                 ("source", {"$eq": source}),
-                ("type", {"$eq": type}),
-                ("chunk_id", {"$eq": chunk_id})
+                ("uploader", {"$eq": uploader})
             )if spec['$eq'] is not None
         ]
         
@@ -185,7 +185,7 @@ class VectorDatabaseManager:
         )
 
         if search_result['ids'] == []:
-            return f"Artigo não encontrado. Dados da busca:\ndoc_id: {doc_id}\nsource: {source}\ntype: {type}."
+            return f"Artigo não encontrado. Dados da busca:\ndoc_id: {doc_id}\nsource: {source}\nuploader: {uploader}."
         
         return (
             self._format_meta_search_output(search_result)
@@ -196,44 +196,57 @@ class VectorDatabaseManager:
 
     def _check_doc_existence(
         self,
-        doc_id: str = None,
+        source: str = None,
     ) -> bool:
         """
         Verifica se um documento já existe na base de dados com base nos metadados.
         Retorna True se encontrar correspondência, False caso contrário.
         """
         result = self.vectorstore.get(
-            where={"doc_id": {"$eq": doc_id}},
+            where={"source": {"$eq": source}},
             include=["metadatas"],
             limit=1
         )
 
         return len(result["ids"]) > 0
-
+    
     @staticmethod
-    def _gen_doc_id(filename: str) -> str:
-        """Gera um id para o documento, a partir do seu nome"""
-        return hashlib.sha256(filename.encode('utf-8')).hexdigest()
+    def _aload_documents(
+        file_path: str,
+    ) -> List[Dict[str, Any]]:
+
+        try:
+            docs = pymupdf4llm.to_markdown(
+                file_path,
+                page_chunks=True,
+                dpi=200,
+                show_progress=True
+            )
+            return docs
+        except Exception as e:
+            print(f"Error processing file: {e}")
+            raise e
     
     @staticmethod
     def _format_output(doc: Document) -> Dict:
         """Formatar a saída da consulta para um dicionário"""
         return {
-            "content": doc.page_content,
+            "text": doc.page_content,
             "source": doc.metadata.get("source"),
-            "type": doc.metadata.get("type"),
+            "uploader": doc.metadata.get("uploader"),
             "page": doc.metadata.get("page"),
             "total_pages": doc.metadata.get("total_pages"),
             "doc_id": doc.metadata.get("doc_id"),
             "chunk_id": doc.metadata.get("chunk_id"),
             "total_chunks": doc.metadata.get("total_chunks"),
+            "sections": doc.metadata.get("sections"),
         }
 
     @staticmethod
     def _format_meta_search_output(only_metadatas) -> List[Dict[str, Any]]:
         """Formatar a saída da consulta para uma lista de metadados únicos"""
         metadatas = only_metadatas['metadatas']
-        meta_to_search = ("doc_id", "source", "total_chunks", "total_pages", "type")
+        meta_to_search = ("doc_id", "source", "total_chunks", "total_pages", "uploader")
         unique_ocorrences = {
             tuple(metadata[meta] for meta in meta_to_search)
             for metadata in metadatas
