@@ -4,7 +4,7 @@ from langchain_community.document_loaders import PyMuPDFLoader
 from langchain_ollama import OllamaEmbeddings
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 from langchain_core.documents import Document
-from typing import List, Dict, Optional, Any
+from typing import List, Dict, Optional, Any, Literal
 from threading import Lock
 import os
 import hashlib
@@ -23,6 +23,8 @@ class VectorDatabaseManager:
             return cls._instance
 
     def __init__(self, embedding_model: str = "nomic-embed-text:latest"):
+        if hasattr(self, '_initialized') and self._initialized:
+            return    
         self.embedding = OllamaEmbeddings(model=embedding_model)
         self.text_splitter = RecursiveCharacterTextSplitter(
             chunk_size=2000,
@@ -32,6 +34,8 @@ class VectorDatabaseManager:
         )
         self.vectorstore = None
         self.current_collection = None
+        self._initialized = True
+
 
     # ------------------------ Public Methods ------------------------
 
@@ -51,7 +55,7 @@ class VectorDatabaseManager:
         self.current_collection = collection_name
         return self
     
-    def store_documents(self, directory: str, uploader: str) -> 'VectorDatabaseManager':
+    def store_documents(self, directory: str, type: str) -> 'VectorDatabaseManager':
         """Carrega documentos com chunking e metadados"""
         if not self.vectorstore:
             raise RuntimeError("Database not initialized. Call initialize_db() first.")
@@ -89,7 +93,7 @@ class VectorDatabaseManager:
                     page_chunk.metadata.update({
                         "doc_id":doc_id,
                         "source": filename,
-                        "uploader": uploader,
+                        "type": type,
                         "chunk_id": chunk_id,
                         "total_chunks": total_of_chunks,
                         "last_modified": datetime.now().isoformat()
@@ -112,7 +116,7 @@ class VectorDatabaseManager:
     def query(
         self,
         query: Optional[str] = "",
-        uploader: Optional[List[str]] = None,
+        type: Optional[List[str]] = None,
         source: Optional[List[str]] = None,
         top_k: Optional[int] = 10
     ) -> List[Dict[str, Any]]:
@@ -120,8 +124,8 @@ class VectorDatabaseManager:
         """
         Consulta flexível em todos os artigos da base de dados,
         possibilitando utilizar todos os artigos para obteção de informações específicas.
-        Também permite a filtragem por uploader e por artigos específicos. Caso especificado
-        uploader e/ou source, limita os artigos da consulta a apenas aqueles com tais dados
+        Também permite a filtragem por tipo de documento e por artigos específicos. Caso especificado
+        tipo e/ou source, limita os artigos da consulta a apenas aqueles com tais dados
         em seus metadados.
         """
         
@@ -131,7 +135,7 @@ class VectorDatabaseManager:
         # Filtros para pesquisa avançada    
         filters = [
             {filter_argument: {"$in": value}} for filter_argument, value in (
-                ("uploader", uploader),
+                ("type", type),
                 ("source", source)
             )if value is not None
         ]
@@ -152,7 +156,7 @@ class VectorDatabaseManager:
         self, 
         doc_id: Optional[str] = None,
         source: Optional[str] = None,
-        uploader: Optional[str] = None,
+        type: Optional[Literal['draft', 'reference']] = None,
         metadata_only: Optional[bool] = True,
         chunk_id: Optional[int] = None
     ) -> List[Dict[str, Any]]:
@@ -169,7 +173,7 @@ class VectorDatabaseManager:
             {filter_argument: spec} for filter_argument, spec in (
                 ("doc_id", {"$eq": doc_id}),
                 ("source", {"$eq": source}),
-                ("uploader", {"$eq": uploader}),
+                ("type", {"$eq": type}),
                 ("chunk_id", {"$eq": chunk_id})
             )if spec['$eq'] is not None
         ]
@@ -181,7 +185,7 @@ class VectorDatabaseManager:
         )
 
         if search_result['ids'] == []:
-            return f"Artigo não encontrado. Dados da busca:\ndoc_id: {doc_id}\nsource: {source}\nuploader: {uploader}."
+            return f"Artigo não encontrado. Dados da busca:\ndoc_id: {doc_id}\nsource: {source}\ntype: {type}."
         
         return (
             self._format_meta_search_output(search_result)
@@ -217,7 +221,7 @@ class VectorDatabaseManager:
         return {
             "content": doc.page_content,
             "source": doc.metadata.get("source"),
-            "uploader": doc.metadata.get("uploader"),
+            "type": doc.metadata.get("type"),
             "page": doc.metadata.get("page"),
             "total_pages": doc.metadata.get("total_pages"),
             "doc_id": doc.metadata.get("doc_id"),
@@ -229,7 +233,7 @@ class VectorDatabaseManager:
     def _format_meta_search_output(only_metadatas) -> List[Dict[str, Any]]:
         """Formatar a saída da consulta para uma lista de metadados únicos"""
         metadatas = only_metadatas['metadatas']
-        meta_to_search = ("doc_id", "source", "total_chunks", "total_pages", "uploader")
+        meta_to_search = ("doc_id", "source", "total_chunks", "total_pages", "type")
         unique_ocorrences = {
             tuple(metadata[meta] for meta in meta_to_search)
             for metadata in metadatas
@@ -266,4 +270,3 @@ class VectorDatabaseManager:
             articles.setdefault(metadatas[idx]['source'], []).append(content_and_metadata)
 
         return articles
-    
