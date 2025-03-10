@@ -8,5 +8,5 @@ teste_db = VectorDatabaseManager()
 )
 
 print(teste_db.query("Acoplador Optico"))
-print(teste_db.query("Acoplador Optico", uploader='Yna'))
-print(teste_db.query("Acoplador Optico", uploader='Yna', source='Obtencao-de-portas-logicas-com-acoplador-de-fibra-optica.pdf'))
+print(teste_db.query("Acoplador Optico", type='Yna'))
+print(teste_db.query("Acoplador Optico", type='Yna', source='Obtencao-de-portas-logicas-com-acoplador-de-fibra-optica.pdf'))

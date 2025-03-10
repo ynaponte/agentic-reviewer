@@ -112,3 +112,4 @@ db copy.sqlite3
 static/
 artigos
 article_vectorstore/*
+drafts
