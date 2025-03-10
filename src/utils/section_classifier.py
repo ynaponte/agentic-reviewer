@@ -5,79 +5,76 @@ class SectionClassifier:
     def __init__(self):
         # Memória inicia como "Pré-textual"
         self.last_section = "pre-text"
-        # Padrão para cabeçalho numerado em negrito: **1.** **INTRODUCTION**
+        self.pattern = None  # Padrão a ser identificado a partir da introdução
+        # Padrão para cabeçalhos numerados em negrito: **1.** **INTRODUCTION**
         self.numbered_pattern = re.compile(
             r'\*\*\s*([\d\.]+)\s*\*\*\s*\*\*(.*?)\*\*',
             re.IGNORECASE | re.DOTALL
         )
-        # Padrão para cabeçalho do Abstract, em negrito: **Abstract: ...**
-        self.abstract_pattern = re.compile(
-            r'\*\*\s*Abstract\s*:\s*(.*?)\*\*',
-            re.IGNORECASE | re.DOTALL
-        )
-        # Novo padrão para cabeçalhos em markdown: linhas iniciadas por "##" ou "###"
-        # Exemplo: "## 1 Introduction" ou "### 1.1 Details"
+        # Padrão para cabeçalhos em markdown: linhas iniciadas por "##" ou "###"
         self.markdown_header_pattern = re.compile(
             r'^(#{1,})\s*([\d\.]+)\s+(.*)',
             re.IGNORECASE | re.MULTILINE
         )
+        # Novo padrão para cabeçalhos com números romanos: Ex: I. Introdução, IV. Resultados
+        self.roman_pattern = re.compile(
+            r'^(?P<roman>[IVXLCDM]+)\.\s+(.*)',
+            re.IGNORECASE | re.MULTILINE
+        )
+
+    def identify_pattern(self, text):
+        """Encontra a introdução e define o padrão de cabeçalhos."""
+        all_matches = (list(self.numbered_pattern.finditer(text)) +
+                       list(self.markdown_header_pattern.finditer(text)) +
+                       list(self.roman_pattern.finditer(text)))
+        if all_matches:
+            first_header = all_matches[0]
+            if first_header.re == self.numbered_pattern:
+                self.pattern = self.numbered_pattern
+            elif first_header.re == self.markdown_header_pattern:
+                self.pattern = self.markdown_header_pattern
+            elif first_header.re == self.roman_pattern:
+                self.pattern = self.roman_pattern
 
     def classify_document(self, doc: Document) -> Document:
-        """
-        Recebe um objeto Document (com page_content e metadata) e
-        insere em metadata uma nova chave "sections" contendo uma lista
-        das seções a que aquele chunk (página) pertence, utilizando memória
-        da última seção identificada.
-        """
         text = doc.page_content
         sections_in_doc = []
         
-        # 1. Procura cabeçalho do Abstract (padrão em negrito)
-        abs_match = self.abstract_pattern.search(text)
-        if abs_match:
-            # Se houver texto antes do Abstract, esse trecho pertence à seção corrente
-            if abs_match.start() > 0:
-                sections_in_doc.append(self.last_section)
-            self.last_section = "Abstract"
-            sections_in_doc.append("Abstract")
+        # Identificar padrão na introdução, se ainda não foi definido
+        if self.pattern is None:
+            self.identify_pattern(text)
         
-        # 2. Procura cabeçalhos numerados usando ambos os padrões:
-        #    a) Cabeçalhos em negrito (padrão antigo)
-        #    b) Cabeçalhos em markdown (padrão novo)
-        numbered_matches = list(self.numbered_pattern.finditer(text))
-        markdown_matches = list(self.markdown_header_pattern.finditer(text))
-        all_matches = numbered_matches + markdown_matches
-        # Ordena as ocorrências pelo índice de início no texto
-        all_matches.sort(key=lambda m: m.start())
+        if self.pattern:
+            all_matches = list(self.pattern.finditer(text))
+            all_matches.sort(key=lambda m: m.start())
+            
+            for match in all_matches:
+                if match.start() > 0 and not sections_in_doc:
+                    sections_in_doc.append(self.last_section)
+                
+                if self.pattern == self.numbered_pattern:
+                    header_title = match.group(2).strip()
+                elif self.pattern == self.markdown_header_pattern:
+                    header_title = match.group(3).strip()
+                elif self.pattern == self.roman_pattern:
+                    header_title = match.group(2).strip()
+                else:
+                    header_title = ""
+                
+                sections_in_doc.append(header_title)
+                self.last_section = header_title
         
-        for match in all_matches:
-            # Se o cabeçalho não está no início e nenhum cabeçalho foi adicionado ainda,
-            # adiciona a seção corrente
-            if match.start() > 0 and not sections_in_doc:
-                sections_in_doc.append(self.last_section)
-            # Extrai o título do cabeçalho dependendo do padrão encontrado
-            if match.re == self.numbered_pattern:
-                header_title = match.group(2).strip()
-            elif match.re == self.markdown_header_pattern:
-                header_title = match.group(3).strip()
-            else:
-                header_title = ""
-            sections_in_doc.append(header_title)
-            # Atualiza a memória para a nova seção
-            self.last_section = header_title
-        
-        # Se nenhum cabeçalho foi encontrado, o chunk herda a última seção conhecida.
         if not sections_in_doc:
             sections_in_doc.append(self.last_section)
         
-        # Insere a lista de seções nos metadados do Document
         doc.metadata["sections"] = "; ".join(sections_in_doc)
         return doc
     
     @property
     def reset(self):
         """Reseta o parser para o estado inicial."""
-        self.last_section = 'pre-text'
+        self.last_section = "pre-text"
+        self.pattern = None
 
 # Exemplo de uso:
 if __name__ == "__main__":
