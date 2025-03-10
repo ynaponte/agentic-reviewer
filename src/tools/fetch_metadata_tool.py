@@ -1,34 +1,38 @@
 from crewai.tools import BaseTool
 from ..utils import VectorDatabaseManager
 from pydantic import BaseModel, Field, PrivateAttr
-from typing import Type, Optional, List, Dict, Any
+from typing import Type, Optional, List, Dict, Any, Literal
+import json
 
 
 class FetchMetadataToolInput(BaseModel):
-    doc_id: Optional[str] = Field(
-        None, description="Document ID to fetch information (metadata) from."
-    )
-    
     source: Optional[str] = Field(
-        None, description="Article's filename to fetch information (metadata) from."
+        None, description=(
+            "Article's filename to fetch information (metadata) from."
+            "It is case sensitive."
+        )
     )
 
-    uploader: Optional[str] = Field(
+    type: Optional[Literal['draft', 'reference']] = Field(
         None, description=(
-            "Name of a user that has uploaded articles to the database. "
-            "Used to fetch information (metadata) from all articles uploaded by this user."
+            "Type of document to fetch information (metadata) from. "
+            "Can be used either to fetch information (metadata) from all articles"
+            "of such type (if all other parameters are not specified) or to narrow"
+            "the search to only documents of such type."
+            "Can be either 'draft' or 'reference'."
         )
     )
 
 
 class FetchMetadataTool(BaseTool):
-    name: str = "Fetch information about articles in the database"
+    name: str = "FetchMetadataTool"
     description: str = (
         "Fetches information about articles in the database, also known as metadata. "
         "This information includes: document id(doc_id), file name(source), "
         "the total of chunks that the article is divided by (total_chunks), "
         "the total of pages that the article contains(total_pages) and finally "
-        "who uploaded the article to the database(uploader)."
+        "what is the type of the document(draft or reference)."
+        "This tool does not return any content at all, only information."
     )
 
     args_schema: Type[BaseModel] = FetchMetadataToolInput
@@ -40,13 +44,13 @@ class FetchMetadataTool(BaseTool):
 
     def _run(
         self,
-        doc_id: Optional[str] = None,
         source: Optional[str] = None,
-        uploader: Optional[str] = None,
+        type: Optional[Literal['draft', 'reference']] = None,
     ) -> List[Dict[str, Any]]:
-        return self._vectorstore.search_doc_by_meta(
-            doc_id=doc_id, 
-            source=source, 
-            uploader=uploader,
-            metadata_only=True
+        return json.dumps(
+            self._vectorstore.search_doc_by_meta(
+                source=source, 
+                type=type,
+                metadata_only=True
+            )
         )
