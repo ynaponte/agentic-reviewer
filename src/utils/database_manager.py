@@ -164,7 +164,7 @@ class VectorDatabaseManager:
         source: Optional[str] = None,
         type: Optional[Literal['draft', 'reference']] = None,
         metadata_only: Optional[bool] = True,
-        chunk_id: Optional[int] = None
+        chunk_id: Optional[List[int]] = None
     ) -> List[Dict[str, Any]]:
         """
         Método para obter as chunks de um artigo específico, identificado pelo nome(source).
@@ -179,11 +179,12 @@ class VectorDatabaseManager:
             {filter_argument: spec} for filter_argument, spec in (
                 ("doc_id", {"$eq": doc_id}),
                 ("source", {"$eq": source}),
-                ("type", {"$eq": type}),
-                ("chunk_id", {"$eq": chunk_id})
-            )if spec['$eq'] is not None
+                ("type", {"$eq": type})
+            )if spec.get('$eq') is not None
         ]
-        
+        if chunk_id is not None:
+            filters.append({"chunk_id": {"$in": chunk_id}})
+            
         where_filters = {"$and": filters} if len(filters) > 1 else filters[0]
         search_result = self.vectorstore.get(
             where=where_filters,
@@ -272,7 +273,7 @@ class VectorDatabaseManager:
     def _format_full_doc_search_output(metadata_and_chunks) -> Dict[str, List[Dict[str, Any]]]:
         """
         Reformata o dicionário resulatante da busca para a estrutura:
-            articles = {source: [{content:"...", chunk_id:...},{...},...{...}]}
+            articles = {source: chunk: {{content:"...", chunk_id:...},{...},...{...}}}
         """
         chunks = metadata_and_chunks['documents']
         metadatas = metadata_and_chunks['metadatas']
@@ -281,11 +282,22 @@ class VectorDatabaseManager:
         # O dicionário tem como chave a source do documento e como valor uma lista de chunks e sua metadata
         articles = {}
         for idx in range(len(chunks)):
-            content_and_metadata = {
-                "content": chunks[idx],
-                **metadatas[idx]
+            content = {             
+                f"chunk {metadatas[idx]['chunk_id']}": {
+                    "content": chunks[idx],                    
+                    "page_number": metadatas[idx]['page'],
+                    "text_from_sections": metadatas[idx]['sections']
+                },
             }
 
-            articles.setdefault(metadatas[idx]['source'], []).append(content_and_metadata)
+            articles.setdefault(metadatas[idx]['source'], {}).update(content)
+
+        metadata = {             
+            "metadata": {
+                "total_of_pages": metadatas[0]['page_count'],
+                "total_of_chunks": metadatas[0]['total_chunks']
+            }
+        }
+        articles[metadatas[0]['source']].update(metadata)
 
         return articles
