@@ -22,9 +22,10 @@ class FetchArticlesToolInput(BaseModel):
         )
     )
 
-    chunk_id: Optional[int] = Field(
+    chunk_id: Optional[List[int]] = Field(
         None, description=(
-            "A integer corresponding to the id of the chunk to fetch from the document."
+            "A list of integers, where each corresponds to the id of a chunk,"
+            "to fetch all chunks that have ids those ids from the document."
         )
     )
 
@@ -39,6 +40,8 @@ class FetchArticlesTool(BaseTool):
         "(if specified) if the 'chunk_id' parameter is omitted, otherwise, it fetches data of the one chunk with the"
         "specified 'chunk_id'"
         "This tool must be used when the content of a specific source is need, may that be all of it or chunk by chunk."
+        "If can't find any documents with requested inputs, the tool will give the message 'Artigo não encontrado. "
+        "Dados da busca:' followed by the inputs provided to the tool"
     )
 
     args_schema: Type[BaseModel] = FetchArticlesToolInput
@@ -52,7 +55,7 @@ class FetchArticlesTool(BaseTool):
         self,
         source: Optional[str] = None,
         type: Optional[str] = None,
-        chunk_id: Optional[int] = None
+        chunk_id: Optional[List[int]] = None
     ) -> List[Dict[str, Any]]:
         return json.dumps(
             self._vectordatabase.search_doc_by_meta(

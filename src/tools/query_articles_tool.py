@@ -17,15 +17,18 @@ class QueryArticlesToolInput(BaseModel):
         )
     )
 
-    source: Optional[str] = Field(
+    source: Optional[List[str]] = Field(
         None, description=(
-            "Document's filename to filter the search for."
-            "Search is case sensitive. It is a optional parameter."
+            "A list of Document's filename to filter the search for."
+            "Should be used only if trying to query a specific document or documents."
+            "In normal operation it should not be specified, as a broader search is"
+            "generally be better. "
+            "It is case sensitive. It is a optional parameter."
         )
     )
 
     top_k: Optional[int] = Field(
-        10, description=(
+        5, description=(
             "The number of text chunks that have high similarity to the search query to return."
             "It is a optional parameter."
         )

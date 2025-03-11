@@ -9,7 +9,6 @@ class FetchMetadataToolInput(BaseModel):
     source: Optional[str] = Field(
         None, description=(
             "Article's filename to fetch information (metadata) from."
-            "It is case sensitive."
         )
     )
 
