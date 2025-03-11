@@ -42,13 +42,6 @@ class ResultAndDiscussionCrew:
         )
 
     @task
-    def read_chunks(self) -> Task:
-        return Task(
-            config=self.tasks_config['read_chunks'],
-            tools=[FetchMetadataTool(), FetchArticlesTool()]
-        )
-
-    @task
     def initial_assessment(self) -> Task:
         return Task(
             config=self.tasks_config['initial_assessment']

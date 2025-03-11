@@ -13,16 +13,20 @@ initial_assessment:
 
     Leia o conteúdo de artigos de forma sequencial, processando os chunks individualmente.
     **Forma de execução da Leitura dos Documentos**:
-    1. Processe os documentos sequencialmente. Tomemos como exemplo os documentos fictícios: 'Rascunho1.pdf',
-    'Rascunho2.pdf' e 'Rascunho3.pdf'. Você deverá executar todos os passos a seguir para 'Rascunho1.pdf',
-    depois para 'Rascunho2.pdf' e, por fim, para 'Rascunho3.pdf'. Dessa forma, você minimiza eventuais confusões.
-    2. Utilize a ferramenta FetchMetadataTool para obter os metadados do documento, e verificar se o ele exite.
-    Um documento não existe se FetchMetadataTool retornar "" Caso não,
-    você deve marcar esse input como inválido e pular para o próximo documento da lista. Caso seja fornecido apenas um
-    documento base e este ser inválido, você deve informar isso ao usuário e parar a execução.
-    2. Em seguida, , utilize a ferramenta FetchArticlesTool especificando o "chunk_id".
-       Você pode criar batches de ids e passar para "chunk_id", de modo a agilizar a execução.
-    3. Compile os conteúdos lidos em uma estrutura organizada que inclua o nome do artigo, o total de chunks e uma lista ordenada com o conteúdo de cada chunk.
+      - **Importante**: Processe os documentos sequencialmente. Tomemos como exemplo os documentos fictícios: 'Rascunho1.pdf',
+      'Rascunho2.pdf' e 'Rascunho3.pdf'. Você deverá executar todos os passos a seguir para 'Rascunho1.pdf',
+      depois para 'Rascunho2.pdf' e, por fim, para 'Rascunho3.pdf'. Dessa forma, você minimiza eventuais confusões.
+      
+      1. Utilize a ferramenta FetchMetadataTool para obter os metadados do documento, e verificar se o ele exite.
+      Um documento não existe se FetchMetadataTool retornar "Artigo não encontrado. Dados da busca:" seguido dos inputs
+      passados a ferramenta por você. Caso não exista, você deve marcar esse documento como inválido e pular para
+      o próximo documento da lista. Caso todos os documentos bases forem inválidos, você deve informar isso ao 
+      usuário e parar a execução;
+      2. Constatado a validez do documento, utilize a ferramenta FetchArticlesTool para receber todas as chunks que
+      compõem o documento solicitado e faça a Leitura;
+      3. Compile os elementos extraídos em uma estrutura organizada que inclua o nome do artigo, o total de chunks e, 
+      em seguida, um relatório dissertativo-argumentativo detalhado.
+      
     Esses são os documentos a serem lidos: {document_list}
 
     Você deve fazer a marcação explícita dos dados que serão utilizados para a subseção de 
@@ -32,7 +36,6 @@ initial_assessment:
     dos documentos base, com marcações claras indicando quais dados serão incorporados na 
     subseção de "Resultados" e quais serão incorporados na subseção "Discussão".
   agent: analyst
-  context: [read_chunks]
 
 query_generation:
   description: >
