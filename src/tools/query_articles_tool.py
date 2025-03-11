@@ -13,6 +13,7 @@ class QueryArticlesToolInput(BaseModel):
     type: Optional[Literal['draft', 'reference']] = Field(
         None, description=(
             "Type of document to be searched for. Can be draft or reference"
+            "Use to limit the search for documentes of a specific type."
             "Can be either 'draft' or 'reference'. It is a optional parameter."
         )
     )
