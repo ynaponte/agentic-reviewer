@@ -19,6 +19,8 @@ class FetchMetadataToolInput(BaseModel):
             "of such type (if all other parameters are not specified) or to narrow"
             "the search to only documents of such type."
             "Can be either 'draft' or 'reference'."
+            "If can't find any documents with requested inputs, the tool will give the message 'Artigo não encontrado. "
+            "Dados da busca:' followed by the inputs provided to the tool"
         )
     )
 
