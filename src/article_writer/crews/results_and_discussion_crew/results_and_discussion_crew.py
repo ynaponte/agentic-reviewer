@@ -10,36 +10,52 @@ class ResultAndDiscussionCrew:
 
     agents_config = "config/agents.yaml"
     tasks_config = "config/tasks.yaml"
-    llm = LLM(
-        model="ollama/llama3.1:latest",
+    analyst_llm = LLM(
+        model="ollama/qwen2.5:32b",
         base_url="http://localhost:11434",
         max_completion_tokens=8192,
-        max_tokens=32768,
-        temperature=0.1
+        max_tokens=131072,
+        temperature=0.2
+    )
+
+    researcher_llm = LLM(
+        model="ollama/deepseek-r1:32b",
+        base_url="http://localhost:11434",
+        max_completion_tokens=8192,
+        max_tokens=131072,
+        temperature=0.7
+    )
+
+    writer_llm = LLM(
+        model="ollama/qwen2.5:32b",
+        base_url="http://localhost:11434",
+        max_completion_tokens=8192,
+        max_tokens=131072,
+        temperature=0.7
     )
 
     @agent
     def analyst(self) -> Agent:
         return Agent(
             config=self.agents_config['analyst'],
-            llm=self.llm,
-            tools=[FetchMetadataTool(), FetchArticlesTool()]
+            llm=self.analyst_llm,
+            tools=[FetchArticlesTool()]
         )
     
-    @agent
-    def researcher(self) -> Agent:
-        return Agent(
-            config=self.agents_config['researcher'],
-            llm=self.llm,
-            tools=[QueryArticlesTool()]
-        )
-
-    @agent
-    def writer(self) -> Agent:
-        return Agent(
-            config=self.agents_config['writer'],
-            llm=self.llm,
-        )
+    #@agent
+    #def researcher(self) -> Agent:
+    #    return Agent(
+    #        config=self.agents_config['researcher'],
+    #        llm=self.researcher_llm,
+    #        tools=[QueryArticlesTool()]
+    #    )
+#
+    #@agent
+    #def writer(self) -> Agent:
+    #    return Agent(
+    #        config=self.agents_config['writer'],
+    #        llm=self.writer_llm,
+    #    )
 
     @task
     def initial_assessment(self) -> Task:
@@ -47,31 +63,25 @@ class ResultAndDiscussionCrew:
             config=self.tasks_config['initial_assessment']
         )
     
-    @task
-    def query_generation(self) -> Task:
-        return Task(
-            config=self.tasks_config['query_generation']
-        )
-    
-    @task
-    def query_execution(self) -> Task:
-        return Task(
-            config=self.tasks_config['query_execution'],
-            tools=[QueryArticlesTool()]
-        )
-    
-    @task
-    def generate_outline(self) -> Task:
-        return Task(
-            config=self.tasks_config['generate_outline'],
-        )
-    
-    @task
-    def compose_section(self) -> Task:
-        return Task(
-            config=self.tasks_config['compose_section'],
-        )
-    
+    #@task
+    #def query_execution(self) -> Task:
+    #    return Task(
+    #        config=self.tasks_config['query_execution'],
+    #        tools=[QueryArticlesTool()]
+    #    )
+    #
+    #@task
+    #def generate_outline(self) -> Task:
+    #    return Task(
+    #        config=self.tasks_config['generate_outline'],
+    #    )
+    #
+    #@task
+    #def compose_section(self) -> Task:
+    #    return Task(
+    #        config=self.tasks_config['compose_section'],
+    #    )
+
     @crew
     def crew(self) -> Crew:
         return Crew(

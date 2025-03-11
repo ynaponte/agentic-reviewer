@@ -21,7 +21,10 @@ class ArticleWriterFlow(Flow[ArticleWriterState]):
     @start()
     def start_flow(self):
         # Declara o tema do artigo
-        self.state.theme = "Acopladores ópticos"
+        self.state.theme = (
+            "Utilização de algorítimos genéticos para criação de portas lógicas ópticas"
+            "em cristal fotônico"
+        )
         self.articles_db.initialize_db(
             persist_directory="article_vectorstore",
             collection_name="flow_test_collection"
