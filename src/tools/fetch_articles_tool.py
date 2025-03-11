@@ -8,7 +8,8 @@ import json
 class FetchArticlesToolInput(BaseModel):    
     source: Optional[str] = Field(
         None, description=(
-            "The of the article's filename to fetch"
+            "A document's name to search in the database and fetch its content,"
+            "i.e, all of the chunks with the same document name for source."
             "It is case sensitive."
         )
     )
