@@ -1,7 +1,8 @@
 from crewai.tools import BaseTool
 from ..utils import VectorDatabaseManager
 from pydantic import BaseModel, Field, PrivateAttr
-from typing import Type, Optional, List, Dict, Any
+from typing import Type, Optional, List, Dict, Any, Literal
+import json
 
 
 class QueryArticlesToolInput(BaseModel):
@@ -9,27 +10,38 @@ class QueryArticlesToolInput(BaseModel):
         ..., description="Query to search through out the database's articles for."
     )
 
-    uploader: Optional[str] = Field(
+    type: Optional[Literal['draft', 'reference']] = Field(
         None, description=(
-            "Name of a user of the database to filter the search fordocument uploader."
+            "Type of document to be searched for. Can be draft or reference"
+            "Can be either 'draft' or 'reference'. It is a optional parameter."
         )
     )
 
-    source: Optional[str] = Field(
-        None, description="Document's filename to filter the search for."
+    source: Optional[List[str]] = Field(
+        None, description=(
+            "A list of Document's filename to filter the search for."
+            "Should be used only if trying to query a specific document or documents."
+            "In normal operation it should not be specified, as a broader search is"
+            "generally be better. "
+            "It is case sensitive. It is a optional parameter."
+        )
     )
 
     top_k: Optional[int] = Field(
-        10, description=(
+        5, description=(
             "The number of text chunks that have high similarity to the search query to return."
+            "It is a optional parameter."
         )
     )
 
 
 class QueryArticlesTool(BaseTool):
-    name: str = "Search the articles database"
+    name: str = "QueryArticlesTool"
     description: str = (
-        "Searches the articles database for chunks that are most similar to the given search query. "
+        "This tool is used when a broad search through the database is needed."
+        "It searches the articles database for chunks that are most similar to the given search query,"
+        "returning a json string with a list of results that each has the chunk's content and it's metadata"
+        "for identification and contextualization."
         "Supports filtering by uploader (who uploaded the article to the database) and/or source (name of the article file)."
     )
 
@@ -43,14 +55,17 @@ class QueryArticlesTool(BaseTool):
     def _run(
         self,
         search_query: str,
-        uploader: Optional[str] = None,
+        type: Optional[Literal['draft', 'reference']] = None,
         source: Optional[str] = None,
         top_k: Optional[int] = 10,
 
     ) -> List[Dict[str, Any]]:        
-        return self._vectordatabase.query(
-            query=search_query,
-            uploader=uploader,
-            source=source,
-            top_k=top_k
+        return json.dumps(
+            self._vectordatabase.query(
+                query=search_query,
+                type=type,
+                source=source,
+                top_k=top_k
+            ),
+            indent=4
         )

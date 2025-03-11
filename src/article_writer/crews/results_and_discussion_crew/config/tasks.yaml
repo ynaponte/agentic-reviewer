@@ -1,0 +1,147 @@
+initial_assessment:
+  description: >
+    Sua tarefa é analisar o(s) documento(s) base: {document_list}
+    Você deve extrair deles, de forma detalhada, todas as seguintes informações:
+    
+    **Elementos a serem extraídos**:
+       - Tema central, objetivos e hipóteses;
+       - Estrutura do texto; 
+       - Métodos e resultados quantitativos e qualitativos.
+       - Conclusões preliminares e insights da discussão inicial.
+       - Capturar insights, interpretações e pontos críticos da discussão inicial.
+       - Tabelas e figuras e suas explicações.
+
+    Leia o conteúdo de artigos de forma sequencial, processando os chunks individualmente.
+    **Forma de execução da Leitura dos Documentos**:
+      - **Importante**: Processe os documentos sequencialmente. Tomemos como exemplo os documentos fictícios: 'Rascunho1.pdf',
+      'Rascunho2.pdf' e 'Rascunho3.pdf'. Você deverá executar todos os passos a seguir para 'Rascunho1.pdf',
+      depois para 'Rascunho2.pdf' e, por fim, para 'Rascunho3.pdf'. Dessa forma, você minimiza eventuais confusões.
+      
+      1. Utilize a ferramenta FetchMetadataTool para obter os metadados do documento, e verificar se o ele exite.
+      Um documento não existe se FetchMetadataTool retornar "Artigo não encontrado. Dados da busca:" seguido dos inputs
+      passados a ferramenta por você. Caso não exista, você deve marcar esse documento como inválido e pular para
+      o próximo documento da lista. Caso todos os documentos bases forem inválidos, você deve informar isso ao 
+      usuário e parar a execução;
+      2. Constatado a validez do documento, utilize a ferramenta FetchArticlesTool para receber todas as chunks que
+      compõem o documento solicitado e faça a Leitura;
+      3. Compile os elementos extraídos em uma estrutura organizada que inclua o nome do artigo, o total de chunks e, 
+      em seguida, um relatório dissertativo-argumentativo detalhado.
+      
+    Esses são os documentos a serem lidos: {document_list}
+
+    Você deve fazer a marcação explícita dos dados que serão utilizados para a subseção de 
+    "Resultados" (ex.: dados principais, achados relevantes) e subseção "Discussão".
+  expected_output: >
+    Um relatório dissertativo-argumentativo detalhado, contendo todas as informações essenciais extraídas
+    dos documentos base, com marcações claras indicando quais dados serão incorporados na 
+    subseção de "Resultados" e quais serão incorporados na subseção "Discussão".
+  agent: analyst
+
+query_generation:
+  description: >
+    Utilize as informações extraídas para formular queries que não só busquem resultados similares,
+    mas também ampliem e complementem a discussão existente.
+    Identifique lacunas ou pontos que podem ser aprofundados na discussão (por exemplo, inconsistências, 
+    tendências inesperadas ou temas controversos). Gerar variações de queries, explorando diferentes ângulos,
+    tais como “análise comparativa de [resultado específico]” ou “discussões sobre [aspecto] na literatura”.
+  expected_output: >
+    Uma representação estruturada no formato JSON contendo mapeando a query gerada para qual lacuna ou 
+    ponto ela ataca e/ou aprofunda, dessa maneira: <ponto/lacuna a ser aprofundada>: <query gerada>   
+  agent: analyst
+
+query_execution:
+  description: >
+    Sua tarefa é receber as queries geradas pelo agente analista e executar buscas na biblioteca de artigos.
+    Para cada query, utilize a ferramenta QueryArticlesTool para localizar artigos relevantes e recuperar os
+    trechos essenciais que respondam à demanda. Em seguida, sintetize essas informações para gerar respostas
+    integradas, realizando uma abordagem de Retrieval-Augmented Generation (RAG) que aprofunde a discussão.
+    Caso ache necessário, você pode gerar novas queries, se ainda houver necessidade de maior contexto.
+  expected_output: >
+    Um relatório estruturado em formato JSON contendo, para cada ponto/lacuna a ser aprofundada, uma referência
+    com os metadados dos trechos utilizados e sua resposta sintetizada que integra os achados com o contexto da
+    discussão. A estrutura deve seguir esse formato: 
+    "<ponto/lacuna a ser aprofundada>: "referências": [<metadados1>,...<metadadosN>], "resposta": "resposta sintetizada""
+  agent: researcher
+
+generate_outline:
+  description: >
+    Sua tarefa é criar um esboço detalhado da seção de "Resultados e Discussão", utilizando as informações
+    extraídas dos documentos base (initial_assessment) e as respostas obtidas pelo pesquisador (query_execution).
+    O outline deve ser estruturado em duas partes principais — Resultados e Discussão — e apresentar, em formato
+    JSON, os tópicos e subtópicos que comporão essa seção. O esboço deve detalhar o que deve ser escrito, informando
+    explicitamente que:
+    
+    - Na parte de **Resultados**: o autor deverá apresentar os dados relevantes de forma objetiva, lógica e concisa;
+      deve destacar os resultados mais importantes, organizar os dados em seções, incluir as características dos sujeitos do
+      estudo, expor achados secundários ou inesperados, relatar resultados negativos importantes e sugerir o uso de
+      ilustrações (como tabelas e figuras). Esses dados são oriundos da análise dos documentos base (initial_assessment).
+    
+    - Na parte de **Discussão**: o autor deverá realçar os achados relevantes e originais, avaliar criticamente a própria
+      pesquisa, comparar os resultados com a literatura pertinente, interpretar os achados e concluir com generalizações,
+      implicações, perspectivas e recomendações, além de comentar sobre o significado dos resultados e expressar sua posição
+      sobre o assunto. Nesta seção, os insights e referências extraídos pelo pesquisador (query_execution) devem ser
+      integrados para enriquecer a discussão.
+      
+    Seu output deve ser um JSON que sirva de guia para a redação final da seção, sem extrapolar para outras partes do trabalho.
+
+  expected_output: >
+    Um JSON estruturado que defina os tópicos e subtópicos da seção "Resultados e Discussão". O output deverá ter o seguinte formato:
+    ```json
+    {
+      "Resultados e Discussão": {
+        "Resultados": {
+          "objetivo": "Apresentar os dados relevantes de forma objetiva, lógica e concisa.",
+          "detalhamento": "Destacar os resultados mais importantes, organizar os dados em seções, incluir características dos sujeitos do estudo, expor achados secundários relevantes ou inesperados, relatar resultados negativos importantes e indicar o uso de ilustrações (tabelas e figuras).",
+          "fonte": "Resultados do autor provenientes da análise inicial (initial_assessment)."
+        },
+        "Discussão": {
+          "objetivo": "Discutir os resultados apresentados, avaliando criticamente a própria pesquisa e comparando com a literatura pertinente.",
+          "detalhamento": "Realçar os achados relevantes e originais, interpretar os resultados, comparar com outros achados da literatura, e concluir com generalizações, implicações, perspectivas e recomendações, além de comentar sobre o significado dos resultados e expressar a posição do autor.",
+          "fonte": "Insights e referências provenientes do pesquisador (query_execution)."
+        }
+      }
+    }
+    ```
+  agent: analyst
+  context: [initial_assessment, query_execution]
+
+compose_section:
+  description: >
+    Sua tarefa é elaborar um texto dissertativo final para a seção de "Resultados e Discussão", utilizando os contextos, outlines e
+    informações armazenadas pelos agentes anteriores em suas tarefas (initial_assessment, generate_outline e query_execution). O texto deve ser
+    argumentativo, coeso e estruturado, e apresentar de forma clara o conteúdo que será inserido na seção do artigo. Para isso,
+    divida o texto em duas partes principais:
+
+    **Seção de Resultados:**
+      - Apresentar os dados relevantes de forma objetiva, lógica e concisa.
+      - Destacar os resultados mais importantes.
+      - Organizar os resultados em seções, conforme a análise dos dados.
+      - Incluir características dos sujeitos do estudo.
+      - Expor achados secundários relevantes ou inesperados.
+      - Relatar resultados negativos importantes.
+      - Sugerir o uso de ilustrações, como tabelas e figuras, para resumir informações.
+
+    **Seção de Discussão:**
+      - Realçar os achados relevantes e originais.
+      - Avaliar criticamente a própria pesquisa.
+      - Comparar os resultados com a literatura pertinente.
+      - Interpretar os achados de forma aprofundada.
+      - Concluir com generalizações, implicações, perspectivas e recomendações.
+      - Comentar sobre o significado dos resultados e a posição do autor.
+
+    Utilize os outlines e guias fornecidos para compor um texto final que possa ser incorporado diretamente ao artigo,
+    focando exclusivamente nessa seção.    
+  expected_output: >
+    Um texto dissertativo-argumentativo final, sem numeração, que apresente a seção "Resultados e Discussão" de forma coesa e detalhada.
+    O texto deve conter duas partes claramente definidas:
+
+    - **Na parte de Resultados:** deve ser feita a apresentação dos dados relevantes, organizando-os em seções, destacando os
+      resultados principais e secundários, mencionando as características dos sujeitos do estudo, relatando eventuais resultados
+      negativos e sugerindo o uso de ilustrações para a síntese das informações. (Fonte: dados do initial_assessment)
+    
+    - **Na parte de Discussão:** deve ser feita a análise crítica dos resultados, a comparação com a literatura, a interpretação dos
+      achados e a apresentação de conclusões com implicações, perspectivas e recomendações, integrando os insights extraídos pela
+      ferramenta de pesquisa. (Fonte: insights do query_execution)
+
+  agent: writer
+  context: [initial_assessment, generate_outline, query_execution]

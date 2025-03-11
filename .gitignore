@@ -112,3 +112,5 @@ db copy.sqlite3
 static/
 artigos
 trabalhos
+article_vectorstore/*
+drafts

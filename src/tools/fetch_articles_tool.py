@@ -1,30 +1,48 @@
 from crewai.tools import BaseTool
 from ..utils import VectorDatabaseManager
 from pydantic import BaseModel, Field, PrivateAttr
-from typing import Type, Optional, List, Dict, Any
+from typing import Type, Optional, List, Dict, Any, Literal
+import json
 
 
-class FetchArticlesToolInput(BaseModel):
-    doc_id: Optional[str] = Field(
-        None, description="Document ID of the article to fetch"
-    )
-    
+class FetchArticlesToolInput(BaseModel):    
     source: Optional[str] = Field(
-        None, description="The of the article's filename to fetch"
+        None, description=(
+            "A document's name to search in the database and fetch its content,"
+            "i.e, all of the chunks with the same document name for source."
+            "It is case sensitive."
+        )
     )
 
-    uploader: Optional[str] = Field(
+    type: Optional[Literal['draft', 'reference']] = Field(
         None, description=(
-            "Name of a user of the database to fetch all articles he or she uploaded."
+            "Type of document to be searched for. Can be draft or reference"
+            "Can be used either to fetch all articles of such type"
+            "(if all other parameters are not specified) or to narrow"
+            "the search to only documents of such type."
+        )
+    )
+
+    chunk_id: Optional[List[int]] = Field(
+        None, description=(
+            "A list of integers, where each corresponds to the id of a chunk,"
+            "to fetch all chunks that have ids those ids from the document."
         )
     )
 
 
 class FetchArticlesTool(BaseTool):
-    name: str = "Fetch entire articles from the database"
+    name: str = "FetchArticlesTool"
     description: str = (
-        "Fetches all articles' chunks from the database that mach the given source and/or uploader. "
-        "Can fetch by document id, source, uploader, document id and uploader or source and uploader"
+        "This tool returns the content of an article as a json string containing as keys the document's"
+        "name and as value a list of it's chunks as dictionaries that have information about their"
+        "content and metadata(for more contextualization)."
+        "It is able to fetch all of an articles' chunks from the database, that match the given source and type"
+        "(if specified) if the 'chunk_id' parameter is omitted, otherwise, it fetches data of the one chunk with the"
+        "specified 'chunk_id'"
+        "This tool must be used when the content of a specific source is need, may that be all of it or chunk by chunk."
+        "If can't find any documents with requested inputs, the tool will give the message 'Artigo não encontrado. "
+        "Dados da busca:' followed by the inputs provided to the tool"
     )
 
     args_schema: Type[BaseModel] = FetchArticlesToolInput
@@ -36,14 +54,17 @@ class FetchArticlesTool(BaseTool):
 
     def _run(
         self,
-        doc_id: Optional[str] = None,
         source: Optional[str] = None,
-        uploader: Optional[str] = None,
+        type: Optional[str] = None,
+        chunk_id: Optional[List[int]] = None
     ) -> List[Dict[str, Any]]:
-        return self._vectordatabase.search_doc_by_meta(
-            doc_id=doc_id, 
-            source=source, 
-            uploader=uploader,
-            metadata_only=False
+        return json.dumps(
+            self._vectordatabase.search_doc_by_meta(
+                source=source, 
+                type=type,
+                metadata_only=False,
+                chunk_id=chunk_id
+            ),
+            indent=4
         )
     

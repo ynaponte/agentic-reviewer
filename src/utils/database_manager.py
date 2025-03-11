@@ -4,8 +4,9 @@ from langchain_chroma import Chroma
 from langchain_ollama import OllamaEmbeddings
 from langchain.text_splitter import MarkdownTextSplitter
 from langchain_core.documents import Document
-from typing import List, Dict, Optional, Any
+from typing import List, Dict, Optional, Any, Literal
 from src.utils.section_classifier import SectionClassifier
+from threading import Lock
 import os
 import hashlib
 import uuid
@@ -22,6 +23,8 @@ class VectorDatabaseManager:
         return cls._instance
 
     def __init__(self, embedding_model: str = "nomic-embed-text:latest"):
+        if hasattr(self, '_initialized') and self._initialized:
+            return
         self.embedding = OllamaEmbeddings(model=embedding_model)
         self.text_splitter = MarkdownTextSplitter(
             chunk_size=1500,
@@ -30,6 +33,7 @@ class VectorDatabaseManager:
         )
         self.vectorstore = None
         self.current_collection = None
+        self._initialized = True
 
     # ------------------------ Public Methods ------------------------
 
@@ -49,7 +53,7 @@ class VectorDatabaseManager:
         self.current_collection = collection_name
         return self
     
-    def store_documents(self, directory_list: List[str], uploader: str) -> 'VectorDatabaseManager':
+    def store_documents(self, directory_list: List[str], type: str) -> 'VectorDatabaseManager':
         """Carrega documentos com chunking e metadados"""
         if not self.vectorstore:
             raise RuntimeError("Database not initialized. Call initialize_db() first.")
@@ -93,12 +97,16 @@ class VectorDatabaseManager:
                     new_metadata['doc_id'] = doc_id
                     #new_metadata['tables'] = page.get('tables', [])
                     #new_metadata['images'] = page.get('images', [])
-                    new_metadata['source'] = c_source[:-4]
-                    new_metadata['uploader'] = uploader
+                    new_metadata['source'] = c_source
+                    new_metadata['type'] = type
                     pages_as_docs.append(Document(page_content=page.get('text',''), metadata=new_metadata))
 
                 chunks = self.text_splitter.split_documents(pages_as_docs)
-                for chunk in chunks:  # Classifica a qual seção o texto pertence e atribui um ID 
+                num_chunks = len(chunks)
+                for idx, chunk in enumerate(chunks):
+                    chunk.metadata['chunk_id'] = idx
+                    chunk.metadata['total_chunks'] = num_chunks
+                    # Classifica a qual seção o texto pertence e atribui um ID 
                     chunk = section_finder.classify_document(chunk)
                     chunk.id = str(uuid.uuid4())
 
@@ -112,7 +120,7 @@ class VectorDatabaseManager:
     def query(
         self,
         query: Optional[str] = "",
-        uploader: Optional[List[str]] = None,
+        type: Optional[Literal['draft', 'reference']] = None,
         source: Optional[List[str]] = None,
         top_k: Optional[int] = 10
     ) -> List[Dict[str, Any]]:
@@ -131,7 +139,7 @@ class VectorDatabaseManager:
         # Filtros para pesquisa avançada    
         filters = [
             {filter_argument: {"$in": value}} for filter_argument, value in (
-                ("uploader", uploader),
+                ("type", type),
                 ("source", source)
             )if value is not None
         ]
@@ -152,8 +160,9 @@ class VectorDatabaseManager:
         self, 
         doc_id: Optional[str] = None,
         source: Optional[str] = None,
-        uploader: Optional[str] = None,
-        metadata_only: Optional[bool] = True
+        type: Optional[Literal['draft', 'reference']] = None,
+        metadata_only: Optional[bool] = True,
+        chunk_id: Optional[List[int]] = None
     ) -> List[Dict[str, Any]]:
         """
         Método para obter as chunks de um artigo específico, identificado pelo nome(source).
@@ -168,10 +177,12 @@ class VectorDatabaseManager:
             {filter_argument: spec} for filter_argument, spec in (
                 ("doc_id", {"$eq": doc_id}),
                 ("source", {"$eq": source}),
-                ("uploader", {"$eq": uploader})
-            )if spec['$eq'] is not None
+                ("type", {"$eq": type})
+            )if spec.get('$eq') is not None
         ]
-        
+        if chunk_id is not None:
+            filters.append({"chunk_id": {"$in": chunk_id}})
+            
         where_filters = {"$and": filters} if len(filters) > 1 else filters[0]
         search_result = self.vectorstore.get(
             where=where_filters,
@@ -179,7 +190,7 @@ class VectorDatabaseManager:
         )
 
         if search_result['ids'] == []:
-            return f"Artigo não encontrado. Dados da busca:\ndoc_id: {doc_id}\nsource: {source}\nuploader: {uploader}."
+            return f"Artigo não encontrado. Dados da busca:\ndoc_id: {doc_id}\nsource: {source}\ntype: {type}."
         
         return (
             self._format_meta_search_output(search_result)
@@ -227,9 +238,9 @@ class VectorDatabaseManager:
         return {
             "text": doc.page_content,
             "source": doc.metadata.get("source"),
-            "uploader": doc.metadata.get("uploader"),
+            "type": doc.metadata.get("type"),
             "page": doc.metadata.get("page"),
-            "total_pages": doc.metadata.get("total_pages"),
+            "page_count": doc.metadata.get("page_count"),
             "doc_id": doc.metadata.get("doc_id"),
             "chunk_id": doc.metadata.get("chunk_id"),
             "total_chunks": doc.metadata.get("total_chunks"),
@@ -240,7 +251,7 @@ class VectorDatabaseManager:
     def _format_meta_search_output(only_metadatas) -> List[Dict[str, Any]]:
         """Formatar a saída da consulta para uma lista de metadados únicos"""
         metadatas = only_metadatas['metadatas']
-        meta_to_search = ("doc_id", "source", "total_chunks", "total_pages", "uploader")
+        meta_to_search = ("source", "total_chunks", "page_count", "type")
         unique_ocorrences = {
             tuple(metadata[meta] for meta in meta_to_search)
             for metadata in metadatas
@@ -260,7 +271,7 @@ class VectorDatabaseManager:
     def _format_full_doc_search_output(metadata_and_chunks) -> Dict[str, List[Dict[str, Any]]]:
         """
         Reformata o dicionário resulatante da busca para a estrutura:
-            articles = {source: [{content:"...", chunk_id:...},{...},...{...}]}
+            articles = {source: chunk: {{content:"...", chunk_id:...},{...},...{...}}}
         """
         chunks = metadata_and_chunks['documents']
         metadatas = metadata_and_chunks['metadatas']
@@ -269,11 +280,22 @@ class VectorDatabaseManager:
         # O dicionário tem como chave a source do documento e como valor uma lista de chunks e sua metadata
         articles = {}
         for idx in range(len(chunks)):
-            content_and_metadata = {
-                "content": chunks[idx],
-                **metadatas[idx]
+            content = {             
+                f"chunk {metadatas[idx]['chunk_id']}": {
+                    "content": chunks[idx],                    
+                    "page_number": metadatas[idx]['page'],
+                    "text_from_sections": metadatas[idx]['sections']
+                },
             }
 
-            articles.setdefault(metadatas[idx]['source'], []).append(content_and_metadata)
+            articles.setdefault(metadatas[idx]['source'], {}).update(content)
+
+        metadata = {             
+            "metadata": {
+                "total_of_pages": metadatas[0]['page_count'],
+                "total_of_chunks": metadatas[0]['total_chunks']
+            }
+        }
+        articles[metadatas[0]['source']].update(metadata)
 
         return articles
