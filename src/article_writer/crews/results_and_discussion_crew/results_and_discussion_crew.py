@@ -5,7 +5,7 @@ from src.tools import FetchMetadataTool, FetchArticlesTool, QueryArticlesTool
 
 
 @CrewBase
-class OutlineCrew:
+class ResultAndDiscussionCrew:
     """Equipe responsável por gerar relatórios de artigos ciêntíficos"""
 
     agents_config = "config/agents.yaml"
@@ -34,6 +34,20 @@ class OutlineCrew:
             tools=[QueryArticlesTool()]
         )
 
+    @agent
+    def writer(self) -> Agent:
+        return Agent(
+            config=self.agents_config['writer'],
+            llm=self.llm,
+        )
+
+    @task
+    def read_chunks(self) -> Task:
+        return Task(
+            config=self.tasks_config['read_chunks'],
+            tools=[FetchMetadataTool(), FetchArticlesTool()]
+        )
+
     @task
     def initial_assessment(self) -> Task:
         return Task(
@@ -49,5 +63,27 @@ class OutlineCrew:
     @task
     def query_execution(self) -> Task:
         return Task(
-            config=self.tasks_config['query_execution']
+            config=self.tasks_config['query_execution'],
+            tools=[QueryArticlesTool()]
+        )
+    
+    @task
+    def generate_outline(self) -> Task:
+        return Task(
+            config=self.tasks_config['generate_outline'],
+        )
+    
+    @task
+    def compose_section(self) -> Task:
+        return Task(
+            config=self.tasks_config['compose_section'],
+        )
+    
+    @crew
+    def crew(self) -> Crew:
+        return Crew(
+            agents=self.agents,
+            tasks=self.tasks,
+            process=Process.sequential,
+            verbose=True
         )
