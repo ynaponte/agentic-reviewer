@@ -1,9 +1,11 @@
 from pydantic import BaseModel
 from crewai.flow import Flow, listen, start
-from .crews.results_and_discussion_crew import ResultAndDiscussionCrew
+from .crews.results_and_discussion_crew import ReviewCrew
 from ..tools import FetchMetadataTool
 from typing import List, Optional
 from ..utils import VectorDatabaseManager
+from article_writer.types.types import ChunkReport
+import asyncio
 
 import json
 
@@ -13,6 +15,7 @@ class ArticleWriterState(BaseModel):
     results: str = ""
     discussion: str = ""
     conclusion: str = ""
+    reports = List[ChunkReport] = []
 
 class ArticleWriterFlow(Flow[ArticleWriterState]):
     
@@ -29,19 +32,30 @@ class ArticleWriterFlow(Flow[ArticleWriterState]):
             persist_directory="article_vectorstore",
             collection_name="flow_test_collection"
         )
-        print(FetchMetadataTool()._run(source='Resultado1.pdf', type='draft'))
-        self.state.drafts_documents = 'Resultado1.pdf, Resultado2.pdf'
+        self.state.drafts_documents = ['Resultado1.pdf', 'Resultado2.pdf']
 
     @listen(start_flow)
-    def write_results_and_conclusion(self):
-        res_and_conc = ResultAndDiscussionCrew().crew().kickoff(
-            inputs={
-                "theme": self.state.theme,
-                "document_list": self.state.drafts_documents
-            }
-        )
+    async def pre_processing(self):
+        def batching(num_chuns):
+            #TODO: implementar o sistema de criação de batches de chunks
+            pass
+        
+        async def process_single_document(doc_name: str, chunk_indexes: List):
+            output = await (
+                ReviewCrew()
+                .crew()
+                .kickoff_async(
+                    inputs={
+                        "target_document": doc_name,
+                        "chunk_indexes": chunk_indexes,
+                        "theme": self.state.theme,
+                        
+                    }
+                )
+            )
 
-        print(res_and_conc.raw)
+        for draft_document in self.state.drafts_documents:
+            tasks = []
 
 def kickoff():
     article_flow = ArticleWriterFlow()

@@ -8,8 +8,7 @@ import json
 class FetchArticlesToolInput(BaseModel):    
     source: Optional[str] = Field(
         None, description=(
-            "A document's name to search in the database and fetch its content,"
-            "i.e, all of the chunks with the same document name for source."
+            "The document's filename to search in the database and fetch its content."
             "It is case sensitive."
         )
     )
@@ -37,10 +36,9 @@ class FetchArticlesTool(BaseTool):
         "This tool returns the content of an article as a json string containing as keys the document's"
         "name and as value a list of it's chunks as dictionaries that have information about their"
         "content and metadata(for more contextualization)."
-        "It is able to fetch all of an articles' chunks from the database, that match the given source and type"
-        "(if specified) if the 'chunk_id' parameter is omitted, otherwise, it fetches data of the one chunk with the"
-        "specified 'chunk_id'"
-        "This tool must be used when the content of a specific source is need, may that be all of it or chunk by chunk."
+        "It is able to fetch all of an articles' chunks from the database, that match the given source and/or type"
+        "(if specified), if the 'chunk_id' parameter is omitted, otherwise, it fetches data from all chunks specified"
+        "in 'chunk_id'. This tool must be used when the content of a specific source is need, may that be all of it or chunk by chunk."
         "If can't find any documents with requested inputs, the tool will give the message 'Artigo não encontrado. "
         "Dados da busca:' followed by the inputs provided to the tool"
     )
