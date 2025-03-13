@@ -190,7 +190,7 @@ class VectorDatabaseManager:
         )
 
         if search_result['ids'] == []:
-            return f"Artigo não encontrado. Dados da busca:\ndoc_id: {doc_id}\nsource: {source}\ntype: {type}."
+            return []
         
         return (
             self._format_meta_search_output(search_result)
