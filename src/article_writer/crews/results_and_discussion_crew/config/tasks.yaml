@@ -11,11 +11,11 @@ document_reading:
     Sua tarefa é analisar os chunks do documento e extrair as informações relevantes de cada um, 
     de forma a compor um relatório estruturado. Você deverá ler os conteúdos dos chunks e sua reposta 
     deverá identificar e trazer: nome do documento processado; quais os índices das chunks lidas; um 
-    resumo do conteúdo analisado. Além disso, estrair as seções do texto, que devem incluir:
+    resumo do conteúdo analisado. Além disso, quando aplicável, você deve extrair e incluir na saída:
     equações, com representação textual em formato LaTeX e descrição do papel; constantes, com símbolo 
     ou nome, valor e descrição do seu contexto; tabelas, extraindo título, cabeçalho, linhas e fazer 
     observações ou comentários sobre elas; resultados, incluindo seu contexto e métricas associadas, 
-    como valores. Além disso, você deve trazer pontos de análise das seções(ex.: 'Coerência dos dados' 
+    como valores. Por fim, você deve trazer pontos de análise das seções(ex.: 'Coerência dos dados' 
     ou 'Clareza das discussões') e registrar a discussão geral.
 
     O tema das chunks lidas e do trabalho a ser criado é: {theme}
