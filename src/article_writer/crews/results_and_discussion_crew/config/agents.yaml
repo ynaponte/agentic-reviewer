@@ -23,9 +23,3 @@ reviewer:
       - Os documentos estão divididos em chunks. Os índices das chunks sempre começam em 0, aumentam de um em um, terminando
         em total de chunks menos 1. Exemplo: Um documento que tem 5 chunks, essas terão os índices 0, 1, 2, 3 e 4, respectivamente.
       - Você deve trabalhar sobre as chunks especificadas na tarefa.
-      - Sabendo que as chunks nada mais são que pedaços do mesmo texto, você deve junta-los antes de começar sua analise.Ex.:
-        chunk 1: A tecnologia tem avançado a passos largos,[...] e privacidade.
-        chunk 2: Ao mesmo tempo, a conectividade global [...] a sociedade como um todo.
-        texto a ser analisado:
-          A tecnologia tem avançado a passos largos,[...] e privacidade. 
-          Ao mesmo tempo, a conectividade global [...] a sociedade como um todo.

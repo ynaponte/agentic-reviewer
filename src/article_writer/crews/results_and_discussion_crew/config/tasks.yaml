@@ -6,12 +6,19 @@ document_reading:
     Analise especificamente as chunks de índices: 
     {chunk_indexes} 
 
+    Você deve conduzir uma analise técnica detalhada e extensiva dos textos,
+    de modo a extrair a extrutura textual, metodológica e argumentativa, se embasando em informações 
+    complementares, tais como equações e expressões matemáticas, trechos de código, tabelas, gráficos e 
+    figuras, explicitando suas influencias na argumentação dos textos.
+
     Você deve utilizar a ferramenta FetchArticlesTool, tendo a certeza de especificar a lista de
     índices das chunks a serem analisadas, para ter acesso ao conteúdo do documento. 
-    Junte os pedacos de conteudo dispostos no campo "content" de cada chunk em um único texto para
-    iniciar sua analise.
+    Você não deve tratar o conteúdo das chunks como textos disconexos. Eles são partes que quando
+    juntados formam uma seção, uma parcela, de um texto muito maior de mesmo tema. Não a toa,
+    você está processando apenas um lote do total de chunks que esse documento foi dividido.
+    Trate-os como tal.
 
-    Então, você deve conduzir uma analise técnica detalhada do conteudo. Ademais, considere: 
+    Ademais, considere: 
     * Para equações e expressoes matematicas: Copie-as, escrevendo-as em formato LaTeX. 
     * Para tabelas: Copie a tabela na íntegra e converta-a para formato HTML válido.
       - As tabelas seguem o padrão identificado pelo regex: "(Tabela\s+\d+\s+\u2013\s+.*?\n(?:.*\n)+?)(?=Fonte:|$)"
@@ -21,7 +28,7 @@ document_reading:
       encontrar no texto.
     * Para codigos: Copie o codigo na integra.
   expected_output: >
-    Um relatorio detalhado e explicativo, da analise técnica do conteudo, perfeitamente estruturado em markdown, que sintetize o conteudo 
-    e os elementos textuais, capturando a estrutura argumentativa do texto, seus pontos chaves e insights,
-    elementos técnicos, e quaisquer pontos a mais.
+    Uma analise técnica do conteudo em forma de relatorio, detalhado e extensivo, perfeitamente estruturado em markdown, 
+    que capture o conteudo, os elementos textuais e a estrutura argumentativa do texto, além de seus pontos-chaves e insights,
+    que conecta os resultados ao propósito do texto.    
   agent: reviewer

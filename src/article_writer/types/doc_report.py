@@ -3,8 +3,7 @@ from typing import Dict, List, Optional
 
 
 class MathObject(BaseModel):
-    math_object: str = Field(description="Equação matemática formatada em LaTeX")
-    description: str = ""
+    math_object: str = Field(description="Equação, expressão ou símbolo matemático formatado em LaTeX")
 
 
 class TableObject(BaseModel):
@@ -29,28 +28,37 @@ class CodeSnipet(BaseModel):
 
 class ContentReport(BaseModel):
     analysis: str = Field(description=(
-            "Relatorio detalhado e extenso, discursivo e descritivo, sobre o conteúdo analisado. "
-            "Deve conter explicações completas e estruturadas, amarrando elementos argumentativos "
-            "não textuais, com o argumento do conteúdo."
+            "Análise técnica informativa **em markdown**, com seções organizadas, detalhando extrutura textual, "
+            "metodológica e argumentativa, explicitando a relação de equações e expressões matemáticas, "
+            "trechos de código, tabelas, gráficos e figuras, com o conteúdo do texto base."
         )
     )
-    key_points: str = Field(description="Key-points and insights from the documents argumentation")
+    conclusion: str = Field(description=(
+            "Síntese final dos principais achados do texto analisado, destacando como os elementos técnicos, "
+            "métodos e resultados se conectam aos objetivos do documento. Deve indicar a relevância dos dados extraídos "
+            "e possíveis implicações das conclusões apresentadas."
+    ))
+    key_points: str = Field(description=(
+        "Pontos chaves, insights e resultados, estruturados **em markdown**, com seções organizadas, "
+        "escritos como bullet points"
+    ))
     math_expressions: Optional[List[MathObject]] = Field(
         description=(
             "Uma lista com as expressoes matematicas encontradas no texto, formatadas em LaTeX. "
-            "Cada elemento da lista é uma equacao matematica."
+            "Cada elemento da lista é uma equacao ou expressao matematica."
         ),
         default_factory=list
     )
     code_snipets: Optional[List[CodeSnipet]] = Field(
         description=(
-            "Uma lista com os snippets de codigo"
-        )
+            "Uma lista com os snippets de codigo, onde cada elemento da lista é um snippet completo."
+        ),
+        default_factory=list
     )
     tables: Optional[List[TableObject]] = Field(
         description=(
-            "Uma lista com as tabelas encontradas e copiadas do texto. Cada elemento da lista é uma "
-            "tabela distinta, convertida para formato HTML, com uma descrição inclusa."
+            "Uma lista dos trechos que estão em conformidade com o padrão regex para tabelas, copiados do texto, formatados"
+            "como tabelas em HTML."
         ),
         default_factory=list
     )
