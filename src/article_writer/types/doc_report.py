@@ -2,107 +2,61 @@ from pydantic import BaseModel, Field
 from typing import Dict, List, Optional
 
 
-class AnalysisPoint(BaseModel):
-    point_name: str = Field(
-        ...,
-        description="Nome do ponto analisado, por exemplo, 'Coerência dos dados' ou 'Clareza das discussões'."
-    )
-    point_analysis: List[str] = Field(
-        ...,
-        description="Lista de observações e análises referentes ao ponto analisado."
-    )
+class MathObject(BaseModel):
+    math_object: str = Field(description="Equação matemática formatada em LaTeX")
+    description: str = ""
 
-class Equation(BaseModel):
-    equation_text: str = Field(
-        ...,
-        description="Representação textual da equação, preferencialmente em formato LaTeX ou similar."
-    )
-    description: str = Field(
-        None,
-        description="Descrição ou interpretação da equação e seu papel na análise."
-    )
 
-class Constant(BaseModel):
-    name: str = Field(
-        ...,
-        description="Símbolo ou nome da constante ou parâmetro experimental (ex.: ε, n₁, n₂, a, λ)."
-    )
-    value: str = Field(
-        ...,
-        description="Valor da constante, incluindo unidades se aplicável."
-    )
-    description: Optional[str] = Field(
-        None,
-        description="Breve descrição do significado ou função da constante no contexto do experimento."
+class TableObject(BaseModel):
+    html:str = Field(
+        description=(
+            "Tabela extraida do texto, convertida corretamente para HTML completo e funcional. "
+            "O formato esperado deve conter todas as tags necessarias, incluindo <table>, <thead>, <tbody> e <tr>. "
+            "Caso algum elemento de cabeçalho faltante, deve-se atribuir algo generico."
+        )
     )
 
 
-class TableData(BaseModel):
-    title: str = Field(
-        ...,
-        description="Título ou legenda da tabela (ex.: 'Tabela verdade para a primeira porta OR')."
-    )
-    headers: List[str] = Field(
-        ...,
-        description="Lista dos cabeçalhos das colunas da tabela."
-    )
-    rows: List[List[str]] = Field(
-        ...,
-        description="Linhas da tabela, onde cada linha é uma lista de valores em formato textual."
-    )
-    description: Optional[str] = Field(
-        None,
-        description="Observações ou comentários sobre a tabela."
-    )
+class GraphObject(BaseModel):
+    name:str = Field(description="Nome da imagem")
+    description:str = Field(description="Descrição da imagem")
 
 
-class ResultItem(BaseModel):
-    context: str = Field(
-        ...,
-        description="Contexto do resultado extraído do texto (ex.: evolução do fitness ou contraste obtido)."
-    )
-    metrics: Optional[Dict[str, str]] = Field(
-        None,
-        description="Métricas associadas ao resultado, como valores numéricos importantes."
-    )
+class CodeSnipet(BaseModel):
+    language: str = Field(description="Linguagem do código")
+    code: str = Field(description="Trecho de código")
 
 
-class SectionAnalysis(BaseModel):
-    section_name: str = Field(
-        ...,
-        description="Nome da seção analisada, por exemplo, 'Resultados', 'Discussão' ou sub-seções como 'Primeira porta OR'."
+class ContentReport(BaseModel):
+    analysis: str = Field(description=(
+            "Relatorio detalhado e extenso, discursivo e descritivo, sobre o conteúdo analisado. "
+            "Deve conter explicações completas e estruturadas, amarrando elementos argumentativos "
+            "não textuais, com o argumento do conteúdo."
+        )
     )
-    analysis_points: List[AnalysisPoint] = Field(
-        ...,
-        description="Lista de pontos de análise críticos referentes à seção."
+    key_points: str = Field(description="Key-points and insights from the documents argumentation")
+    math_expressions: Optional[List[MathObject]] = Field(
+        description=(
+            "Uma lista com as expressoes matematicas encontradas no texto, formatadas em LaTeX. "
+            "Cada elemento da lista é uma equacao matematica."
+        ),
+        default_factory=list
     )
-    equations: Optional[List[Equation]] = Field(
-        None,
-        description="Lista de equações extraídas ou mencionadas na seção."
+    code_snipets: Optional[List[CodeSnipet]] = Field(
+        description=(
+            "Uma lista com os snippets de codigo"
+        )
     )
-    constants: Optional[List[Constant]] = Field(
-        None,
-        description="Lista de constantes identificadas na seção."
+    tables: Optional[List[TableObject]] = Field(
+        description=(
+            "Uma lista com as tabelas encontradas e copiadas do texto. Cada elemento da lista é uma "
+            "tabela distinta, convertida para formato HTML, com uma descrição inclusa."
+        ),
+        default_factory=list
     )
-    tables: Optional[List[TableData]] = Field(
-        None,
-        description="Lista de tabelas apresentadas ou referenciadas na seção."
-    )
-    extracted_results: Optional[List[ResultItem]] = Field(
-        None,
-        description="Resultados ou achados extraídos da análise da seção."
-    )
-
-
-class ChunkReport(BaseModel):
-    doc_name: str = Field(description="Nome do documento base")
-    chunk_id: List[int] = Field(description="Lista dos índices das chunks analisadas")
-    resumo: str = Field(description="Resumo breve das ideias e pontos principais dos chunks analisados")
-    sections_analysis: List[SectionAnalysis] = Field(
-        ...,
-        description="Analise das seções do presentes nas chunks."
-    )
-    overall_discussion: Optional[List[str]] = Field(
-        None,
-        description="Comentários gerais e análise crítica global do conteúdo."
+    graphs_and_images: Optional[List[GraphObject]] = Field(
+        description=(
+            "Uma lista com a descrição de imagens e gráficos que foram encontrados no texto"
+        ),
+        default_factory=list
     )
