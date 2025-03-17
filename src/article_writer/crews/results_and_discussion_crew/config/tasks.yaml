@@ -1,34 +1,41 @@
 document_reading:
   description: >
-    Você deve analisar chunks do documento: {target_document} 
-    O tema do documento é: {theme} 
-    Ele é documento do tipo <type>'draft'</type>. 
-    Analise especificamente as chunks de índices: 
-    {chunk_indexes} 
+    Você deve analisar as chunks sequenciais do documento: {target_document}, cujo tema é: {theme}. 
+    Este documento é um <type>'draft'</type>. As chunks a serem analisadas são: {chunk_indexes}.
 
-    Você deve conduzir uma analise técnica detalhada e extensiva dos textos,
-    de modo a extrair a extrutura textual, metodológica e argumentativa, se embasando em informações 
-    complementares, tais como equações e expressões matemáticas, trechos de código, tabelas, gráficos e 
-    figuras, explicitando suas influencias na argumentação dos textos.
+    Seu objetivo é realizar uma análise crítica e interpretativa detalhada do documento, garantindo a compreensão
+    profunda de seu conteúdo, estrutura e argumentação. Para isso, você deve:
 
-    Você deve utilizar a ferramenta FetchArticlesTool, tendo a certeza de especificar a lista de
-    índices das chunks a serem analisadas, para ter acesso ao conteúdo do documento. 
-    Você não deve tratar o conteúdo das chunks como textos disconexos. Eles são partes que quando
-    juntados formam uma seção, uma parcela, de um texto muito maior de mesmo tema. Não a toa,
-    você está processando apenas um lote do total de chunks que esse documento foi dividido.
-    Trate-os como tal.
+    1.  **Contextualizar e Interpretar:** Relacione o conteúdo das chunks com o tema geral do documento e o contexto acadêmico relevante,
+        analisando o significado das informações, pressupostos, inferências e possíveis vieses.
+    2.  **Sintetizar e Avaliar:** Crie um resumo crítico que capture a essência do conteúdo, destacando pontos-chave, relações entre eles,
+        e avaliando a qualidade da argumentação, relevância das evidências e clareza da exposição.
+    3.  **Analisar a Estrutura:** Extraia e descreva a estrutura textual, metodológica e argumentativa do documento,
+        identificando os elementos mais relevantes para o tema.
+    4.  **Avaliar Informações Complementares:** Analise o impacto de equações, códigos, tabelas, gráficos e figuras na argumentação.
+    5.  **Integrar e Conectar:** Mostre como as chunks se conectam sequencialmente e se encaixam na estrutura geral do documento,
+        explicitando as relações entre os diferentes elementos analisados.
+    6.  **Identificar Pontos-Chave:** Destile as informações mais importantes, descobertas significativas ou argumentos centrais 
+        apresentados nas chunks.
+
+    Você deve utilizar a ferramenta FetchArticlesTool para acessar o conteúdo das chunks, especificando os índices,
+    e tratar as chunks como partes sequenciais de um texto maior.
 
     Ademais, considere: 
     * Para equações e expressoes matematicas: Copie-as, escrevendo-as em formato LaTeX. 
     * Para tabelas: Copie a tabela na íntegra e converta-a para formato HTML válido.
-      - As tabelas seguem o padrão identificado pelo regex: "(Tabela\s+\d+\s+\u2013\s+.*?\n(?:.*\n)+?)(?=Fonte:|$)"
       - Você deve transcreve-las em formato HTML completo e funcional, pronto para ser exibido diretamente em um navegador. 
       - Exemplo esperado: `<table><thead><tr><th>Coluna1</th><th>Coluna2</th></tr></thead><tbody><tr><td>Valor1</td><td>Valor2</td></tr></tbody></table>`.
     * Para graficos e imagens: capture o nome do objeto e a descricao dele que voce 
       encontrar no texto.
     * Para codigos: Copie o codigo na integra.
   expected_output: >
-    Uma analise técnica do conteudo em forma de relatorio, detalhado e extensivo, perfeitamente estruturado em markdown, 
-    que capture o conteudo, os elementos textuais e a estrutura argumentativa do texto, além de seus pontos-chaves e insights,
-    que conecta os resultados ao propósito do texto.    
+    Um relatório analítico e interpretativo em Markdown, contendo:
+    1.  Um resumo crítico do conteúdo, destacando ideias, argumentos e conclusões principais.
+    2.  Uma análise da qualidade da argumentação, relevância das evidências e clareza da exposição.
+    3.  Uma descrição da estrutura textual, metodológica e argumentativa do documento.
+    4.  Uma avaliação do impacto de informações complementares (equações, códigos, tabelas, etc.).
+    5.  Uma análise das relações entre as chunks e sua conexão com o tema geral do documento.
+    6.  Uma seção de **Pontos-Chave**, listando as informações, descobertas ou argumentos mais importantes identificados na análise.
+    7.  Uma seção de "Insights", com interpretações, inferências, pressupostos e vieses identificados. 
   agent: reviewer
