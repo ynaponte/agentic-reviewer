@@ -2,8 +2,8 @@ from crewai import Agent, Crew, Task, Process
 from crewai.project import CrewBase, agent, crew, task
 from crewai.llm import LLM
 from langchain_ollama import ChatOllama
-from src.tools import FetchMetadataTool, FetchArticlesTool, QueryArticlesTool
-from src.article_writer.types.doc_report import ChunkReport
+from src.tools import FetchArticlesTool, TableSearchTool
+from src.article_writer.types.doc_report import ContentReport
 
 
 @CrewBase
@@ -15,10 +15,10 @@ class ReviewCrew:
     reviewer_llm = LLM(
         model="ollama/llama3.1:latest",
         base_url="http://localhost:11434",
-        n=3,
-        max_completion_tokens=2000,
+        top_p=0.8,
+        max_completion_tokens=3000,
         max_tokens=8192,
-        temperature=0.4
+        temperature=0.6,
     )
 
     @agent
@@ -34,7 +34,7 @@ class ReviewCrew:
         return Task(
             config=self.tasks_config['document_reading'],
             tools=[FetchArticlesTool()],
-            output_pydantic=ChunkReport
+            #output_pydantic=ContentReport
         )
     
     @crew

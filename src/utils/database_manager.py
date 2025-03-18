@@ -11,6 +11,7 @@ import os
 import hashlib
 import uuid
 import pymupdf4llm
+import re
   
 
 class VectorDatabaseManager:
@@ -28,7 +29,7 @@ class VectorDatabaseManager:
         self.embedding = OllamaEmbeddings(model=embedding_model)
         self.text_splitter = MarkdownTextSplitter(
             chunk_size=1500,
-            chunk_overlap=100,
+            chunk_overlap=200,
             length_function=len,
         )
         self.vectorstore = None
@@ -275,6 +276,8 @@ class VectorDatabaseManager:
         """
         chunks = metadata_and_chunks['documents']
         metadatas = metadata_and_chunks['metadatas']
+        # Regex das tabelas
+        pattern = r"(Tabela\s+\d+\s+\u2013\s+.*?\n(?:.*\n)+?)(?=Fonte:|$)"
         # Se aproveita da natureza sequencial que os chunks aparecem(grandes blocos do mesmo artigo)
         # para organizar os chunks em um dicionário.
         # O dicionário tem como chave a source do documento e como valor uma lista de chunks e sua metadata
@@ -284,7 +287,8 @@ class VectorDatabaseManager:
                 f"chunk {metadatas[idx]['chunk_id']}": {
                     "content": chunks[idx],                    
                     "page_number": metadatas[idx]['page'],
-                    "text_from_sections": metadatas[idx]['sections']
+                    "text_from_sections": metadatas[idx]['sections'],
+                    "tables_present": re.findall(pattern, chunks[idx], flags=re.UNICODE | re.DOTALL)
                 },
             }
 
@@ -299,3 +303,4 @@ class VectorDatabaseManager:
         articles[metadatas[0]['source']].update(metadata)
 
         return articles
+    

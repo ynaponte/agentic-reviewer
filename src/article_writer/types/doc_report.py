@@ -27,10 +27,8 @@ class CodeSnipet(BaseModel):
 
 
 class ContentReport(BaseModel):
-    analysis: str = Field(description=(
-            "Análise técnica informativa **em markdown**, com seções organizadas, detalhando extrutura textual, "
-            "metodológica e argumentativa, explicitando a relação de equações e expressões matemáticas, "
-            "trechos de código, tabelas, gráficos e figuras, com o conteúdo do texto base."
+    synthesis: str = Field(description=(
+            "Um resumo crítico do conteúdo **em markdown**, destacando ideias, argumentos e conclusões principais"
         )
     )
     conclusion: str = Field(description=(
