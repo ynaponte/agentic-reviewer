@@ -11,6 +11,7 @@ import os
 import hashlib
 import uuid
 import pymupdf4llm
+import re
   
 
 class VectorDatabaseManager:
@@ -275,6 +276,7 @@ class VectorDatabaseManager:
         """
         chunks = metadata_and_chunks['documents']
         metadatas = metadata_and_chunks['metadatas']
+        pattern = r"(Tabela\s+\d+\s+\u2013\s+.*?\n(?:.*\n)+?)(?=Fonte:|$)"
         # Se aproveita da natureza sequencial que os chunks aparecem(grandes blocos do mesmo artigo)
         # para organizar os chunks em um dicionário.
         # O dicionário tem como chave a source do documento e como valor uma lista de chunks e sua metadata
@@ -284,7 +286,8 @@ class VectorDatabaseManager:
                 f"chunk {metadatas[idx]['chunk_id']}": {
                     "content": chunks[idx],                    
                     "page_number": metadatas[idx]['page'],
-                    "text_from_sections": metadatas[idx]['sections']
+                    "text_from_sections": metadatas[idx]['sections'],
+                    "tables": re.findall(pattern, chunks[idx], flags=re.UNICODE | re.DOTALL)
                 },
             }
 
