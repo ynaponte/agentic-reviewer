@@ -21,16 +21,17 @@ document_reading:
     Você deve utilizar a ferramenta FetchArticlesTool para acessar o conteúdo das chunks, especificando os índices,
     e tratar as chunks como partes sequenciais de um texto maior.
 
-    Ademais, considere: 
+    Você deve incluir na sua resposta os pontos do texto que elas se referem. como equações e expressoes matematicas, 
+    tabelas, graficos e imagens, e trechos de códigoAdemais, considere: 
     * Para equações e expressoes matematicas: Copie-as, escrevendo-as em formato LaTeX. 
     * Para tabelas: Copie a tabela na íntegra e converta-a para formato HTML válido.
       - Você deve transcreve-las em formato HTML completo e funcional, pronto para ser exibido diretamente em um navegador. 
       - Exemplo esperado: `<table><thead><tr><th>Coluna1</th><th>Coluna2</th></tr></thead><tbody><tr><td>Valor1</td><td>Valor2</td></tr></tbody></table>`.
     * Para graficos e imagens: capture o nome do objeto e a descricao dele que voce 
       encontrar no texto.
-    * Para codigos: Copie o codigo na integra.
+    * Para trechos decodigos: Copie o trecho de codigo na integra.
   expected_output: >
-    Um relatório analítico e interpretativo em Markdown, contendo:
+    Um relatório analítico e interpretativo, formatado em Markdown, em seções distintas, que são:
     1.  Um resumo crítico do conteúdo, destacando ideias, argumentos e conclusões principais.
     2.  Uma análise da qualidade da argumentação, relevância das evidências e clareza da exposição.
     3.  Uma descrição da estrutura textual, metodológica e argumentativa do documento.
