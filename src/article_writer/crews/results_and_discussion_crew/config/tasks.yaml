@@ -1,7 +1,8 @@
-document_reading:
+analyze_critical:
   description: >
     Você deve analisar as chunks sequenciais do documento: {target_document}, cujo tema é: {theme}. 
     Este documento é um <type>'draft'</type>. As chunks a serem analisadas são: {chunk_indexes}.
+    Essas são as chunks referentes a batch {batch_number}.
 
     Seu objetivo é realizar uma análise crítica e interpretativa detalhada do documento, garantindo a compreensão
     profunda de seu conteúdo, estrutura e argumentação. Para isso, você deve:
@@ -13,16 +14,79 @@ document_reading:
     3.  **Analisar a Estrutura:** Extraia e descreva a estrutura textual, metodológica e argumentativa do documento,
         identificando os elementos mais relevantes para o tema.
     4.  **Avaliar Informações Complementares:** Analise o impacto de equações, códigos, tabelas, gráficos e figuras na argumentação.
-    5.  **Integrar e Conectar:** Mostre como as chunks se conectam sequencialmente e se encaixam na estrutura geral do documento,
-        explicitando as relações entre os diferentes elementos analisados.
-    6.  **Identificar Pontos-Chave:** Destile as informações mais importantes, descobertas significativas ou argumentos centrais 
+    5.  **Identificar Pontos-Chave:** Destile as informações mais importantes, descobertas significativas ou argumentos centrais 
         apresentados nas chunks.
+
+    Você deve utilizar a ferramenta FetchArticlesTool para acessar o conteúdo das chunks, especificando os índices,
+    e tratar as chunks como partes sequenciais de um texto maior.    
+  expected_output: >
+    Um objeto JSON contendo:
+      - Um resumo crítico da argumentação.
+      - Uma lista dos pontos-chave identificados.
+      - Uma lista de inconsistências identificadas.
+      - Uma análise do impacto dos elementos complementares na argumentação.
+    Deve seguir examatemente estrutura:
+    ```JSON
+    {
+      "resumo_critico": "",
+      "pontos_chave": [Lista com os pontos-chave identificados],
+      "inconsistencias": [
+        {
+          "descricao": "",
+          "nota": ""
+        }
+      ],
+      "impacto_elementos_complementares": ""
+    }
+    ```
+    Caso algum não forem encontradas inconsistencias, o campo deve ser populado com uma lista vazia.
+  agent: reviewer
+
+analyze_technical:
+  description: >
+    Você deve analisar tecnicamente as chunks sequenciais do documento: {target_document}, cujo tema é: {theme}. 
+    Este documento é um <type>'draft'</type>. As chunks a serem analisadas são: {chunk_indexes}.
+    Essas são as chunks referentes a batch {batch_number}.
+
+    Seu objetivo é realizar uma análise técnica detalhada do documento, focando na identificação da estrutura, metodologia e fluxo lógico da argumentação. Para isso, você deve:
+
+    1.  **Analisar a Estrutura Textual e Metodológica:** Extraia e descreva a estrutura textual, metodológica e argumentativa do documento,
+        identificando os elementos mais relevantes para o tema.
+    2.  **Identificar o Fluxo Lógico:** Descreva como as ideias são apresentadas e conectadas, identificando a progressão da argumentação.
+    3.  **Descrever a Metodologia (se aplicável):** Detalhe os métodos, técnicas ou abordagens utilizadas no documento.
+    4.  **Identificar Relações entre Elementos:** Descreva como os resultados, discussões e elementos complementares se relacionam dentro das chunks.
 
     Você deve utilizar a ferramenta FetchArticlesTool para acessar o conteúdo das chunks, especificando os índices,
     e tratar as chunks como partes sequenciais de um texto maior.
 
-    Você deve incluir na sua resposta os pontos do texto que elas se referem. como equações e expressoes matematicas, 
-    tabelas, graficos e imagens, e trechos de códigoAdemais, considere: 
+  expected_output: |
+    Um objeto JSON contendo:
+      - Uma descrição da estrutura textual e metodológica.
+      - Uma descrição do fluxo lógico da argumentação.
+      - Uma descrição da metodologia (se aplicável).
+      - Uma descrição das relações entre os elementos.
+    que siga o template a seguir:
+    ```JSON
+    {
+      "batch_number": "1",
+      "estrutura_textual_metodologica": "",
+      "fluxo_logico": "",
+      "metodologia": "",
+      "relacoes_elementos": ""
+    }
+    ```
+  agent: reviewer
+
+elements_extraction:
+  description: >
+    Você deve analisar as chunks sequenciais do documento: {target_document}, cujo tema é: {theme}. 
+    Este documento é um <type>'draft'</type>. As chunks a serem analisadas são: {chunk_indexes}.
+    Você esta processando a batch {batch_number}.
+
+    Sua tarefa é extrair resultados e métricas do texto, como também, equações e expressões matematicas, 
+    trechos de códigos, tabelas, gráficos e figuras.
+
+    Maneira de extração dos elementos complementares:
     * Para equações e expressoes matematicas: Copie-as, escrevendo-as em formato LaTeX. 
     * Para tabelas: Copie a tabela na íntegra e converta-a para formato HTML válido.
       - Você deve transcreve-las em formato HTML completo e funcional, pronto para ser exibido diretamente em um navegador. 
@@ -30,13 +94,31 @@ document_reading:
     * Para graficos e imagens: capture o nome do objeto e a descricao dele que voce 
       encontrar no texto.
     * Para trechos decodigos: Copie o trecho de codigo na integra.
-  expected_output: >
-    Um relatório analítico e interpretativo, formatado em Markdown, em seções distintas, que são:
-    1.  Um resumo crítico do conteúdo, destacando ideias, argumentos e conclusões principais.
-    2.  Uma análise da qualidade da argumentação, relevância das evidências e clareza da exposição.
-    3.  Uma descrição da estrutura textual, metodológica e argumentativa do documento.
-    4.  Uma avaliação do impacto de informações complementares (equações, códigos, tabelas, etc.).
-    5.  Uma análise das relações entre as chunks e sua conexão com o tema geral do documento.
-    6.  Uma seção de **Pontos-Chave**, listando as informações, descobertas ou argumentos mais importantes identificados na análise.
-    7.  Uma seção de "Insights", com interpretações, inferências, pressupostos e vieses identificados. 
+  expected_output: |
+    A saída deve conter todos os elementos complementares especificados na descrição da tarefa, que forem detectados durante a execução,
+    acompanhados da descrição de uso, identificando o número da batch que foi processada. Deve estar estruturada em formado JSON, seguindo 
+    extamente o template a seguir. Caso não seja encontrado algum dos termos (exemplo: não há tabelas no texto), o campo deve ser populado 
+    com uma lista vazia. Template:
+    ```JSON
+    { 
+      'batch_number': 'numero da batch que foi processada'
+      'results': ['lista com os resultados encontrados'],
+      'metrics': ['lista com as metricas encontradas'],
+      'tables':[
+        {
+          'table_name': nome da tabela,
+          'html': conteudo da tabela estruturado em html funcional,
+        }, {...}
+      ],
+      'codes': [
+        {
+          'code': código copiado,
+          'language': linguagem de programação em que o código foi escrito
+        }, {...}
+      ],
+      'images': [lista dos nomes das figura encontradas e sua descrição],
+      'math_elements': [lista de equações e expressões matematicas encontradas]
+    }
+    ```
   agent: reviewer
+
