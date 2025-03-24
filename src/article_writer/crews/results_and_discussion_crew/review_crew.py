@@ -3,7 +3,9 @@ from crewai.project import CrewBase, agent, crew, task
 from crewai.llm import LLM
 from langchain_ollama import ChatOllama
 from src.tools import FetchMetadataTool, FetchArticlesTool, QueryArticlesTool
-from src.article_writer.types.doc_report import ChunkReport
+from src.article_writer.types.doc_report import AnaliseCriticaResultadosDiscussao
+from src.article_writer.types.results_report import ElementsExtraction
+
 
 
 @CrewBase
@@ -12,29 +14,44 @@ class ReviewCrew:
 
     agents_config = "config/agents.yaml"
     tasks_config = "config/tasks.yaml"
-    reviewer_llm = LLM(
+    std_llm = LLM(
         model="ollama/llama3.1:latest",
         base_url="http://localhost:11434",
-        n=3,
-        max_completion_tokens=2000,
-        max_tokens=8192,
-        temperature=0.4
+        max_completion_tokens=6000,
+        max_tokens=128000,
+        temperature=0.5
     )
 
     @agent
-    def reviewer(self) -> Agent:
+    def critical_analyst(self) -> Agent:
         return Agent(
-            config=self.agents_config['reviewer'],
-            llm=self.reviewer_llm,
+            config=self.agents_config['critical_analyst'],
+            llm=self.std_llm,
             tools=[FetchArticlesTool()]
         )
-    
+
+    @agent
+    def technical_data_extractor(self) -> Agent:
+        return Agent(
+            config=self.agents_config['technical_data_extractor'],
+            llm=self.std_llm,
+            tools=[FetchMetadataTool()]
+        )
+
     @task
-    def document_reading(self) -> Task:
+    def critical_analysis(self) -> Task:
         return Task(
-            config=self.tasks_config['document_reading'],
+            config=self.tasks_config['critical_analysis'],
             tools=[FetchArticlesTool()],
-            output_pydantic=ChunkReport
+            #output_pydantic=AnaliseCriticaResultadosDiscussao
+        )
+
+    @task
+    def elements_extraction(self) -> Task:
+        return Task(
+            config=self.tasks_config['elements_extraction'],
+            tools=[FetchArticlesTool()],
+            output_pydantic=ElementsExtraction
         )
     
     @crew

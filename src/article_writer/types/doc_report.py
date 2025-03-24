@@ -1,70 +1,42 @@
 from pydantic import BaseModel, Field
 from typing import Dict, List, Optional
+from .base_types import Tabela, Figura, Equacao, Codigo
 
 
-class MathObject(BaseModel):
-    math_object: str = Field(description="Equação, expressão ou símbolo matemático formatado em LaTeX")
+class Resultado(BaseModel):
+    resultado: str
+    evidencias_de_suporte: Optional[str] = None
+    condicoes_contexto: Optional[str] = None
 
+class Discussao(BaseModel):
+    ponto_de_discussao: str
+    relacao_com_os_resultados: Optional[str] = None
+    possiveis_implicacoes_significado: Optional[str] = None
+    conexao_com_outros_trabalhos: Optional[str] = None   
 
-class TableObject(BaseModel):
-    html:str = Field(
-        description=(
-            "Tabela extraida do texto, convertida corretamente para HTML completo e funcional. "
-            "O formato esperado deve conter todas as tags necessarias, incluindo <table>, <thead>, <tbody> e <tr>. "
-            "Caso algum elemento de cabeçalho faltante, deve-se atribuir algo generico."
-        )
-    )
+class PontoChave(BaseModel):
+    ponto: str
 
+class Insight(BaseModel):
+    insight: str
 
-class GraphObject(BaseModel):
-    name:str = Field(description="Nome da imagem")
-    description:str = Field(description="Descrição da imagem")
+class Inconsistencia(BaseModel):
+    lotes: List[int]
+    descricao: str
+    nota: Optional[str] = None
 
-
-class CodeSnipet(BaseModel):
-    language: str = Field(description="Linguagem do código")
-    code: str = Field(description="Trecho de código")
-
-
-class ContentReport(BaseModel):
-    analysis: str = Field(description=(
-            "Análise técnica informativa **em markdown**, com seções organizadas, detalhando extrutura textual, "
-            "metodológica e argumentativa, explicitando a relação de equações e expressões matemáticas, "
-            "trechos de código, tabelas, gráficos e figuras, com o conteúdo do texto base."
-        )
-    )
-    conclusion: str = Field(description=(
-            "Síntese final dos principais achados do texto analisado, destacando como os elementos técnicos, "
-            "métodos e resultados se conectam aos objetivos do documento. Deve indicar a relevância dos dados extraídos "
-            "e possíveis implicações das conclusões apresentadas."
-    ))
-    key_points: str = Field(description=(
-        "Pontos chaves, insights e resultados, estruturados **em markdown**, com seções organizadas, "
-        "escritos como bullet points"
-    ))
-    math_expressions: Optional[List[MathObject]] = Field(
-        description=(
-            "Uma lista com as expressoes matematicas encontradas no texto, formatadas em LaTeX. "
-            "Cada elemento da lista é uma equacao ou expressao matematica."
-        ),
-        default_factory=list
-    )
-    code_snipets: Optional[List[CodeSnipet]] = Field(
-        description=(
-            "Uma lista com os snippets de codigo, onde cada elemento da lista é um snippet completo."
-        ),
-        default_factory=list
-    )
-    tables: Optional[List[TableObject]] = Field(
-        description=(
-            "Uma lista dos trechos que estão em conformidade com o padrão regex para tabelas, copiados do texto, formatados"
-            "como tabelas em HTML."
-        ),
-        default_factory=list
-    )
-    graphs_and_images: Optional[List[GraphObject]] = Field(
-        description=(
-            "Uma lista com a descrição de imagens e gráficos que foram encontrados no texto"
-        ),
-        default_factory=list
-    )
+class TechnicalData(BaseModel):
+    documento_draft: str
+    tema: str
+    resultados_apresentados: List[Resultado] = []
+    discussao_interpretacao: List[Discussao] = []
+    elementos_visuais_complementares: Optional[Dict[str, List[Tabela | Figura | Equacao | Codigo]]] = {
+        "tabelas": [],
+        "figuras": [],
+        "equacoes": [],
+        "codigos": []
+    }
+    pontos_chave_para_integracao_outline: List[PontoChave] = []
+    insights_conexoes_entre_lotes: List[Insight] = []
+    sintese_geral_dos_achados: Optional[str] = None
+    inconsistencias_divergencias_identificadas: List[Inconsistencia] = []

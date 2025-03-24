@@ -1,124 +1,67 @@
-analyze_critical:
+critical_analysis:
   description: >
-    Você deve analisar as chunks sequenciais do documento: {target_document}, cujo tema é: {theme}. 
-    Este documento é um <type>'draft'</type>. As chunks a serem analisadas são: {chunk_indexes}.
-    Essas são as chunks referentes a batch {batch_number}.
+    Realize uma análise crítica das chunks {chunk_indexes} (batch {batch_number}) do documento {target_document} (tema: {theme}), 
+    que contém APENAS RESULTADOS PARCIAIS, sem seções introdutórias, metodológicas ou conclusivas. O documento é do tipo <type>
+    'draft'</type>.
 
-    Seu objetivo é realizar uma análise crítica e interpretativa detalhada do documento, garantindo a compreensão
-    profunda de seu conteúdo, estrutura e argumentação. Para isso, você deve:
+    Produza uma síntese crítica dos resultados apresentados no batch, avaliando sua clareza, relevância e possíveis lacunas.
 
-    1.  **Contextualizar e Interpretar:** Relacione o conteúdo das chunks com o tema geral do documento e o contexto acadêmico relevante,
-        analisando o significado das informações, pressupostos, inferências e possíveis vieses.
-    2.  **Sintetizar e Avaliar:** Crie um resumo crítico que capture a essência do conteúdo, destacando pontos-chave, relações entre eles,
-        e avaliando a qualidade da argumentação, relevância das evidências e clareza da exposição.
-    3.  **Analisar a Estrutura:** Extraia e descreva a estrutura textual, metodológica e argumentativa do documento,
-        identificando os elementos mais relevantes para o tema.
-    4.  **Avaliar Informações Complementares:** Analise o impacto de equações, códigos, tabelas, gráficos e figuras na argumentação.
-    5.  **Identificar Pontos-Chave:** Destile as informações mais importantes, descobertas significativas ou argumentos centrais 
-        apresentados nas chunks.
-
-    Você deve utilizar a ferramenta FetchArticlesTool para acessar o conteúdo das chunks, especificando os índices,
-    e tratar as chunks como partes sequenciais de um texto maior.    
+    **Ações Obrigatórias**:
+    1.  **Sintetizar e Avaliar:** Crie um resumo analítico e crítico do conteúdo, destacando pontos-chave, relações entre eles,
+        e avaliando a qualidade da argumentação, relevância das evidências e clareza da exposição;
+    2. **Mapeamento de Dependências**  
+       - Registrar termos/conceitos que exigem contexto externo (ex: "Definição de 'Otimização Z' ausente");
+    3. **Classificação de Relevância**  
+       - Priorizar dados por potencial impacto na síntese final (ex: "Dados do chunk 5 são centrais para {theme}");
+    4.  **Avaliar Elementos Complementares:** Analise o uso argumentativo de equações, códigos, tabelas, gráficos e figuras, que por
+        ventura estejam presentes no texto das chunks (ex: "Os dados de 'tabela 1' são usados para").
+    5.  **Identificar Limitações do Batch:** Se o conteúdo das chunks for predominantemente não textual (exemplo: apenas tabelas sem 
+        explicação), registrar essa limitação, indicando a impossibilidade de uma análise crítica textual.
+    
   expected_output: >
-    Um objeto JSON contendo:
-      - Um resumo crítico da argumentação.
-      - Uma lista dos pontos-chave identificados.
-      - Uma lista de inconsistências identificadas.
-      - Uma análise do impacto dos elementos complementares na argumentação.
-    Deve seguir examatemente estrutura:
-    ```JSON
-    {
-      "resumo_critico": "",
-      "pontos_chave": [Lista com os pontos-chave identificados],
-      "inconsistencias": [
-        {
-          "descricao": "",
-          "nota": ""
-        }
-      ],
-      "impacto_elementos_complementares": ""
-    }
-    ```
-    Caso algum não forem encontradas inconsistencias, o campo deve ser populado com uma lista vazia.
-  agent: reviewer
+      Um Relatório do Batch, identificando o documento e a batch, apresentando uma **Síntese Crítica** com resumo contextualizado do 
+      conteudo e os pontos-chaves, e sua relação com o tema; faça o mapeamento de dependências, registrando termos/conceitos que 
+      exigem contexto externo
 
-analyze_technical:
-  description: >
-    Você deve analisar tecnicamente as chunks sequenciais do documento: {target_document}, cujo tema é: {theme}. 
-    Este documento é um <type>'draft'</type>. As chunks a serem analisadas são: {chunk_indexes}.
-    Essas são as chunks referentes a batch {batch_number}.
+      **Inconsistências:**  
+      - **Ambiguidade**: [Ex: "Termo 'alto desempenho' não quantificado (chunk 1)"]  
+      - **Fragilidade Argumentativa**: [Ex: "Conclusão não sustenta evidências do Gráfico 2 (chunk 7)"]  
 
-    Seu objetivo é realizar uma análise técnica detalhada do documento, focando na identificação da estrutura, metodologia e fluxo lógico da argumentação. Para isso, você deve:
+      **Alertas Técnicos:**  
+      - [Ex: "Gráfico 1 (chunk 3) sem descrição de eixos"]  
+      - [Ex: "Código no chunk 8 não documentado"]  
 
-    1.  **Analisar a Estrutura Textual e Metodológica:** Extraia e descreva a estrutura textual, metodológica e argumentativa do documento,
-        identificando os elementos mais relevantes para o tema.
-    2.  **Identificar o Fluxo Lógico:** Descreva como as ideias são apresentadas e conectadas, identificando a progressão da argumentação.
-    3.  **Descrever a Metodologia (se aplicável):** Detalhe os métodos, técnicas ou abordagens utilizadas no documento.
-    4.  **Identificar Relações entre Elementos:** Descreva como os resultados, discussões e elementos complementares se relacionam dentro das chunks.
-
-    Você deve utilizar a ferramenta FetchArticlesTool para acessar o conteúdo das chunks, especificando os índices,
-    e tratar as chunks como partes sequenciais de um texto maior.
-
-  expected_output: |
-    Um objeto JSON contendo:
-      - Uma descrição da estrutura textual e metodológica.
-      - Uma descrição do fluxo lógico da argumentação.
-      - Uma descrição da metodologia (se aplicável).
-      - Uma descrição das relações entre os elementos.
-    que siga o template a seguir:
-    ```JSON
-    {
-      "batch_number": "1",
-      "estrutura_textual_metodologica": "",
-      "fluxo_logico": "",
-      "metodologia": "",
-      "relacoes_elementos": ""
-    }
-    ```
-  agent: reviewer
+      **Problemas Textuais:**  
+      - [Ex: "Repetição excessiva do termo 'otimização' sem definição (chunk 5)"]  
+      - [Ex: "Estrutura passiva obscurece responsabilidade metodológica (chunk 2)"] 
+  agent: critical_analyst
 
 elements_extraction:
   description: >
-    Você deve analisar as chunks sequenciais do documento: {target_document}, cujo tema é: {theme}. 
-    Este documento é um <type>'draft'</type>. As chunks a serem analisadas são: {chunk_indexes}.
-    Você esta processando a batch {batch_number}.
+    Extraia dados estruturados e elementos técnicos das chunks {chunk_indexes} (batch {batch_number}) do documento {target_document}, 
+    seguindo regras rigorosas de formatação e padronização. O documento é do tipo <type>'draft'</type>
+    Você deve coletar informações brutas e neutras (sem análise crítica) para posterior síntese, de elementos técnicos e dados chaves, 
+    garantindo integridade e compatibilidade entre batches.
 
-    Sua tarefa é extrair resultados e métricas do texto, como também, equações e expressões matematicas, 
-    trechos de códigos, tabelas, gráficos e figuras.
+    **Ações Obrigatórias**:
+    1. **Extrair Elementos Técnicos**:
+       - **Tabelas**: Converter para HTML válido, mantendo cabeçalhos e dados brutos.
+         - Exemplo: <table><tr><th>ID</th><th>Valor</th></tr><tr><td>1</td><td>42</td></tr></table>
+       - **Equações**: Transcrever em LaTeX com contexto mínimo (ex: `E = mc^2`).
+       - **Códigos**: Extrair trechos completos, indicando a linguagem (ex: ```python\nprint("Hello World")```).
+       - **Gráficos/Imagens**: Registrar nome do arquivo, descrição textual e chunk de origem.
 
-    Maneira de extração dos elementos complementares:
-    * Para equações e expressoes matematicas: Copie-as, escrevendo-as em formato LaTeX. 
-    * Para tabelas: Copie a tabela na íntegra e converta-a para formato HTML válido.
-      - Você deve transcreve-las em formato HTML completo e funcional, pronto para ser exibido diretamente em um navegador. 
-      - Exemplo esperado: `<table><thead><tr><th>Coluna1</th><th>Coluna2</th></tr></thead><tbody><tr><td>Valor1</td><td>Valor2</td></tr></tbody></table>`.
-    * Para graficos e imagens: capture o nome do objeto e a descricao dele que voce 
-      encontrar no texto.
-    * Para trechos decodigos: Copie o trecho de codigo na integra.
-  expected_output: |
-    A saída deve conter todos os elementos complementares especificados na descrição da tarefa, que forem detectados durante a execução,
-    acompanhados da descrição de uso, identificando o número da batch que foi processada. Deve estar estruturada em formado JSON, seguindo 
-    extamente o template a seguir. Caso não seja encontrado algum dos termos (exemplo: não há tabelas no texto), o campo deve ser populado 
-    com uma lista vazia. Template:
-    ```JSON
-    { 
-      'batch_number': 'numero da batch que foi processada'
-      'results': ['lista com os resultados encontrados'],
-      'metrics': ['lista com as metricas encontradas'],
-      'tables':[
-        {
-          'table_name': nome da tabela,
-          'html': conteudo da tabela estruturado em html funcional,
-        }, {...}
-      ],
-      'codes': [
-        {
-          'code': código copiado,
-          'language': linguagem de programação em que o código foi escrito
-        }, {...}
-      ],
-      'images': [lista dos nomes das figura encontradas e sua descrição],
-      'math_elements': [lista de equações e expressões matematicas encontradas]
-    }
-    ```
-  agent: reviewer
+    2. **Coletar Dados Chave**:
+       - **Resultados Numéricos**: Extrair valores, métricas e unidades explicitamente declarados (ex: "Eficiência: 85% ± 2%").
+       - **Termos Técnicos**: Listar definições explícitas (ex: "Definição: 'Otimização Z' refere-se a...").
+       - **Relações Declaradas**: Capturar conexões explícitas entre conceitos (ex: "Variável X correlacionada com Y (r=0.7)").
+
+    3. **Metadados Contextuais**:
+       - Registrar índices das chunks associadas a cada elemento.
+       - Marcar termos/conceitos repetidos no batch (ex: "Termo 'Fator K' mencionado 5x").
+  expected_output: >
+    Um relatório do batch, identificando documento e batch de chunk, formatado em markdown, com uma seção apresentando os dados 
+    chave encontrados e coletados, e outra contento: tabelas formatadas em HTML e funcional, trechos de código, equações e expressoes 
+    matematicas, e figuras e gráficos, se encontrados no conteudo das chunks. Caso não, informar isso.
+  agent: technical_data_extractor
 
