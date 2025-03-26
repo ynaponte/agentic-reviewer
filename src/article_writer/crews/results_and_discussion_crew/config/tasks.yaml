@@ -1,23 +1,47 @@
 critical_analysis:
   description: >
-    Realize uma análise crítica das chunks {chunk_indexes} (batch {batch_number}) do documento {target_document} (tema: {theme}). 
+    Analise as chunks {chunk_indexes} do batch {batch_number} do documento {target_document} (tema: {theme}). 
     O documento é do tipo <type>'draft'</type>.
 
-    Produza um único relatório analítico e crítico sobre os textos contidos nas chunks do batch. Esse relatório deve conter:um resumo 
-    analítico e crítico do conteúdo; Destaque dos pontos-chave; Registro de termos/conceitos que exigem contexto externo 
-    (ex: "Definição de 'Otimização Z' ausente"); Por fim, avaliação e detalhamento da metodologia utilizada pelo autor.
-    Uma vez que será processado apenas um pedaço do texto, um percentual do total, o conteúdo do batch pode causar limitações na 
-    analise e produção do relatório. Portanto, você também deve **Identificar Limitações do Batch:** Se o conteúdo das chunks for 
-    predominantemente não textual (exemplo: apenas tabelas sem explicação), registrar essa limitação, indicando a impossibilidade 
-    de uma análise crítica textual.
-    
+    Escreva uma análise crítica sob os textos contidos nas chunks do batch, de pelo menos um parágrafo de comprimento,
+    destacando e sinteizando os pontos-chaves e insights, avaliando todo a extensão do conteúdo e contexto fornecido 
+    pelas chunks.
   expected_output: >
-      Um Relatório do Batch, identificando o documento e a batch, escrito em seções, que apresente:
-      - Um resumo analítico e crítico do conteúdo;
-      - Descrição dos pontos chave em bullet points;
-      - Termos/conceitos que exigem contexto externo;
-      - Analise do conteúdo: metodologia e resultados obtidos;
-      - Críticas e limitações;
+    Uma análise crítica do conteúdo do batch, escrito em português brasileiro, como um texto coeso de no mínimo um parágrafo, 
+    que destaque e sintetize os pontos-chaves e insights. 
+  agent: critical_analyst
+
+methodology_analysis:
+  description: >
+    Analise as chunks {chunk_indexes} do batch {batch_number} do documento {target_document} (tema: {theme}). 
+    O documento é do tipo <type>'draft'</type>.
+    Faça uma analise da metodologia do conteúdo, verificando:    
+    - A fundamentação teórica e justificativa para os métodos utilizados; 
+    - A clareza, coerência e replicabilidade dos procedimentos descritos;  
+    - Possíveis lacunas metodológicas ou pressuposições não explicitadas.
+  expected_output: >
+    Um texto estruturado abordando:
+    1. Descrição e Avaliação dos Métodos Utilizados:
+      - Explicação dos métodos aplicados e sua fundamentação teórica;
+      - Avaliação da clareza na descrição dos procedimentos;
+      - Verificação da coerência e replicabilidade.
+    2. Identificação de Lacunas e Pressupostos:
+      - Análise de possíveis inconsistências na metodologia;
+      - Identificação de pressupostos metodológicos não explicitados.
+  agent: critical_analyst
+
+results_analysis:
+  description: >
+    Analise as chunks {chunk_indexes} do batch {batch_number} do documento {target_document} (tema: {theme}). 
+    O documento é do tipo <type>'draft'</type>.
+    Avalie os resultados apresentados, considerando:
+    
+    - A consistência dos dados obtidos em relação aos objetivos e metodologia empregada;
+    - A coerência das conclusões com base nas evidências apresentadas;
+    - A presença de possíveis inconsistências, referências ausentes ou lacunas interpretativas.
+  expected_output: >
+  context: [methodology_analysis]
+  agent: critical_analyst
 
 elements_extraction:
   description: >
@@ -48,3 +72,8 @@ elements_extraction:
     matematicas, e figuras e gráficos, se encontrados no conteudo das chunks. Caso não, informar isso.
   agent: technical_data_extractor
 
+critical_report_writing:
+  description: >
+    Utilize as analises realizadas para nas tarefas anteriores para escrever um relatório crítico do conteúdo do batch.
+  expected_output:>
+  context: [critical_analysis, methodology_analysis]
