@@ -1,40 +1,23 @@
 critical_analysis:
   description: >
-    Realize uma análise crítica das chunks {chunk_indexes} (batch {batch_number}) do documento {target_document} (tema: {theme}), 
-    que contém APENAS RESULTADOS PARCIAIS, sem seções introdutórias, metodológicas ou conclusivas. O documento é do tipo <type>
-    'draft'</type>.
+    Realize uma análise crítica das chunks {chunk_indexes} (batch {batch_number}) do documento {target_document} (tema: {theme}). 
+    O documento é do tipo <type>'draft'</type>.
 
-    Produza uma síntese crítica dos resultados apresentados no batch, avaliando sua clareza, relevância e possíveis lacunas.
-
-    **Ações Obrigatórias**:
-    1.  **Sintetizar e Avaliar:** Crie um resumo analítico e crítico do conteúdo, destacando pontos-chave, relações entre eles,
-        e avaliando a qualidade da argumentação, relevância das evidências e clareza da exposição;
-    2. **Mapeamento de Dependências**  
-       - Registrar termos/conceitos que exigem contexto externo (ex: "Definição de 'Otimização Z' ausente");
-    3. **Classificação de Relevância**  
-       - Priorizar dados por potencial impacto na síntese final (ex: "Dados do chunk 5 são centrais para {theme}");
-    4.  **Avaliar Elementos Complementares:** Analise o uso argumentativo de equações, códigos, tabelas, gráficos e figuras, que por
-        ventura estejam presentes no texto das chunks (ex: "Os dados de 'tabela 1' são usados para").
-    5.  **Identificar Limitações do Batch:** Se o conteúdo das chunks for predominantemente não textual (exemplo: apenas tabelas sem 
-        explicação), registrar essa limitação, indicando a impossibilidade de uma análise crítica textual.
+    Produza um único relatório analítico e crítico sobre os textos contidos nas chunks do batch. Esse relatório deve conter:um resumo 
+    analítico e crítico do conteúdo; Destaque dos pontos-chave; Registro de termos/conceitos que exigem contexto externo 
+    (ex: "Definição de 'Otimização Z' ausente"); Por fim, avaliação e detalhamento da metodologia utilizada pelo autor.
+    Uma vez que será processado apenas um pedaço do texto, um percentual do total, o conteúdo do batch pode causar limitações na 
+    analise e produção do relatório. Portanto, você também deve **Identificar Limitações do Batch:** Se o conteúdo das chunks for 
+    predominantemente não textual (exemplo: apenas tabelas sem explicação), registrar essa limitação, indicando a impossibilidade 
+    de uma análise crítica textual.
     
   expected_output: >
-      Um Relatório do Batch, identificando o documento e a batch, apresentando uma **Síntese Crítica** com resumo contextualizado do 
-      conteudo e os pontos-chaves, e sua relação com o tema; faça o mapeamento de dependências, registrando termos/conceitos que 
-      exigem contexto externo
-
-      **Inconsistências:**  
-      - **Ambiguidade**: [Ex: "Termo 'alto desempenho' não quantificado (chunk 1)"]  
-      - **Fragilidade Argumentativa**: [Ex: "Conclusão não sustenta evidências do Gráfico 2 (chunk 7)"]  
-
-      **Alertas Técnicos:**  
-      - [Ex: "Gráfico 1 (chunk 3) sem descrição de eixos"]  
-      - [Ex: "Código no chunk 8 não documentado"]  
-
-      **Problemas Textuais:**  
-      - [Ex: "Repetição excessiva do termo 'otimização' sem definição (chunk 5)"]  
-      - [Ex: "Estrutura passiva obscurece responsabilidade metodológica (chunk 2)"] 
-  agent: critical_analyst
+      Um Relatório do Batch, identificando o documento e a batch, escrito em seções, que apresente:
+      - Um resumo analítico e crítico do conteúdo;
+      - Descrição dos pontos chave em bullet points;
+      - Termos/conceitos que exigem contexto externo;
+      - Analise do conteúdo: metodologia e resultados obtidos;
+      - Críticas e limitações;
 
 elements_extraction:
   description: >
