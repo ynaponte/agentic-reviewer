@@ -1,14 +1,25 @@
 critical_analysis:
   description: >
-    Analise as chunks {chunk_indexes} do batch {batch_number} do documento {target_document} (tema: {theme}). 
-    O documento é do tipo <type>'draft'</type>.
+    Você irá trabalhar no conteúdo das chunks {chunk_indexes} do batch {batch_number} do documento {target_document},
+    do tipo <type>'draft'</type>.
 
-    Escreva uma análise crítica sob os textos contidos nas chunks do batch, de pelo menos um parágrafo de comprimento,
-    destacando e sinteizando os pontos-chaves e insights, avaliando todo a extensão do conteúdo e contexto fornecido 
-    pelas chunks.
+    Sua tarefa consiste em produzir uma análise crítica do conteúdo das chunks do batch, seguindo as orientações abaixo:
+    
+    1. Escreva uma síntese crítica do conteúdo, contextualizada com o tema, em pelo menos um parágrafo. A síntese deve 
+    integrar dados técnicos, com as informações e argumentos principais, demonstrando como os métodos aplicados influenciam 
+    os resultados.
+
+    2. Extraia e analise pontos-chave e insights, apresentando-os em bullet points. Para cada bullet point, inclua:
+       - Comparações relevantes, se aplicáveis (por exemplo, diferentes abordagens ou configurações apresentadas no documento).
+       - Destaque de inconsistências ou referências incorretas (ex: "Tabela ??").
+       - Relação dos dados, métodos e informações com o tema.
+    
+    Caso o conteúdo do batch apresente limitações (por exemplo, predominância de elementos não textuais), registre essa 
+    limitação e indique a impossibilidade de uma análise crítica textual completa.
   expected_output: >
-    Uma análise crítica do conteúdo do batch, escrito em português brasileiro, como um texto coeso de no mínimo um parágrafo, 
-    que destaque e sintetize os pontos-chaves e insights. 
+     Uma análise crítica do conteúdo do batch, escrita em português brasileiro, composta por:
+      - Um parágrafo de síntese crítica e contextualização do tema.
+      - Uma lista de bullet points contendo os pontos-chave e insights, cada um acompanhado de um detalhamento explicativo.
   agent: critical_analyst
 
 methodology_analysis:
