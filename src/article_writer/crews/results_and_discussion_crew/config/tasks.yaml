@@ -83,7 +83,11 @@ report_consolidation:
     ao qual o relatório se refere ({target_document}) e qual o número do batch, no caso {batch_number}.
   expected_output: >
     Um relatório consolidado, escrito em português brasileiro, que inclua:
-      - Identificação do documento e do batch ao qual o relatório se refere.
-      - Um resumo executivo sintetizando as principais conclusões das análises.
-      - Seções organizadas para cada área de análise (crítica, metodológica, de resultados e extração de dados), com os pontos-chave e insights destacados.
-      - Uma seção de considerações finais que integre os achados e aponte sugestões ou direções para a elaboração do capítulo de Resultados e Discussões.
+      - Identificação do documento e do batch ao qual o relatório se refer;
+      - Um resumo executivo sintetizando as principais conclusões das análises;
+      - Seções organizadas para cada área de análise (crítica, metodológica, de resultados e extração de dados), com os pontos-chave 
+        e insights destacados;
+      - Uma seção de considerações finais que integre os achados e aponte sugestões ou direções para a elaboração do capítulo de 
+        Resultados e Discussões.
+  agent: report_consolidator
+  context: [critical_analysis, methodology_analysis, results_analysis, elements_extraction]
