@@ -1,6 +1,6 @@
 from pydantic import BaseModel
 from crewai.flow import Flow, listen, start
-from .crews.results_and_discussion_crew import ReviewCrew
+from .crews.doc_chunk_review_crew import ChunkReviewCrew
 from ..tools import FetchMetadataTool
 from typing import List, Optional
 from ..utils import VectorDatabaseManager
@@ -35,7 +35,7 @@ class ArticleWriterFlow(Flow[ArticleWriterState]):
         )
 
     @listen(start_flow)
-    async def pre_processing(self):
+    async def doc_process_by_chunks(self):
         def batching(num_chunks, batch_size):
             '''
             Defina o tamanho do lote de acordo?
@@ -48,7 +48,7 @@ class ArticleWriterFlow(Flow[ArticleWriterState]):
             ]
         
         async def process_single_document(doc_name: str, chunk_indexes: List[int], batch_index: int):
-            output = await ReviewCrew().crew().kickoff_async(
+            output = await ChunkReviewCrew().crew().kickoff_async(
                     inputs={
                         "target_document": doc_name,
                         "chunk_indexes": chunk_indexes,
@@ -64,10 +64,9 @@ class ArticleWriterFlow(Flow[ArticleWriterState]):
             chunk_batches = batching(doc_meta[0]['total_chunks'], 2)
             for i, batch in enumerate(chunk_batches, start=1):
                 task = asyncio.create_task(process_single_document(draft_document, batch, i))
-                #task = process_single_document(draft_document, batch)
                 tasks.append(task)
+            reports = await asyncio.gather(*tasks)
 
-        reports = await asyncio.gather(*tasks)
         for report in reports:
             print(report.raw)
         #print(f"Reports gerados:\n {tasks}")

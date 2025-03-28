@@ -9,7 +9,7 @@ from src.article_writer.types.results_report import ElementsExtraction
 
 
 @CrewBase
-class ReviewCrew:
+class ChunkReviewCrew:
     """Equipe responsável por gerar relatórios de artigos ciêntíficos"""
 
     agents_config = "config/agents.yaml"
