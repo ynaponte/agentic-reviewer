@@ -89,5 +89,5 @@ report_consolidation:
         e insights destacados;
       - Uma seção de considerações finais que integre os achados e aponte sugestões ou direções para a elaboração do capítulo de 
         Resultados e Discussões.
-  agent: report_consolidator
+  agent: report_redactor
   context: [critical_analysis, methodology_analysis, results_analysis, elements_extraction]
