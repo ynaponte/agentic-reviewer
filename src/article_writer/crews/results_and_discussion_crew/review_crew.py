@@ -3,7 +3,7 @@ from crewai.project import CrewBase, agent, crew, task
 from crewai.llm import LLM
 from langchain_ollama import ChatOllama
 from src.tools import FetchMetadataTool, FetchArticlesTool, QueryArticlesTool
-from src.article_writer.types.doc_report import AnaliseCriticaResultadosDiscussao
+#from src.article_writer.types.doc_report import AnaliseCriticaResultadossDiscussao
 from src.article_writer.types.results_report import ElementsExtraction
 
 
@@ -15,9 +15,9 @@ class ReviewCrew:
     agents_config = "config/agents.yaml"
     tasks_config = "config/tasks.yaml"
     std_llm = LLM(
-        model="ollama/llama3.1:latest",
+        model="ollama/qwen2.5:32b",
         base_url="http://localhost:11434",
-        max_completion_tokens=6000,
+        max_completion_tokens=8000,
         max_tokens=128000,
         temperature=0.5
     )
@@ -35,7 +35,14 @@ class ReviewCrew:
         return Agent(
             config=self.agents_config['technical_data_extractor'],
             llm=self.std_llm,
-            tools=[FetchMetadataTool()]
+            tools=[FetchArticlesTool()]
+        )
+    
+    @agent
+    def report_redactor(self) -> Agent:
+        return Agent(
+            config=self.agents_config['report_redactor'],
+            llm=self.std_llm
         )
 
     @task
@@ -45,13 +52,33 @@ class ReviewCrew:
             tools=[FetchArticlesTool()],
             #output_pydantic=AnaliseCriticaResultadosDiscussao
         )
+    
+    @task
+    def methodology_analysis(self) -> Task:
+        return Task(
+            config=self.tasks_config['methodology_analysis'],
+            tools=[FetchArticlesTool()],
+        )
+    
+    @task
+    def results_analysis(self) ->Task:
+        return Task(
+            config=self.tasks_config['results_analysis'],
+            tools=[FetchArticlesTool()],
+        )     
 
     @task
     def elements_extraction(self) -> Task:
         return Task(
             config=self.tasks_config['elements_extraction'],
             tools=[FetchArticlesTool()],
-            output_pydantic=ElementsExtraction
+            #output_pydantic=ElementsExtraction
+        )
+    
+    @task
+    def report_consolidation(self) -> Task:
+        return Task(
+            config=self.tasks_config['report_consolidation']
         )
     
     @crew
