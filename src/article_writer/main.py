@@ -4,7 +4,7 @@ from .crews.results_and_discussion_crew import ReviewCrew
 from ..tools import FetchMetadataTool
 from typing import List, Optional
 from ..utils import VectorDatabaseManager
-from .types.doc_report import AnaliseCriticaResultadosDiscussao
+#from .types.doc_report import AnaliseCriticaResultadosDiscussao
 
 import asyncio
 import json
@@ -19,7 +19,7 @@ class ArticleWriterState(BaseModel):
     results: str = ""
     discussion: str = ""
     conclusion: str = ""
-    chunk_reports: List[AnaliseCriticaResultadosDiscussao] = []
+    #chunk_reports: List[AnaliseCriticaResultadosDiscussao] = []
 
 
 class ArticleWriterFlow(Flow[ArticleWriterState]):

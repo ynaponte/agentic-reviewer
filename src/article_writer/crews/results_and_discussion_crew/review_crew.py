@@ -54,17 +54,23 @@ class ReviewCrew:
         )
     
     @task
+    def key_points_extraction(self) -> Task:
+        return Task(
+            config=self.tasks_config['key_points_extraction'],
+        )
+    
+    @task
     def methodology_analysis(self) -> Task:
         return Task(
             config=self.tasks_config['methodology_analysis'],
-            tools=[FetchArticlesTool()],
+            #tools=[FetchArticlesTool()],
         )
     
     @task
     def results_analysis(self) ->Task:
         return Task(
             config=self.tasks_config['results_analysis'],
-            tools=[FetchArticlesTool()],
+            #tools=[FetchArticlesTool()],
         )     
 
     @task

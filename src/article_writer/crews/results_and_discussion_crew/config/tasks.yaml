@@ -1,25 +1,35 @@
 critical_analysis:
   description: >
-    Você irá trabalhar no conteúdo das chunks {chunk_indexes} do batch {batch_number} do documento {target_document},
-    do tipo <type>'draft'</type>.
-
-    Sua tarefa consiste em produzir uma análise crítica do conteúdo das chunks do batch, seguindo as orientações abaixo:
-    
-    1. Escreva uma síntese crítica do conteúdo, contextualizada com o tema, em pelo menos um parágrafo. A síntese deve 
-    integrar dados técnicos, com as informações e argumentos principais, demonstrando como os métodos aplicados influenciam 
-    os resultados.
-
-    2. Extraia e analise pontos-chave e insights, apresentando-os em bullet points. Para cada bullet point, inclua:
-       - Comparações relevantes, se aplicáveis (por exemplo, diferentes abordagens ou configurações apresentadas no documento).
-       - Destaque de inconsistências ou referências incorretas (ex: "Tabela ??").
-       - Relação dos dados, métodos e informações com o tema.
-    
-    Caso o conteúdo do batch apresente limitações (por exemplo, predominância de elementos não textuais), registre essa 
-    limitação e indique a impossibilidade de uma análise crítica textual completa.
+    Análise críticamente do conteúdo das chunks {chunk_indexes} do batch {batch_number} do documento {target_document},
+    do tipo <type>'draft'</type>.    
+    Escreva uma síntese crítica do conteúdo, contextualizada com o tema, em pelo menos um parágrafo. 
+    O objetivo desta tarefa é produzir uma síntese crítica que sirva como base para a elaboração do capítulo de Resultados e Discussões.
+    **Boas práticas para a escrita de síntese crítica:**
+    - Utilize linguagem clara, objetiva e coerente;
+      - Integre dados técnicos e argumentos principais de forma que evidencie como os métodos aplicados influenciam os resultados;
+      - Contextualize as informações com o tema do documento;
+      - Caso o conteúdo do batch apresente limitações (por exemplo, predominância de elementos não textuais), registre essa 
+        limitação e indique a impossibilidade de uma análise crítica textual completa;
   expected_output: >
-     Uma análise crítica do conteúdo do batch, escrita em português brasileiro, composta por:
-      - Um parágrafo de síntese crítica e contextualização do tema.
-      - Uma lista de bullet points contendo os pontos-chave e insights, cada um acompanhado de um detalhamento explicativo.
+    Uma análise crítica do conteúdo do batch, escrita em português brasileiro, de pelo menos um parágrafo que sintetise
+    criticamente o conteúdo, apresentando as principais informações, argumentos e dados, todos contextualizados com o tema,
+    de forma clara e coesa.
+  agent: critical_analyst
+
+key_points_extraction:
+  description: >
+    Extraia e analise os pontos-chave e insights do conteúdo das chunks {chunk_indexes} do batch {batch_number} do documento {target_document}.
+    O objetivo desta tarefa é identificar e destacar, em bullet points, os aspectos mais relevantes para a elaboração do capítulo.
+    Siga as seguintes boas práticas:
+      - Utiliza formatação Markdown para apresentar os pontos-chave de forma clara e concisa;
+      - Organize as informações em bullet points, cada um contendo um insight ou comparação relevante;
+      - Para cada bullet point, inclua um detalhamento explicativo que evidencie comparações (quando aplicável), inconsistências (ex: "Tabela ??")
+        e a relação dos dados, métodos e informações com o tema;
+      - Seja conciso, mas completo na explicação de cada ponto.
+  expected_output: > 
+    Uma lista de bullet points, escrita em português brasileiro, contendo os pontos-chave e insights extraídos, cada um acompanhado de um detalhamento
+    explicativo que inclua comparações, contextualizações e destaques das inconsistências ou relações com o tema.
+  context: [critical_analysis]
   agent: critical_analyst
 
 methodology_analysis:
@@ -39,7 +49,7 @@ methodology_analysis:
     2. Identificação de Lacunas e Pressupostos:
       - Análise de possíveis inconsistências na metodologia;
       - Identificação de pressupostos metodológicos não explicitados.
-  context: [critical_analysis]
+  context: [key_points_extraction]
   agent: critical_analyst
   
 
@@ -78,8 +88,8 @@ elements_extraction:
 
 report_consolidation:
   description: >
-    Utilize as saídas das tarefas de análise crítica, análise metodológica, análise de resultados e extração de dados referentes
-    ao lote de chunks {chunk_indexes} do batch {batch_number} do documento {target_document} (tema: {theme}) para criar um relatório 
+    Utilizando a análise crítica, a análise metodológica, a análise de resultados e a extração de dados referentes
+    ao lote de chunks {chunk_indexes} do batch {batch_number} do documento {target_document} (tema: {theme}), crie um relatório 
     consolidado. O relatório deve integrar e organizar os insights por relevância, apresentando um resumo executivo, os pontos 
     principais extraídos de cada análise e considerações finais. Deve ser formatado em markdown e conter identificação do documento 
     ao qual o relatório se refere ({target_document}) e qual o número do batch, no caso {batch_number}.
