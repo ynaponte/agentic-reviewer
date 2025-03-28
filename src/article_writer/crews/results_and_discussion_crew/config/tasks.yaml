@@ -39,7 +39,9 @@ methodology_analysis:
     2. Identificação de Lacunas e Pressupostos:
       - Análise de possíveis inconsistências na metodologia;
       - Identificação de pressupostos metodológicos não explicitados.
+  context: [critical_analysis]
   agent: critical_analyst
+  
 
 results_analysis:
   description: >
@@ -56,7 +58,7 @@ results_analysis:
       - Uma análise crítica da coerência das conclusões baseadas nas evidências (tabelas, métricas, resultados numéricos).
       - A identificação de inconsistências, referências ausentes ou lacunas interpretativas, como dados mal indexados ou ausentes (por exemplo, referência a "Tabela ??").
       - Sugestões de melhorias ou pontos a serem aprofundados, quando pertinente.
-  context: [methodology_analysis]
+  context: [critical_analysis, methodology_analysis]
   agent: critical_analyst
 
 elements_extraction: 
@@ -89,5 +91,6 @@ report_consolidation:
         e insights destacados;
       - Uma seção de considerações finais que integre os achados e aponte sugestões ou direções para a elaboração do capítulo de 
         Resultados e Discussões.
-  agent: report_redactor
   context: [critical_analysis, methodology_analysis, results_analysis, elements_extraction]
+  agent: report_redactor
+  
