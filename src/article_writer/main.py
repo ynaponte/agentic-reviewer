@@ -2,12 +2,20 @@ from pydantic import BaseModel
 from crewai.flow import Flow, listen, start
 from .crews.doc_chunk_review_crew import ChunkReviewCrew
 from ..tools import FetchMetadataTool
-from typing import List, Optional
+from typing import Dict, List 
 from ..utils import VectorDatabaseManager
 #from .types.doc_report import AnaliseCriticaResultadosDiscussao
 
 import asyncio
 import json
+
+
+class ChunkReview(BaseModel):
+    """A class representing a chunk review."""
+    critical_analysis: List[str]
+    key_points_detailing: List[str]
+    methodology_analysis: List[str]
+    techenical_elements: List[str]
 
 
 class ArticleWriterState(BaseModel):
@@ -16,6 +24,7 @@ class ArticleWriterState(BaseModel):
         "em cristal fotônico"
     )
     drafts_documents: List[str] = ['Resultado1.pdf']
+    docs_chunks_reports: Dict[str, Dict[str, List]] = {}
     results: str = ""
     discussion: str = ""
     conclusion: str = ""
@@ -65,12 +74,39 @@ class ArticleWriterFlow(Flow[ArticleWriterState]):
             for i, batch in enumerate(chunk_batches, start=1):
                 task = asyncio.create_task(process_single_document(draft_document, batch, i))
                 tasks.append(task)
-            reports = await asyncio.gather(*tasks)
+            crews_outputs = await asyncio.gather(*tasks)
+            chunk_report = {}
+            # Armazena os resultados de cada chunk
+            for crew_output in crews_outputs:
+                # Indice em crew_output.tasks_output corresponte a task:
+                #   0 -> 'critical_analysis'
+                #   1 -> 'key_points_extraction'
+                #   2 -> 'methodology_analysis'
+                #   3 -> 'results_analysis'
+                #   4 -> 'elements_extraction'
+                #   5 -> 'report_consolidation'
+                chunk_report.setdefault("critical_analysis", []).append(
+                    crew_output.tasks_output[0].raw
+                )
+                chunk_report.setdefault("key_points_extraction", []).append(
+                    crew_output.tasks_output[1].raw
+                )
+                chunk_report.setdefault("methodology_analysis", []).append(
+                    crew_output.tasks_output[2].raw
+                )
+                chunk_report.setdefault("results_analysis", []).append(
+                    crew_output.tasks_output[3].raw
+                )
+                chunk_report.setdefault("elements_extraction", []).append(
+                    crew_output.tasks_output[4].raw
+                )
+                chunk_report.setdefault("report_consolidation", []).append(
+                    crew_output.tasks_output[5].raw
+                )
 
-        for report in reports:
-            print(report.raw)
-        #print(f"Reports gerados:\n {tasks}")
-        #self.state.chunk_reports = tasks
+            self.state.docs_chunks_reports[draft_document] = chunk_report
+
+
 
 def kickoff():
     article_flow = ArticleWriterFlow()
