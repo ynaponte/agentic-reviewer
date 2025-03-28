@@ -54,33 +54,19 @@ results_analysis:
   context: [methodology_analysis]
   agent: critical_analyst
 
-elements_extraction:
+elements_extraction: 
   description: >
-    Extraia dados estruturados e elementos técnicos das chunks {chunk_indexes} (batch {batch_number}) do documento {target_document}, 
+    Extraia dados estruturados das chunks {chunk_indexes} (batch {batch_number}) do documento {target_document}, 
     seguindo regras rigorosas de formatação e padronização. O documento é do tipo <type>'draft'</type>
-    Você deve coletar informações brutas e neutras (sem análise crítica) para posterior síntese, de elementos técnicos e dados chaves, 
-    garantindo integridade e compatibilidade entre batches.
+    Você deve coletar informações brutas e neutras (sem análise crítica) para posterior síntese, de dados chaves, 
+    garantindo integridade e compatibilidade entre batches. Os dados chaves são:
 
-    **Ações Obrigatórias**:
-    1. **Extrair Elementos Técnicos**:
-       - **Tabelas**: Converter para HTML válido, mantendo cabeçalhos e dados brutos.
-         - Exemplo: <table><tr><th>ID</th><th>Valor</th></tr><tr><td>1</td><td>42</td></tr></table>
-       - **Equações**: Transcrever em LaTeX com contexto mínimo (ex: `E = mc^2`).
-       - **Códigos**: Extrair trechos completos, indicando a linguagem (ex: ```python\nprint("Hello World")```).
-       - **Gráficos/Imagens**: Registrar nome do arquivo, descrição textual e chunk de origem.
-
-    2. **Coletar Dados Chave**:
        - **Resultados Numéricos**: Extrair valores, métricas e unidades explicitamente declarados (ex: "Eficiência: 85% ± 2%").
        - **Termos Técnicos**: Listar definições explícitas (ex: "Definição: 'Otimização Z' refere-se a...").
        - **Relações Declaradas**: Capturar conexões explícitas entre conceitos (ex: "Variável X correlacionada com Y (r=0.7)").
-
-    3. **Metadados Contextuais**:
-       - Registrar índices das chunks associadas a cada elemento.
-       - Marcar termos/conceitos repetidos no batch (ex: "Termo 'Fator K' mencionado 5x").
   expected_output: >
-    Um relatório do batch, identificando documento e batch de chunk, formatado em markdown, com uma seção apresentando os dados 
-    chave encontrados e coletados, e outra contento: tabelas formatadas em HTML e funcional, trechos de código, equações e expressoes 
-    matematicas, e figuras e gráficos, se encontrados no conteudo das chunks. Caso não, informar isso.
+    Um relatório do batch, identificando documento e batch de chunk, formatado em markdown, apresentando os dados 
+    chave encontrados e coletados em formato de lista. Caso não encontrados, informar isso.
   agent: technical_data_extractor
 
 critical_report_writing:
