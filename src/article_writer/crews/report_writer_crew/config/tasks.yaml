@@ -1,0 +1,68 @@
+final_critical_consolidation:
+  description: >
+    Consolide os fragmentos de análises críticas de um mesmo texto em um único documento coeso.  
+    Seu objetivo é produzir uma síntese que preserve todos os insights e detalhes importantes, organizada de forma lógica.  
+    Fragmentos a consolidar: {critical_analysis_fragments}  
+    Siga as boas práticas:
+      - Use linguagem clara e objetiva.
+      - Mantenha a integridade das informações apresentadas.
+      - Garanta a coesão do texto final e evite redundâncias.
+  expected_output: >
+    Um texto consolidado, escrito em português brasileiro e formatado em markdown, que reúna os fragmentos de análise crítica em um texto coeso e bem estruturado.
+  agent: report_consolidator
+
+final_key_points_consolidation:
+  description: >
+    Consolide os fragmentos de pontos-chave extraídos de um mesmo texto em uma única lista organizada.  
+    Seu objetivo é produzir uma lista de bullet points que reúna todos os insights relevantes, evitando redundâncias e mantendo clareza.  
+    Fragmentos a consolidar: {key_points_fragments}  
+    Siga as boas práticas:
+      - Utilize bullet points bem definidos.
+      - Agrupe informações similares e destaque comparações ou inconsistências quando necessário.
+  expected_output: >
+    Uma lista de bullet points, escrita em português brasileiro, que consolide os pontos-chave extraídos do texto, garantindo objetividade e clareza.
+  agent: report_consolidator
+
+final_methodology_consolidation:
+  description: >
+    Consolide os fragmentos de análises metodológicas de um mesmo texto em um único documento.  
+    Seu objetivo é produzir um texto que resuma e integre as avaliações dos métodos utilizados, destacando justificativas, lacunas e pressupostos.  
+    Fragmentos a consolidar: {methodology_fragments}  
+    Siga as boas práticas:
+      - Organize as informações de forma lógica.
+      - Use uma linguagem técnica precisa.
+      - Garanta que todas as lacunas e pressupostos relevantes estejam claramente expostos.
+  expected_output: >
+    Um texto consolidado, escrito em português brasileiro e formatado em markdown, que integre os fragmentos de análise metodológica em um texto coeso e bem estruturado.
+  agent: report_consolidator
+
+final_results_consolidation:
+  description: >
+    Consolide os fragmentos de análises de resultados de um mesmo texto em um único documento.  
+    Seu objetivo é produzir um texto que integre a avaliação dos dados apresentados, identificando consistências, incoerências e lacunas interpretativas.  
+    Fragmentos a consolidar: {results_fragments}  
+    Siga as boas práticas:
+      - Mantenha a objetividade e a clareza na apresentação dos dados.
+      - Destaque as evidências que sustentam as conclusões.
+      - Garanta que todas as inconsistências sejam evidenciadas.
+  expected_output: >
+    Um texto consolidado, escrito em português brasileiro e formatado em markdown, que integre os fragmentos de análise de resultados em um texto claro e bem estruturado.
+  agent: report_consolidator
+
+final_report_consolidation:
+  description: >
+    Com base nos textos consolidados fornecidos pelas tasks de consolidação (análise crítica, pontos-chave, metodologia e resultados),
+    elabore um relatório final integrado.  
+    O relatório deve ser dividido nas seguintes seções:  
+      - **Análise Crítica**: Apresente a síntese das análises críticas consolidadas.  
+      - **Pontos-Chave**: Liste os principais insights extraídos.  
+      - **Metodologia**: Descreva as principais avaliações metodológicas identificadas.  
+      - **Resultados**: Apresente a avaliação consolidada dos resultados e suas implicações.  
+    Siga as boas práticas:
+      - Estruture o relatório de forma lógica e sequencial.
+      - Use formatação em markdown para melhorar a legibilidade.
+      - Integre todos os detalhes relevantes sem perder informações essenciais.
+  expected_output: >
+    Um relatório final, escrito em português brasileiro e formatado em markdown, contendo as seções definidas e organizadas de forma clara e coesa.
+  agent: report_writer
+  context: [final_critical_consolidation, final_key_points_consolidation, final_methodology_consolidation, final_results_consolidation]
