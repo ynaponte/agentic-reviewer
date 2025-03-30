@@ -25,14 +25,6 @@ class ChunkReviewCrew:
             llm=self.std_llm,
             tools=[FetchArticlesTool()]
         )
-
-    @agent
-    def technical_data_extractor(self) -> Agent:
-        return Agent(
-            config=self.agents_config['technical_data_extractor'],
-            llm=self.std_llm,
-            tools=[FetchArticlesTool()]
-        )
     
     @agent
     def report_redactor(self) -> Agent:
@@ -65,19 +57,6 @@ class ChunkReviewCrew:
         return Task(
             config=self.tasks_config['results_analysis']
         )     
-
-    @task
-    def elements_extraction(self) -> Task:
-        return Task(
-            config=self.tasks_config['elements_extraction'],
-            tools=[FetchArticlesTool()]
-        )
-    
-    @task
-    def report_consolidation(self) -> Task:
-        return Task(
-            config=self.tasks_config['report_consolidation']
-        )
     
     @crew
     def crew(self) -> Crew:
