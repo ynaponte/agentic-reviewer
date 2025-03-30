@@ -1,11 +1,7 @@
 from crewai import Agent, Crew, Task, Process
 from crewai.project import CrewBase, agent, crew, task
 from crewai.llm import LLM
-from langchain_ollama import ChatOllama
-from src.tools import FetchMetadataTool, FetchArticlesTool, QueryArticlesTool
-#from src.article_writer.types.doc_report import AnaliseCriticaResultadossDiscussao
-from src.article_writer.types.results_report import ElementsExtraction
-
+from src.tools import FetchArticlesTool
 
 
 @CrewBase
@@ -15,7 +11,7 @@ class ChunkReviewCrew:
     agents_config = "config/agents.yaml"
     tasks_config = "config/tasks.yaml"
     std_llm = LLM(
-        model="ollama/qwen2.5:32b",
+        model="ollama/llama3.1:latest",
         base_url="http://localhost:11434",
         max_completion_tokens=8000,
         max_tokens=128000,
@@ -49,36 +45,32 @@ class ChunkReviewCrew:
     def critical_analysis(self) -> Task:
         return Task(
             config=self.tasks_config['critical_analysis'],
-            tools=[FetchArticlesTool()],
-            #output_pydantic=AnaliseCriticaResultadosDiscussao
+            tools=[FetchArticlesTool()]
         )
     
     @task
     def key_points_extraction(self) -> Task:
         return Task(
-            config=self.tasks_config['key_points_extraction'],
+            config=self.tasks_config['key_points_extraction']
         )
     
     @task
     def methodology_analysis(self) -> Task:
         return Task(
-            config=self.tasks_config['methodology_analysis'],
-            #tools=[FetchArticlesTool()],
+            config=self.tasks_config['methodology_analysis']
         )
     
     @task
     def results_analysis(self) ->Task:
         return Task(
-            config=self.tasks_config['results_analysis'],
-            #tools=[FetchArticlesTool()],
+            config=self.tasks_config['results_analysis']
         )     
 
     @task
     def elements_extraction(self) -> Task:
         return Task(
             config=self.tasks_config['elements_extraction'],
-            tools=[FetchArticlesTool()],
-            #output_pydantic=ElementsExtraction
+            tools=[FetchArticlesTool()]
         )
     
     @task
