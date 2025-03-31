@@ -98,9 +98,6 @@ class ArticleWriterFlow(Flow[ArticleWriterState]):
                 chunk_report.setdefault("results_analysis", []).append(
                     crew_output.tasks_output[3].raw
                 )
-                chunk_report.setdefault("elements_extraction", []).append(
-                    crew_output.tasks_output[4].raw
-                )
 
             self.state.docs_chunks_reports[draft_document] = chunk_report
 
@@ -113,7 +110,6 @@ class ArticleWriterFlow(Flow[ArticleWriterState]):
                     "key_points_fragments": rprt_frag["key_points_extraction"],
                     "methodology_fragments": rprt_frag["methodology_analysis"],
                     "results_fragments": rprt_frag["results_analysis"],
-                    "elements_fragments": rprt_frag["elements_extraction"],
                 }
             )
 

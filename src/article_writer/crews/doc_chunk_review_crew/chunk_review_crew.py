@@ -26,13 +26,6 @@ class ChunkReviewCrew:
             tools=[FetchArticlesTool()]
         )
     
-    @agent
-    def technical_data_extractor(self) -> Agent:
-        return Agent(
-            config=self.agents_config['technical_data_extractor'],
-            llm=self.std_llm
-        )
-
     @task
     def critical_analysis(self) -> Task:
         return Task(
@@ -58,13 +51,6 @@ class ChunkReviewCrew:
             config=self.tasks_config['results_analysis']
         )
     
-    @task
-    def elements_extraction(self) ->Task:
-        return Task(
-            config=self.tasks_config['elements_extraction'],
-            tools=[FetchArticlesTool()]
-        )
-
     @crew
     def crew(self) -> Crew:
         crew = Crew(

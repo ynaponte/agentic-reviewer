@@ -67,20 +67,5 @@ results_analysis:
       - Uma análise crítica da coerência das conclusões baseadas nas evidências (tabelas, métricas, resultados numéricos).
       - A identificação de inconsistências, referências ausentes ou lacunas interpretativas, como dados mal indexados ou ausentes (por exemplo, referência a "Tabela ??").
       - Sugestões de melhorias ou pontos a serem aprofundados, quando pertinente.
-  context: [critical_analysis, methodology_analysis]
   agent: critical_analyst
   
-elements_extraction: 
-  description: >
-    Extraia dados estruturados das chunks {chunk_indexes} (batch {batch_number}) do documento {target_document}, 
-    seguindo regras rigorosas de formatação e padronização. O documento é do tipo <type>'draft'</type>
-    Você deve coletar informações brutas e neutras (sem análise crítica) para posterior síntese, de dados chaves, 
-    garantindo integridade e compatibilidade entre batches. Os dados chaves são:
-
-       - **Resultados Numéricos**: Extrair valores, métricas e unidades explicitamente declarados (ex: "Eficiência: 85% ± 2%").
-       - **Termos Técnicos**: Listar definições explícitas (ex: "Definição: 'Otimização Z' refere-se a...").
-       - **Relações Declaradas**: Capturar conexões explícitas entre conceitos (ex: "Variável X correlacionada com Y (r=0.7)").
-  expected_output: >
-    Um relatório do batch, identificando documento e batch de chunk, formatado em markdown, apresentando os dados 
-    chave encontrados e coletados em formato de lista. Caso não encontrados, informar isso.
-  agent: technical_data_extractor
