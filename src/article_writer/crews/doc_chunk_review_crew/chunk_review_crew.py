@@ -11,7 +11,7 @@ class ChunkReviewCrew:
     agents_config = "config/agents.yaml"
     tasks_config = "config/tasks.yaml"
     std_llm = LLM(
-        model="ollama/llama3.1:latest",
+        model="ollama/qwen2.5:32b",
         base_url="http://localhost:11434",
         max_completion_tokens=8000,
         max_tokens=128000,
@@ -27,9 +27,9 @@ class ChunkReviewCrew:
         )
     
     @agent
-    def report_redactor(self) -> Agent:
+    def technical_data_extractor(self) -> Agent:
         return Agent(
-            config=self.agents_config['report_redactor'],
+            config=self.agents_config['technical_data_extractor'],
             llm=self.std_llm
         )
 
@@ -56,8 +56,15 @@ class ChunkReviewCrew:
     def results_analysis(self) ->Task:
         return Task(
             config=self.tasks_config['results_analysis']
-        )     
+        )
     
+    @task
+    def elements_extraction(self) ->Task:
+        return Task(
+            config=self.tasks_config['elements_extraction'],
+            tools=[FetchArticlesTool()]
+        )
+
     @crew
     def crew(self) -> Crew:
         crew = Crew(

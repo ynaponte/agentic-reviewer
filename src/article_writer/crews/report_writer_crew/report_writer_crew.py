@@ -4,19 +4,19 @@ from crewai.llm import LLM
 
 
 @CrewBase
-class ReportConsolidation:
+class ReportWriterCrew:
 
     agents_config = "config/agents.yaml"
     tasks_config = "config/tasks.yaml"
     consolidation_llm = LLM(
-        model="ollama/llama3.1:latest",
+        model="ollama/qwen2.5:32b",
         base_url="http://localhost:11434",
         max_completion_tokens=8000,
         max_tokens=128000,
         temperature=0.5
     )
     writer_llm = LLM(
-        model="ollama/llama3.1:latest",
+        model="ollama/qwen2.5:32b",
         base_url="http://localhost:11434",
         max_completion_tokens=8000,
         max_tokens=128000,
@@ -59,6 +59,12 @@ class ReportConsolidation:
     def final_results_consolidation(self) -> Task:
         return Task(
             config=self.tasks_config['final_results_consolidation']
+        )
+    
+    @task
+    def final_elements_consolidation(self) -> Task:
+        return Task(
+            config=self.tasks_config['final_elements_consolidation']
         )
     
     @task

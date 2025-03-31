@@ -49,15 +49,28 @@ final_results_consolidation:
     Um texto consolidado, escrito em português brasileiro e formatado em markdown, que integre os fragmentos de análise de resultados em um texto claro e bem estruturado.
   agent: report_consolidator
 
+final_elements_consolidation:
+  description: >
+    Consolide os fragmentos de elementos técnicos extraídos de um mesmo texto em um único documento.
+    Seu objetivo é produzir um texto que preserve os elementos técnicos (como equações, códigos, imagens e tabelas) exatamente como foram extraídos, mantendo a formatação original para que o escritor possa utilizá-los.
+    Fragmentos a consolidar: {elements_fragments}
+    Siga as boas práticas:
+      - Mantenha a formatação original dos elementos técnicos.
+      - Organize os elementos de forma clara e estruturada.
+  expected_output: >
+    Um texto consolidado, escrito em português brasileiro e formatado em markdown, que reúna os elementos técnicos extraídos de um mesmo texto, preservando sua formatação original.
+  agent: report_consolidator
+
 final_report_consolidation:
   description: >
-    Com base nos textos consolidados fornecidos pelas tasks de consolidação (análise crítica, pontos-chave, metodologia e resultados),
+    Com base nos textos consolidados fornecidos pelas tasks de consolidação de análise crítica, de pontos-chave, de metodologia e de resultados,
     elabore um relatório final integrado.  
     O relatório deve ser dividido nas seguintes seções:  
       - **Análise Crítica**: Apresente a síntese das análises críticas consolidadas.  
       - **Pontos-Chave**: Liste os principais insights extraídos.  
       - **Metodologia**: Descreva as principais avaliações metodológicas identificadas.  
-      - **Resultados**: Apresente a avaliação consolidada dos resultados e suas implicações.  
+      - **Resultados**: Apresente a avaliação consolidada dos resultados e suas implicações.
+      - **Elementos Técnicos**: Inclua os elementos técnicos extraídos, preservando sua formatação original.
     Siga as boas práticas:
       - Estruture o relatório de forma lógica e sequencial.
       - Use formatação em markdown para melhorar a legibilidade.
@@ -65,4 +78,4 @@ final_report_consolidation:
   expected_output: >
     Um relatório final, escrito em português brasileiro e formatado em markdown, contendo as seções definidas e organizadas de forma clara e coesa.
   agent: report_writer
-  context: [final_critical_consolidation, final_key_points_consolidation, final_methodology_consolidation, final_results_consolidation]
+  context: [final_critical_consolidation, final_key_points_consolidation, final_methodology_consolidation, final_results_consolidation, final_elements_consolidation]

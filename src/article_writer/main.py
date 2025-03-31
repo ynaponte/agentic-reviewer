@@ -1,6 +1,7 @@
 from pydantic import BaseModel
 from crewai.flow import Flow, listen, start
 from .crews.doc_chunk_review_crew import ChunkReviewCrew
+from .crews.report_writer_crew.report_writer_crew import ReportWriterCrew
 from ..tools import FetchMetadataTool
 from typing import Dict, List 
 from ..utils import VectorDatabaseManager
@@ -25,7 +26,7 @@ class ArticleWriterState(BaseModel):
     )
     drafts_documents: List[str] = ['Resultado1.pdf']
     docs_chunks_reports: Dict[str, Dict[str, List]] = {}
-    results: str = ""
+    docs_reports: List[str] = []
     discussion: str = ""
     conclusion: str = ""
     #chunk_reports: List[AnaliseCriticaResultadosDiscussao] = []
@@ -100,13 +101,27 @@ class ArticleWriterFlow(Flow[ArticleWriterState]):
                 chunk_report.setdefault("elements_extraction", []).append(
                     crew_output.tasks_output[4].raw
                 )
-                chunk_report.setdefault("report_consolidation", []).append(
-                    crew_output.tasks_output[5].raw
-                )
 
             self.state.docs_chunks_reports[draft_document] = chunk_report
 
+    @listen(doc_process_by_chunks)
+    def report_consolidation(self):
+        for rprt_frag in self.state.docs_chunks_reports:
+            report = ReportWriterCrew.crew().kickoff(
+                inputs={
+                    "critical_analysis_fragments": rprt_frag["critical_analysis"],
+                    "key_points_fragments": rprt_frag["key_points_extraction"],
+                    "methodology_fragments": rprt_frag["methodology_analysis"],
+                    "results_fragments": rprt_frag["results_analysis"],
+                    "elements_fragments": rprt_frag["elements_extraction"],
+                }
+            )
 
+            self.state.docs_reports.append(report.raw)
+
+    @listen(report_consolidation)
+    def res_and_disc_sec_writting(self):
+        pass
 
 def kickoff():
     article_flow = ArticleWriterFlow()
