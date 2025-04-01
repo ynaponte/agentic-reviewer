@@ -11,7 +11,7 @@ class ChunkReviewCrew:
     agents_config = "config/agents.yaml"
     tasks_config = "config/tasks.yaml"
     std_llm = LLM(
-        model="ollama/qwen2.5:32b",
+        model="ollama/llama3.1:latest",
         base_url="http://localhost:11434",
         max_completion_tokens=8000,
         max_tokens=128000,
@@ -23,14 +23,12 @@ class ChunkReviewCrew:
         return Agent(
             config=self.agents_config['critical_analyst'],
             llm=self.std_llm,
-            tools=[FetchArticlesTool()]
         )
     
     @task
     def critical_analysis(self) -> Task:
         return Task(
             config=self.tasks_config['critical_analysis'],
-            tools=[FetchArticlesTool()]
         )
     
     @task
