@@ -79,7 +79,7 @@ class ArticleWriterFlow(Flow[ArticleWriterState]):
             doc_meta = self.articles_db.search_doc_by_meta(source=draft_document, type='draft')
             chunk_batches = batching(doc_meta[0]['total_chunks'], 2)
             for i, batch in enumerate(chunk_batches, start=1):
-                content = FetchArticlesTool._run(source=draft_document, chunk_id=batch, doc_type='draft')
+                content = FetchArticlesTool()._run(source=draft_document, chunk_id=batch, doc_type='draft')
                 #task = asyncio.create_task(process_single_document(draft_document, batch, i))
                 #tasks.append(task)
                 tasks.append(process_single_document(draft_document, batch, i, content))
