@@ -2,7 +2,7 @@ from pydantic import BaseModel
 from crewai.flow import Flow, listen, start
 from .crews.doc_chunk_review_crew import ChunkReviewCrew
 from .crews.report_writer_crew.report_writer_crew import ReportWriterCrew
-from ..tools import FetchMetadataTool
+from ..tools import FetchArticlesTool
 from typing import Dict, List 
 from ..utils import VectorDatabaseManager
 #from .types.doc_report import AnaliseCriticaResultadosDiscussao
@@ -57,13 +57,19 @@ class ArticleWriterFlow(Flow[ArticleWriterState]):
                 for i in range(0, num_chunks, batch_size)
             ]
         
-        async def process_single_document(doc_name: str, chunk_indexes: List[int], batch_index: int):
-            output = await ChunkReviewCrew().crew().kickoff_async(
+        def process_single_document(
+            doc_name: str, 
+            chunk_indexes: List[int], 
+            batch_index: int,
+            content: str
+        ):
+            output = ChunkReviewCrew().crew().kickoff(
                     inputs={
                         "target_document": doc_name,
                         "chunk_indexes": chunk_indexes,
                         "theme": self.state.theme,
-                        "batch_number": batch_index
+                        "batch_number": batch_index,
+                        "content": content         
                     }
                 )
             return output
@@ -73,9 +79,13 @@ class ArticleWriterFlow(Flow[ArticleWriterState]):
             doc_meta = self.articles_db.search_doc_by_meta(source=draft_document, type='draft')
             chunk_batches = batching(doc_meta[0]['total_chunks'], 2)
             for i, batch in enumerate(chunk_batches, start=1):
-                task = asyncio.create_task(process_single_document(draft_document, batch, i))
-                tasks.append(task)
-            crews_outputs = await asyncio.gather(*tasks)
+                content = FetchArticlesTool._run(source=draft_document, chunk_id=batch, doc_type='draft')
+                #task = asyncio.create_task(process_single_document(draft_document, batch, i))
+                #tasks.append(task)
+                tasks.append(process_single_document(draft_document, batch, i, content))
+
+            #crews_outputs = await asyncio.gather(*tasks)
+            crews_outputs = tasks
             chunk_report = {}
             # Armazena os resultados de cada chunk
             for crew_output in crews_outputs:
