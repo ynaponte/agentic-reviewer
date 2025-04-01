@@ -10,6 +10,8 @@ critical_analysis:
       - Contextualize as informações com o tema do documento;
       - Caso o conteúdo do batch apresente limitações (por exemplo, predominância de elementos não textuais), registre essa 
         limitação e indique a impossibilidade de uma análise crítica textual completa;
+    Esse é o conteúdo a ser analisado:
+    {content}
   expected_output: >
     Uma análise crítica do conteúdo do batch, escrita em português brasileiro, de pelo menos um parágrafo que sintetise
     criticamente o conteúdo, apresentando as principais informações, argumentos e dados, todos contextualizados com o tema,
@@ -26,10 +28,11 @@ key_points_extraction:
       - Para cada bullet point, inclua um detalhamento explicativo que evidencie comparações (quando aplicável), inconsistências (ex: "Tabela ??")
         e a relação dos dados, métodos e informações com o tema;
       - Seja conciso, mas completo na explicação de cada ponto.
+    Esse é o conteúdo a ser analisado:
+    {content}
   expected_output: > 
     Uma lista de bullet points, escrita em português brasileiro, contendo os pontos-chave e insights extraídos, cada um acompanhado de um detalhamento
     explicativo que inclua comparações, contextualizações e destaques das inconsistências ou relações com o tema.
-  context: [critical_analysis]
   agent: critical_analyst
 
 methodology_analysis:
@@ -40,6 +43,8 @@ methodology_analysis:
     - A fundamentação teórica e justificativa para os métodos utilizados; 
     - A clareza, coerência e replicabilidade dos procedimentos descritos;  
     - Possíveis lacunas metodológicas ou pressuposições não explicitadas.
+    Esse é o conteúdo a ser analisado:
+    {content}
   expected_output: >
     Um texto estruturado abordando:
     1. Descrição e Avaliação dos Métodos Utilizados:
@@ -49,7 +54,6 @@ methodology_analysis:
     2. Identificação de Lacunas e Pressupostos:
       - Análise de possíveis inconsistências na metodologia;
       - Identificação de pressupostos metodológicos não explicitados.
-  context: [key_points_extraction]
   agent: critical_analyst
 
 results_analysis:
@@ -61,6 +65,8 @@ results_analysis:
     - A consistência dos dados obtidos em relação aos objetivos e metodologia empregada;
     - A coerência das conclusões com base nas evidências apresentadas;
     - A presença de possíveis inconsistências, referências ausentes ou lacunas interpretativas.
+    Esse é o conteúdo a ser analisado:
+    {content}
   expected_output: >
     Um texto estruturado (mínimo um parágrafo) que contenha:
       - Uma avaliação da consistência dos dados apresentados em relação aos objetivos e à metodologia empregada.
@@ -68,4 +74,3 @@ results_analysis:
       - A identificação de inconsistências, referências ausentes ou lacunas interpretativas, como dados mal indexados ou ausentes (por exemplo, referência a "Tabela ??").
       - Sugestões de melhorias ou pontos a serem aprofundados, quando pertinente.
   agent: critical_analyst
-  
