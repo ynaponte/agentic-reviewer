@@ -1,76 +1,36 @@
-critical_analysis:
+methodology_results_consistency:
   description: >
-    Análise críticamente do conteúdo das chunks {chunk_indexes} do batch {batch_number} do documento {target_document},
-    do tipo <type>'draft'</type>.    
-    Escreva uma síntese crítica do conteúdo, contextualizada com o tema, em pelo menos um parágrafo. 
-    O objetivo desta tarefa é produzir uma síntese crítica que sirva como base para a elaboração do capítulo de Resultados e Discussões.
-    **Boas práticas para a escrita de síntese crítica:**
-    - Utilize linguagem clara, objetiva e coerente;
-      - Integre dados técnicos e argumentos principais de forma que evidencie como os métodos aplicados influenciam os resultados;
-      - Contextualize as informações com o tema do documento;
-      - Caso o conteúdo do batch apresente limitações (por exemplo, predominância de elementos não textuais), registre essa 
-        limitação e indique a impossibilidade de uma análise crítica textual completa;
+    Analise as chunks {chunk_indexes} do batch {batch_number} do documento {target_document}. 
+    Avalie criticamente a relação entre metodologia e resultados, considerando:
+    - **Fundamentação e Aplicação dos Métodos:** A justificativa e coerência dos métodos utilizados em relação aos objetivos;
+    - **Consistência dos Dados:** A adequação dos resultados em relação à metodologia aplicada;
+    - **Coerência das Conclusões:** A validade das inferências feitas a partir dos dados, destacando possíveis inconsistências ou lacunas interpretativas.
     Esse é o conteúdo a ser analisado:
     {content}
   expected_output: >
-    Uma análise crítica do conteúdo do batch, escrita em português brasileiro, de pelo menos um parágrafo que sintetise
-    criticamente o conteúdo, apresentando as principais informações, argumentos e dados, todos contextualizados com o tema,
-    de forma clara e coesa.
-  agent: critical_analyst
-
-key_points_extraction:
-  description: >
-    Extraia e analise os pontos-chave e insights do conteúdo das chunks {chunk_indexes} do batch {batch_number} do documento {target_document}.
-    O objetivo desta tarefa é identificar e destacar, em bullet points, os aspectos mais relevantes para a elaboração do capítulo.
-    Siga as seguintes boas práticas:
-      - Utiliza formatação Markdown para apresentar os pontos-chave de forma clara e concisa;
-      - Organize as informações em bullet points, cada um contendo um insight ou comparação relevante;
-      - Para cada bullet point, inclua um detalhamento explicativo que evidencie comparações (quando aplicável), inconsistências (ex: "Tabela ??")
-        e a relação dos dados, métodos e informações com o tema;
-      - Seja conciso, mas completo na explicação de cada ponto.
-    Esse é o conteúdo a ser analisado:
-    {content}
-  expected_output: > 
-    Uma lista de bullet points, escrita em português brasileiro, contendo os pontos-chave e insights extraídos, cada um acompanhado de um detalhamento
-    explicativo que inclua comparações, contextualizações e destaques das inconsistências ou relações com o tema.
-  agent: critical_analyst
-
-methodology_analysis:
-  description: >
-    Analise as chunks {chunk_indexes} do batch {batch_number} do documento {target_document} (tema: {theme}). 
-    O documento é do tipo <type>'draft'</type>.
-    Faça uma analise da metodologia do conteúdo, verificando:    
-    - A fundamentação teórica e justificativa para os métodos utilizados; 
-    - A clareza, coerência e replicabilidade dos procedimentos descritos;  
-    - Possíveis lacunas metodológicas ou pressuposições não explicitadas.
-    Esse é o conteúdo a ser analisado:
-    {content}
-  expected_output: >
-    Um texto estruturado abordando:
-    1. Descrição e Avaliação dos Métodos Utilizados:
-      - Explicação dos métodos aplicados e sua fundamentação teórica;
-      - Avaliação da clareza na descrição dos procedimentos;
-      - Verificação da coerência e replicabilidade.
-    2. Identificação de Lacunas e Pressupostos:
-      - Análise de possíveis inconsistências na metodologia;
-      - Identificação de pressupostos metodológicos não explicitados.
-  agent: critical_analyst
+    Um texto estruturado contendo e objetivo, que apresente:
+    1. **Descrição e Avaliação da Metodologia:**
+       - Explicação dos métodos aplicados;
+       - Verificação da coerência e replicabilidade dos métodos.
+    2. **Análise da Relação entre Metodologia e Resultados:**
+       - Avaliação da compatibilidade entre os métodos empregados e os dados obtidos;
+  agent: methodology_evaluator
 
 results_analysis:
   description: >
-    Analise as chunks {chunk_indexes} do batch {batch_number} do documento {target_document} (tema: {theme}). 
-    O documento é do tipo <type>'draft'</type>.
+    Analise as chunks {chunk_indexes} do batch {batch_number} do documento {target_document}. 
     Avalie os resultados apresentados, considerando:
-    
+    - A progressão lógica do texto;
     - A consistência dos dados obtidos em relação aos objetivos e metodologia empregada;
     - A coerência das conclusões com base nas evidências apresentadas;
     - A presença de possíveis inconsistências, referências ausentes ou lacunas interpretativas.
-    Esse é o conteúdo a ser analisado:
+    Essas são as chunks a serem analisadas:
     {content}
   expected_output: >
-    Um texto estruturado (mínimo um parágrafo) que contenha:
+    Um resumo executivo estruturado (mínimo um parágrafo) que contemple:
+      - Progressão lógica dos resultados;
       - Uma avaliação da consistência dos dados apresentados em relação aos objetivos e à metodologia empregada.
       - Uma análise crítica da coerência das conclusões baseadas nas evidências (tabelas, métricas, resultados numéricos).
-      - A identificação de inconsistências, referências ausentes ou lacunas interpretativas, como dados mal indexados ou ausentes (por exemplo, referência a "Tabela ??").
       - Sugestões de melhorias ou pontos a serem aprofundados, quando pertinente.
+  context: [methodology_results_consistency]
   agent: critical_analyst
