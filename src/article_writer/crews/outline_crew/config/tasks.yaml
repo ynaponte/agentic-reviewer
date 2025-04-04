@@ -1,0 +1,48 @@
+generate_results_discussion_outline:
+  description: >
+    analysis:
+    {analysis}
+
+    Use the analysis provided to create a detailed outline for the **Results and Discussion** chapter of a scientific article.
+    The outline should reflect the logical progression of the results, major findings, and interpretative insights from 
+    the analysis. It should help the writer structure the chapter in a way that integrates data presentation and discussion 
+    fluidly.
+  expected_output: >
+    A structured outline for the Results and Discussion chapter, containing:
+    - Section and subsection titles;
+    - A brief description of what each part should cover (e.g., specific findings, comparisons, discussions, etc.);
+    - A logical flow that connects findings with interpretations.  
+  agent: chapter_outliner
+
+  generate_conclusion_outline:
+  description: >
+    analysis:
+    {analysis}
+
+    Based on the provided analysis and the previously generated Results and Discussion outline, create a detailed outline 
+    for the **Conclusion** chapter. The outline should synthesize the key findings, highlight the contribution of the study, 
+    and suggest implications or future directions.
+  expected_output: >
+    A structured outline for the Conclusion chapter, including:
+    - Section headings (if necessary);
+    - Summary points for each paragraph or section;
+    - Reflections on the significance of the results and any proposed future work.
+  agent: chapter_outliner
+  context: [generate_results_discussion_outline]
+
+  generate_methodology_outline:
+  description: >
+    analysis:
+    {analysis}
+
+    Based on the analysis and previously generated outlines for Results and Discussion and Conclusion, produce a structured 
+    outline for the **Methodology** chapter. The outline should be coherent with the findings and conclusions and describe 
+    the approach taken in a way that supports reproducibility and credibility.
+  expected_output: >
+    A structured outline for the Methodology chapter, including:
+    - Sections and subsections (e.g., data collection, instrumentation, procedures, analysis techniques);
+    - Descriptions of what content each part should present;
+    - Any specific methodological notes that are relevant to the previously outlined results and conclusions.
+  agent: chapter_outliner
+  context: [generate_results_discussion_outline, generate_conclusion_outline]
+
