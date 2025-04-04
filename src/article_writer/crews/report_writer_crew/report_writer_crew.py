@@ -8,71 +8,27 @@ class ReportWriterCrew:
 
     agents_config = "config/agents.yaml"
     tasks_config = "config/tasks.yaml"
-    consolidation_llm = LLM(
-        model="ollama/qwen2.5:32b",
+    llm = LLM(
+        model="ollama/qwen2.5:14b",
         base_url="http://localhost:11434",
-        max_completion_tokens=8000,
+        max_completion_tokens=128000,
         max_tokens=128000,
         temperature=0.5
     )
-    writer_llm = LLM(
-        model="ollama/qwen2.5:32b",
-        base_url="http://localhost:11434",
-        max_completion_tokens=8000,
-        max_tokens=128000,
-        temperature=0.6
-    )
     
     @agent
-    def report_consolidator(self) -> Agent:
+    def technical_editor(self) -> Agent:
         return Agent(
-            config=self.agents_config['report_consolidator'],
-            llm=self.consolidation_llm
-        )
-    
-    @agent
-    def report_writer(self) -> Agent:
-        return Agent(
-            config=self.agents_config['report_writer'],
-            llm=self.writer_llm
+            config=self.agents_config['technical_editor'],
+            llm=self.llm
         )
     
     @task
-    def final_critical_consolidation (self) -> Task:
+    def refactor_cohesive_text(self) -> Task:
         return Task(
-            config=self.tasks_config['final_critical_consolidation']
+            config=self.tasks_config['refactor_cohesive_text']
         )
-    
-    @task
-    def final_key_points_consolidation(self) -> Task:
-        return Task(
-            config=self.tasks_config['final_key_points_consolidation']
-        )
-    
-    @task
-    def final_methodology_consolidation(self) -> Task:
-        return Task(
-            config=self.tasks_config['final_methodology_consolidation']
-        )
-    
-    @task
-    def final_results_consolidation(self) -> Task:
-        return Task(
-            config=self.tasks_config['final_results_consolidation']
-        )
-    
-    @task
-    def final_elements_consolidation(self) -> Task:
-        return Task(
-            config=self.tasks_config['final_elements_consolidation']
-        )
-    
-    @task
-    def final_report_consolidation(self) -> Task:
-        return Task(
-            config=self.tasks_config['final_report_consolidation']
-        )
-    
+
     @crew
     def crew(self) -> Crew:
         crew = Crew(
