@@ -7,28 +7,41 @@ from crewai.project import CrewBase, agent, crew, task
 # https://docs.crewai.com/concepts/crews#example-crew-class-with-decorators
 
 @CrewBase
-class ResultsDiscussionCrew():
-	"""ConclusionCrew crew"""
+class OutlineCrew():
 
 	agents_config = 'config/agents.yaml'
 	tasks_config = 'config/tasks.yaml'
 	llm = LLM(
         model="ollama/qwen2.5:14b",
-        base_url="http://localhost:11434"
+        base_url="http://localhost:11434",
+		max_tokens=128000,
+		temperature=0.3
     )
 
 	@agent
-	def redator_conclusao(self) -> Agent:
+	def chapter_outliner(self) -> Agent:
 		return Agent(
-			config=self.agents_config['redator_conclusao'],
+			config=self.agents_config['chapter_outliner'],
 			llm=self.llm,
 			verbose=True
 		)
 	
 	@task
-	def redacao_conclusao(self) -> Task:
+	def generate_results_discussion_outline(self) -> Task:
 		return Task(
-			config=self.tasks_config['redacao_conclusao'],
+			config=self.tasks_config['generate_results_discussion_outline'],
+		)
+	
+	@task
+	def generate_conclusion_outline(self) -> Task:
+		return Task(
+			config=self.tasks_config['generate_conclusion_outline'],
+		)
+	
+	@task
+	def generate_methodology_outline(self) -> Task:
+		return Task(
+			config=self.tasks_config['generate_methodology_outline'],
 		)
 
 	@crew
