@@ -29,7 +29,7 @@ class QueryArticlesToolInput(BaseModel):
     )
 
     top_k: Optional[int] = Field(
-        5, description=(
+        3, description=(
             "The number of text chunks that have high similarity to the search query to return."
             "It is a optional parameter."
         )

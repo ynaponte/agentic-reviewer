@@ -280,25 +280,19 @@ class VectorDatabaseManager:
         # Se aproveita da natureza sequencial que os chunks aparecem(grandes blocos do mesmo artigo)
         # para organizar os chunks em um dicionário.
         # O dicionário tem como chave a source do documento e como valor uma lista de chunks e sua metadata
-        articles = {}
-        for idx in range(len(chunks)):
-            content = {             
-                f"chunk {metadatas[idx]['chunk_id']}": {
-                    "content": chunks[idx],                    
-                    "page_number": metadatas[idx]['page'],
-                    "text_from_sections": metadatas[idx]['sections'],
-                    "tables": re.findall(pattern, chunks[idx], flags=re.UNICODE | re.DOTALL)
-                },
-            }
-
-            articles.setdefault(metadatas[idx]['source'], {}).update(content)
-
-        metadata = {             
-            "metadata": {
+        text_content = "".join(chunks[idx] for idx in range(len(chunks)))
+        tables = re.findall(pattern, text_content, flags=re.UNICODE | re.DOTALL)
+        chunk_list = [metadatas[idx]['chunk_id'] for idx in range(len(chunks))]
+        
+        content = {
+            "text_content": text_content,
+            "tables": tables,
+            "metadata": {                
+                "from_chunks": chunk_list,
                 "total_of_pages": metadatas[0]['page_count'],
                 "total_of_chunks": metadatas[0]['total_chunks']
             }
         }
-        articles[metadatas[0]['source']].update(metadata)
+        articles = {metadatas[0]['source']: content}
 
         return articles

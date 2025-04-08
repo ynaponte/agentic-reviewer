@@ -70,7 +70,7 @@ class FetchArticlesTool(BaseTool):
                 )
             return json.dumps(
                 search_result,
-                indent=4
+                indent=2
             )
         except AttributeError:
             return json.dumps(
