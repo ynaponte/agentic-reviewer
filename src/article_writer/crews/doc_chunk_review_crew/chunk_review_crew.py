@@ -1,6 +1,7 @@
 from crewai import Agent, Crew, Task, Process
 from crewai.project import CrewBase, agent, crew, task
 from crewai.llm import LLM
+from src.article_writer.types.results_report import ElementsList
 
 
 @CrewBase
@@ -23,6 +24,7 @@ class ChunkReviewCrew:
             config=self.agents_config['critical_analyst'],
             llm=self.std_llm,
         )
+    
     @agent
     def methodology_evaluator(self) -> Agent:
         return Agent(
@@ -30,6 +32,14 @@ class ChunkReviewCrew:
             llm=self.std_llm,
         )
     
+    @agent
+    def technical_data_extractor(self) -> Agent:
+        return Agent(
+            config=self.agents_config['technical_data_extractor'],
+            llm=self.std_llm,
+        )
+
+
     @task
     def methodology_results_consistency(self) -> Task:
         return Task(
@@ -42,6 +52,12 @@ class ChunkReviewCrew:
             config=self.tasks_config['results_analysis'],
         )
     
+    @task
+    def elements_extraction(self) -> Task:
+        return Task(
+            config=self.tasks_config['elements_extraction'],
+        )
+
     @crew
     def crew(self) -> Crew:
         crew = Crew(

@@ -34,3 +34,42 @@ results_analysis:
       - Sugestões de melhorias ou pontos a serem aprofundados, quando pertinente.
   context: [methodology_results_consistency]
   agent: critical_analyst
+
+elements_extraction:
+  description: >
+    Extraia dados estruturados e elementos técnicos das chunks {chunk_indexes} (batch {batch_number}) do documento {target_document}, 
+    seguindo regras rigorosas de formatação e padronização.
+    Você deve coletar informações brutas e neutras (sem análise crítica) para posterior síntese, de elementos técnicos e dados chaves, 
+    garantindo integridade e compatibilidade entre batches, tendo a certeza de incluir para cada elemento o CONTEXTO DE USO pelo autor,
+    de modo a explicitar a função e o significado de cada dado extraído. Essa inclusão deve ter no MÁXIMO UMA LINHA.
+
+    **Ações Obrigatórias**:
+    1. **Extrair Elementos Técnicos**:
+       - **Tabelas**: Converter para LaTeX válido, mantendo cabeçalhos, dados brutos, título e fonte.
+       - **Equações**: Transcrever em LaTeX com contexto mínimo (ex: `E = mc^2`).
+       - **Códigos**: Extrair trechos completos, indicando a linguagem (ex: ```python\nprint("Hello World")```).
+       - **Gráficos/Imagens**: Registrar nome do arquivo, descrição textual e chunk de origem.
+
+  expected_output: >
+    Um relatório minimalista do batch, formatado em markdown, com uma seção apresentando os elementos complementares encontrados, 
+    contento: tabelas formatadas em HTML e funcional, trechos de código, equações e expressoes matematicas, e figuras e gráficos, 
+    se encontrados no conteudo das chunks, despostos em uma lista de bullet points, onde cada elemento da lista segue a estrutura:
+
+    * tipo: <tipo do elemento: tabela | código | equação | figura>
+      * descrição: <descrição curta do uso do elemento no texto>
+      * conteúdo: <conteúdo literal extraído, mantendo formatação original>
+  
+    Exemplo de lista:
+
+    * tipo: código
+      * descrição: Código utilizado para instanciar algoritmo genético.
+      * conteúdo: ```ga = pygad.ga(...)```
+
+    * tipo: tabela
+      * descrição: Tabela com relação entre variáveis X e Y.
+      * conteúdo:
+        \BEGIN{TABLE}[H!]
+          \CENTERING
+          \CAPTION{TABELA 1: Correlação entre X e Y}
+          ...
+  agent: technical_data_extractor
