@@ -3,7 +3,8 @@ refactor_cohesive_text:
     Reestruture o texto {input_text} para melhorar coesão, fluidez e rigor técnico, seguindo estas diretrizes:  
       1. Eliminar redundâncias e repetições;  
       2. Garantir progressão lógica entre parágrafos (ex: Método → Resultado → Análise → Conclusão);  
-      3. Integrar tabelas/figuras ao fluxo narrativo (não apenas listá-las);  
+      3. Integrar tabelas, figuras, trechos de código, resultados numéricos e equações matemáticas ao fluxo narrativo 
+      e explicitá-los;  
       4. Padronizar termos técnicos;  
       5. Usar conectivos para vincular ideias (ex: "Consequentemente", "Em contraste", "Portanto").  
   expected_output: >
@@ -11,5 +12,5 @@ refactor_cohesive_text:
       - Máximo de 5 parágrafos;  
       - Títulos claros (se aplicável);  
       - Destaque para contribuições principais;  
-      - Links explícitos entre dados e argumentos.  
+      - Elementos técnicos explicitados
   agent: technical_editor

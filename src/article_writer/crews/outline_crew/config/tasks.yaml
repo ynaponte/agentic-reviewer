@@ -3,10 +3,12 @@ generate_results_discussion_outline:
     analysis:
     {analysis}
 
-    Use the analysis provided to create a detailed outline for the **Results and Discussion** chapter of a scientific article.
+    Use the provided analysis to create a detailed outline for the **Results and Discussion** chapter of a scientific article.
     The outline should reflect the logical progression of the results, major findings, and interpretative insights from 
-    the analysis. It should help the writer structure the chapter in a way that integrates data presentation and discussion 
-    fluidly.
+    the analysis.
+    
+    The generated outline should help the writer structure and write the **Results and Discussion** chapter in a way that 
+    integrates data presentation and discussion fluidly.
   expected_output: >
     A structured outline for the Results and Discussion chapter, containing:
     - Section and subsection titles;
@@ -14,7 +16,7 @@ generate_results_discussion_outline:
     - A logical flow that connects findings with interpretations.  
   agent: chapter_outliner
 
-  generate_conclusion_outline:
+generate_conclusion_outline:
   description: >
     analysis:
     {analysis}
@@ -30,7 +32,7 @@ generate_results_discussion_outline:
   agent: chapter_outliner
   context: [generate_results_discussion_outline]
 
-  generate_methodology_outline:
+generate_methodology_outline:
   description: >
     analysis:
     {analysis}
