@@ -1,0 +1,49 @@
+contextualization:
+  description: >
+    Outline:
+    
+    {chapter_outline}
+
+    Busque nos artigos de referência, utilizando a ferramenta QueryArticlesTool, elementos complementares como tabelas, 
+    figuras, equações e expressões matemáticas, e trechos de código, que se alinhem com o conteúdo do capítulo detalhado
+    no OUTLINE fornecido, bem como trechos que sejam relevantes. O objetivo dessa busca é encontrar elementos que possam ser
+    utilizados posterirmente na escrita do capítulo de **Resultados e Discussão** para um artigo científico de tema {theme}.
+
+    **Forma de realização da tool**:
+    - A partir do OUTLINE fornecido, crie frases para consulta. 
+    - Utilize essas frases de consulta passando-as para a tool QueryArticlesTool, em seu campo `query`
+    - A tool irá lhe retornar os 3 trechos que mais se alinham com o termo/frase utilizada na consulta
+    - Repita o processo para cada item do OUTLINE fornecido
+    - Utilize os retornos da tool para formatar respostas para suas frases de consulta.
+
+    **Diretrizes para elementos complementares:**
+    - Utilize o contexto no trecho textual para identificar sua relevância. Caso haja, copie-o na integra,
+    sem a resumir, e inclua uma nota de como você pode utilizá-la
+  expected_output: >
+    Um relatório contendo os termos de consulta utilizados e a resposta gerada utilizando o que foi retornado pela 
+    tool QueryArticlesTool. Se a resposta incluir tabelas ou trechos de código, ou ainda equações ou expressões 
+    matemáticas, eles devem estar tal quais nas referências consultadas, sem qualquer tipo de resumo.
+
+results_discussion_writting:
+  description: >
+    Outline:
+    
+    {chapter_outline}
+
+    Utilize o outline informado para escrever o capítulo de **Resultados e Discussão** para um artigo científico de tema
+    {theme}, seguindo as melhores diretrizes de escrita acadêmica. 
+    O texto deve seguir boas práticas acadêmicas, garantindo:  
+      - Apresentação objetiva dos resultados, enfatizando os principais achados. 
+      - Inclusão de elementos técnicos, como tabelas, trecho de código, imagens e equações/expressões matemáticas; 
+      - Discussão científica bem fundamentada, relacionando os achados aos objetivos do estudo e à literatura existente;
+      - Transições lógicas entre parágrafos e seções, garantindo um fluxo natural da argumentação.  
+      - Uso de formatação LaTeX adequada, com comentários embutidos para sugestões de melhoria.  
+  expected_output: >  
+    O capítulo de **Resultados e Discussão** para um artigo científico de ALTO PADRÃO, para o tema {theme} 
+    estruturado e formatado em LaTeX, contendo:  
+      - Introdução contextualizando os resultados.  
+      - Seção de Resultados descrevendo os achados de forma discurssiva e analítica, utilizando
+      elementos complementares como tabelas, trechos de código, imagens e/ou equações/expressões matemáticas
+      que componham a argumentação.s
+      - Seção de Discussão, analisando e interpretando os achados, comparando pontos positivos e negativos.    
+  agent: results_discussion_writer
