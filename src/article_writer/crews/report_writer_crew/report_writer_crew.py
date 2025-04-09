@@ -9,7 +9,7 @@ class ReportWriterCrew:
     agents_config = "config/agents.yaml"
     tasks_config = "config/tasks.yaml"
     llm = LLM(
-        model="ollama/qwen2.5:14b",
+        model="ollama/qwen2.5:14b-instruct-q8_0",
         base_url="http://localhost:11434",
         max_completion_tokens=128000,
         max_tokens=128000,

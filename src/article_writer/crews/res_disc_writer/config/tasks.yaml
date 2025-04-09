@@ -1,49 +1,73 @@
-contextualization:
+research_outline_topics:
   description: >
+    A partir do outline da seção **Resultados e Discussão** de um artigo científico, utilize a ferramenta `QueryArticlesTool` 
+    para realizar consultas à base de dados vetorizada, identificando conteúdos técnicos, metodológicos ou analíticos que 
+    possam ser usados para apoiar ou aprofundar cada tópico do outline.
+
+    Para cada seção ou subseção do outline:
+      - Gere uma ou mais queries baseadas no título e na descrição;
+      - Execute as buscas com a ferramenta `QueryArticlesTool`;
+      - Analise os resultados retornados e produza um **bloco de apoio técnico** por seção, contendo:
+        - Um resumo sintético dos achados mais relevantes;
+        - Tópicos ou artigos sugeridos para citação (com IDs, autores ou títulos se disponíveis);
+        - Sugestões específicas sobre como o escritor pode aproveitar o material encontrado (ex: comparar resultados, reforçar argumentação, inserir gráficos).
+
+    Nunca repita o conteúdo do outline nem gere conteúdo fictício. Baseie-se exclusivamente nos retornos da ferramenta.
+
     Outline:
-    
+
     {chapter_outline}
 
-    Busque nos artigos de referência, utilizando a ferramenta QueryArticlesTool, elementos complementares como tabelas, 
-    figuras, equações e expressões matemáticas, e trechos de código, que se alinhem com o conteúdo do capítulo detalhado
-    no OUTLINE fornecido, bem como trechos que sejam relevantes. O objetivo dessa busca é encontrar elementos que possam ser
-    utilizados posterirmente na escrita do capítulo de **Resultados e Discussão** para um artigo científico de tema {theme}.
-
-    **Forma de realização da tool**:
-    - A partir do OUTLINE fornecido, crie frases para consulta. 
-    - Utilize essas frases de consulta passando-as para a tool QueryArticlesTool, em seu campo `query`
-    - A tool irá lhe retornar os 3 trechos que mais se alinham com o termo/frase utilizada na consulta
-    - Repita o processo para cada item do OUTLINE fornecido
-    - Utilize os retornos da tool para formatar respostas para suas frases de consulta.
-
-    **Diretrizes para elementos complementares:**
-    - Utilize o contexto no trecho textual para identificar sua relevância. Caso haja, copie-o na integra,
-    sem a resumir, e inclua uma nota de como você pode utilizá-la
   expected_output: >
-    Um relatório contendo os termos de consulta utilizados e a resposta gerada utilizando o que foi retornado pela 
-    tool QueryArticlesTool. Se a resposta incluir tabelas ou trechos de código, ou ainda equações ou expressões 
-    matemáticas, eles devem estar tal quais nas referências consultadas, sem qualquer tipo de resumo.
+    Um relatório técnico organizado por seção do outline, contendo para cada uma:
+    - O título e descrição da seção original;
+    - A(s) query(s) utilizadas;
+    - Um resumo dos achados relevantes oriundos da base vetorizada;
+    - Artigos ou fontes sugeridas (com [ref:ID], título ou autores se disponíveis);
+    - Sugestões claras de como usar esse material no texto final.
+  agent: research_agent
 
 results_discussion_writting:
   description: >
+    Escreva o capítulo completo de **Resultados e Discussão** para um artigo científico com base na estrutura detalhada 
+    do capítulo, fornecida pelo OUTLINE, se embasando no Relatório técnico com referências e sugestões de aprofundamento, 
+    gerado pelo seu colega pesquisador.
+
+    Tenha a certeza de seguir rigorosamente a estrutura proposta no outline e utilizar as informações do relatório técnico 
+    provido pelo Pesquisador técnico para tópicos científicos, para embasar e 
+    fortalecer a argumentação científica, incorporando as referências de maneira fluida ao longo do texto. Além disso, 
+    incluir ELEMENTOS TÉCNICOS (tabelas, códigos, figuras, equações) referenciados no outline, disponíveis no relatório
+    técnico, integralmente, de forma natural no corpo do texto, respeitando a fluidez e a clareza da exposição.
+
+    O capítulo deve atender aos seguintes critérios:
+    - Clareza e concisão na apresentação dos resultados;
+    - Discussão crítica dos achados, relacionando-os aos objetivos do estudo e à literatura científica existente;
+    - Integração de elementos técnicos (quando mencionados), respeitando a sequência lógica do texto;
+    - Inclusão direta das referências obtidas no relatório técnico, com formatação adequada (ex: "como demonstrado em [Autor, Ano]");
+    - Estilo acadêmico formal, adequado à publicação científica;
+    - Formatação em LaTeX, com organização típica de artigos (seções, subseções, equações numeradas, figuras e tabelas 
+      referenciadas no texto).
+
     Outline:
     
     {chapter_outline}
 
-    Utilize o outline informado para escrever o capítulo de **Resultados e Discussão** para um artigo científico de tema
-    {theme}, seguindo as melhores diretrizes de escrita acadêmica. 
-    O texto deve seguir boas práticas acadêmicas, garantindo:  
-      - Apresentação objetiva dos resultados, enfatizando os principais achados. 
-      - Inclusão de elementos técnicos, como tabelas, trecho de código, imagens e equações/expressões matemáticas; 
-      - Discussão científica bem fundamentada, relacionando os achados aos objetivos do estudo e à literatura existente;
-      - Transições lógicas entre parágrafos e seções, garantindo um fluxo natural da argumentação.  
-      - Uso de formatação LaTeX adequada, com comentários embutidos para sugestões de melhoria.  
+    Relatório técnico:
+
+    {technical_report}
+
   expected_output: >  
-    O capítulo de **Resultados e Discussão** para um artigo científico de ALTO PADRÃO, para o tema {theme} 
-    estruturado e formatado em LaTeX, contendo:  
-      - Introdução contextualizando os resultados.  
-      - Seção de Resultados descrevendo os achados de forma discurssiva e analítica, utilizando
-      elementos complementares como tabelas, trechos de código, imagens e/ou equações/expressões matemáticas
-      que componham a argumentação.s
-      - Seção de Discussão, analisando e interpretando os achados, comparando pontos positivos e negativos.    
+    Um capítulo finalizado de **Resultados e Discussão** para o tema "{theme}", com estrutura baseada no OUTLINE
+    fornecido e conteúdo enriquecido com base nas sugestões e referências fornecidas pelo Pesquisador técnico para 
+    tópicos científicos.
+
+    O texto deve ser entregue em LaTeX completo, com:
+    - Introdução aos resultados;
+    - Subseção de apresentação e descrição analítica dos resultados;
+    - Subseção de discussão, com interpretações, comparações com a literatura e implicações do estudo;
+    - Inclusão de elementos técnicos no ponto adequado do texto;
+    - Referências integradas diretamente na narrativa, conforme os padrões de citação.
+   
   agent: results_discussion_writer
+  context: [research_outline_topics]
+  output_file: output/results_discussion.tex

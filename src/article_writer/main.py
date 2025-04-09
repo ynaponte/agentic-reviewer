@@ -136,7 +136,7 @@ class ArticleWriterFlow(Flow[ArticleWriterState]):
         chapter = ResultAndDiscussionCrew().crew().kickoff(
             inputs={
                 "chapter_outline": self.state.results_discussion_outline,
-                "theme": self.state.theme
+                "technical_report": self.state.technical_elements
             }
         )
         print(chapter.raw)

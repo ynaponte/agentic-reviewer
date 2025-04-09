@@ -51,9 +51,9 @@ elements_extraction:
        - **Gráficos/Imagens**: Registrar nome do arquivo, descrição textual e chunk de origem.
 
   expected_output: >
-    Um relatório minimalista do batch, formatado em markdown, com uma seção apresentando os elementos complementares encontrados, 
-    contento: tabelas formatadas em HTML e funcional, trechos de código, equações e expressoes matematicas, e figuras e gráficos, 
-    se encontrados no conteudo das chunks, despostos em uma lista de bullet points, onde cada elemento da lista segue a estrutura:
+    Um lista minimalista, apresentando os elementos complementares/técnicos encontrados, isto é, tabelas, equações e expressoes 
+    matematicas formatadas em LaTeX funcional; trechos de código, e figuras/gráficos; quando e se encontrados no conteudo 
+    analisado, despostos como bullet points, onde cada elemento da lista segue a estrutura:
 
     * tipo: <tipo do elemento: tabela | código | equação | figura>
       * descrição: <descrição curta do uso do elemento no texto>
