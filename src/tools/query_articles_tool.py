@@ -68,5 +68,5 @@ class QueryArticlesTool(BaseTool):
                 source=source,
                 top_k=top_k
             ),
-            indent=4
+            indent=2
         )
