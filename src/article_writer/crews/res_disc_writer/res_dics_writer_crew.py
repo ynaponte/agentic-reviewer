@@ -36,14 +36,13 @@ class ResultAndDiscussionCrew():
             config=self.agents_config['research_agent'],
             llm=self.researcher_llm,
             tools=[QueryArticlesTool()]
+        )
 
     @agent
     def results_discussion_writer(self) -> Agent:
         return Agent(
             config=self.agents_config['results_discussion_writer'],
-            llm=self.writer_llm,
-            function_calling_llm=self.tool_call_llm,
-            tools=[QueryArticlesTool()]
+            llm=self.writer_llm
         )
 
     @task
