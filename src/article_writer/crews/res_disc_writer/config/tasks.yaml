@@ -1,3 +1,26 @@
+research_outline_topics:
+  description: >
+    A partir do outline do capítulo de **Resultados e Discussão** para um artigo científico, utilize a ferramenta 
+    `QueryArticlesTool` para realizar consultas à base de dados vetorizada e crie respostas que tragam informações 
+    e argumentação extras para os tópicos do outline, com o objetivo de enriquecer o texto do capítulo.
+    
+    Você deve identificar conteúdos técnicos, metodológicos ou analíticos que possam ser usados para apoiar ou 
+    aprofundar um ou mais tópicos do outline, tendo a certeza de atacar a todos.
+
+    Para cada seção ou subseção do outline:
+      - Gere uma ou mais queries baseadas no título e na descrição;
+      - Execute as buscas com a ferramenta `QueryArticlesTool`;
+      - Analise os resultados retornados e produza um **bloco de apoio técnico** por seção, contendo:
+        - Um resumo sintético dos achados mais relevantes;
+        - Tópicos ou artigos sugeridos para citação (com IDs, autores ou títulos se disponíveis);
+        - Sugestões específicas sobre como o escritor pode aproveitar o material encontrado (ex: comparar resultados, reforçar argumentação, inserir gráficos).
+
+    Nunca repita o conteúdo do outline nem gere conteúdo fictício. Baseie-se exclusivamente nos retornos da ferramenta.
+
+    Outline:
+
+    {chapter_outline}
+
 select_complementary_elements:
   description: >
     Utilize o outline fornecido do capítulo **Resultados e Discussão**, para obter da lista de elementos complementares,
