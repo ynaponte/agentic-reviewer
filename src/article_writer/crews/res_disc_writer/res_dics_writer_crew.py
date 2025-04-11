@@ -10,14 +10,14 @@ class ResultAndDiscussionCrew():
     agents_config = 'config/agents.yaml'
     tasks_config = 'config/tasks.yaml'
     writer_llm = LLM(
-        model="ollama/qwen2.5:14b-instruct-q8_0",
+        model="ollama/qwen2.5:32b",
         base_url="http://localhost:11434",
 		max_tokens=128000,
 		temperature=0.7
     )
 
     researcher_llm = LLM(
-        model='ollama/qwen2.5:14b',
+        model='ollama/qwen2.5:14b-instruct-q8_0',
         base_url='http://localhost:11434',
         max_tokens=128000,
         temperature=0.2
