@@ -1,29 +1,32 @@
 generate_outline_results_discussion:
   description: >
-    Com base no relatório analítico consolidado, gere um outline estruturado para o capítulo de **Resultados e Discussão**,
-    que refleta a estrutura típica esperada para esse capítulo, composta por três partes principais:
-    - Um texto introdutório que contextualize os resultados;
-    - Uma subseção dedicada à apresentação ordenada dos principais achados;
+    Com base no relatório analítico consolidado, gere um outline estruturado para o capítulo de **Resultados e Discussão**
+    de um artigo científico. Esse outline deve funcionar como um **guia de estruturação textual**, orientando o escritor sobre
+    como organizar os conteúdos, evidências e interpretações no momento da redação.
+
+    O objetivo é fornecer uma estrutura clara, lógica e progressiva para o capítulo, que reflita o formato típico esperado para esse tipo de seção,
+    composto por três partes principais:
+    - Uma introdução que contextualize os resultados;
+    - Uma subseção dedicada à apresentação ordenada dos principais achados do estudo;
     - Uma subseção destinada à análise e discussão crítica desses achados.
 
-    Utilize exclusivamente o conteúdo do relatório para fundamentar o outline. A seção de **Análise dos Resultados** deve estruturar a parte de apresentação dos dados;
-    a seção de **Interpretação Crítica** deve fundamentar os blocos argumentativos e analíticos da subseção de Discussão; e os elementos listados na 
-    **Apresentação Clara dos Elementos Visuais** devem ser integrados estrategicamente nas partes correspondentes do outline, sem serem transcritos.
+    O outline não deve conter conteúdo redacional do capítulo, mas sim títulos e descrições que orientem **como** e **com que foco** cada parte deve ser escrita.
+    Utilize o relatório analítico para organizar os tópicos com base nas evidências descritas, na interpretação crítica e nos elementos visuais disponíveis.
 
-    O outline deve apresentar os achados do estudo, articular as evidências e interpretações de forma progressiva 
-    e lógica, e indicar onde e quais elementos visuais (como tabelas, figuras, equações e/ou trechos de código) devem ser 
-    incorporados para apoiar a argumentação.
+    Indique claramente:
+    - Onde os elementos visuais (tabelas, figuras, equações, trechos de código) devem ser inseridos;
+    - O papel de cada tópico dentro da argumentação científica do capítulo;
+    - A relação entre os achados e as interpretações presentes no relatório.
 
-    Relatório Analítico consolidado:
+    Relatório analítico consolidado:
 
     {report}
 
   expected_output: >
-    Um outline completo para o capítulo de Resultados e Discussão, contendo:
-    - Títulos e subtítulos organizados em ordem lógica;
-    - Descrições orientativas de cada seção;
-    - Uma seção inicial introdutória com título e descrição;
-    - Uma subseção de Resultados com tópicos bem definidos, cada um com título, descrição e indicação de onde os elementos visuais serão utilizados;
-    - Uma subseção de Discussão com tópicos interpretativos e analíticos, organizados em sequência lógica e embasados na Interpretação Crítica.
+    Um outline completo e sequencial para o capítulo de Resultados e Discussão, contendo:
+    - Uma seção introdutória com título e descrição orientativa;
+    - Uma subseção de Resultados com tópicos bem definidos, cada um com título, descrição e indicação de onde e quais elementos visuais devem ser inseridos;
+    - Uma subseção de Discussão com tópicos interpretativos e analíticos, baseados na Interpretação Crítica, organizados com progressão lógica;
+    - Todas as descrições devem instruir claramente o escritor sobre o foco argumentativo e a função de cada seção na construção do capítulo.
 
   agent: core_chapters_outliner
