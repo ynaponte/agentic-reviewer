@@ -82,7 +82,7 @@ class VectorDatabaseManager:
                 c_source = sources[i]
                 c_pages = loaded_articles[i]
                 
-                doc_id = hashlib.sha256(c_source.encode('utf-8')).hexdigest()
+                doc_id = str(uuid.uuid4())
                 # Processamento de metadados
                 keys_to_del = [
                     'format', 'title', 'author', 'subject', 'keywords', 'creator',
@@ -113,8 +113,9 @@ class VectorDatabaseManager:
 
                 section_finder.reset
                 docs_to_upload.extend(chunks)
-
-            self.vectorstore.add_documents(documents=docs_to_upload)
+            for doc in docs_to_upload:
+                # Não era pra precisar desse for, mas se não tiver, o upload não funciona para alguns documentos
+                self.vectorstore.add_documents(documents=[doc])
 
         return self
     
@@ -252,7 +253,7 @@ class VectorDatabaseManager:
     def _format_meta_search_output(only_metadatas) -> List[Dict[str, Any]]:
         """Formatar a saída da consulta para uma lista de metadados únicos"""
         metadatas = only_metadatas['metadatas']
-        meta_to_search = ("source", "total_chunks", "page_count", "doc_type")
+        meta_to_search = ("source", "total_chunks", "page_count", "doc_type", "doc_id")
         unique_ocorrences = {
             tuple(metadata[meta] for meta in meta_to_search)
             for metadata in metadatas
