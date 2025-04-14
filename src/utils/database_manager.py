@@ -164,7 +164,7 @@ class VectorDatabaseManager:
         source: Optional[str] = None,
         doc_type: Optional[Literal['draft', 'reference', 'report']] = None,
         metadata_only: Optional[bool] = True,
-        chunk_id: Optional[List[int]] = None
+        section_list: Optional[List[str]] = None
     ) -> List[Dict[str, Any]]:
         """
         Método para obter as chunks de um artigo específico, identificado pelo nome(source).
@@ -182,8 +182,8 @@ class VectorDatabaseManager:
                 ("doc_type", {"$eq": doc_type})
             )if spec.get('$eq') is not None
         ]
-        if chunk_id is not None:
-            filters.append({"chunk_id": {"$in": chunk_id}})
+        if section_list is not None:
+            filters.append({"sections": {"$in": section_list}})
             
         where_filters = {"$and": filters} if len(filters) > 1 else filters[0]
         search_result = self.vectorstore.get(
@@ -277,17 +277,14 @@ class VectorDatabaseManager:
         """
         chunks = metadata_and_chunks['documents']
         metadatas = metadata_and_chunks['metadatas']
-        pattern = r"(Tabela\s+\d+\s+\u2013\s+.*?\n(?:.*\n)+?)(?=Fonte:|$)"
         # Se aproveita da natureza sequencial que os chunks aparecem(grandes blocos do mesmo artigo)
         # para organizar os chunks em um dicionário.
         # O dicionário tem como chave a source do documento e como valor uma lista de chunks e sua metadata
         text_content = "".join(chunks[idx] for idx in range(len(chunks)))
-        tables = re.findall(pattern, text_content, flags=re.UNICODE | re.DOTALL)
         chunk_list = [metadatas[idx]['chunk_id'] for idx in range(len(chunks))]
         
         content = {
             "text_content": text_content,
-            "tables": tables,
             "metadata": {                
                 "from_chunks": chunk_list,
                 "total_of_pages": metadatas[0]['page_count'],
