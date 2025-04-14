@@ -54,7 +54,7 @@ class VectorDatabaseManager:
         self.current_collection = collection_name
         return self
     
-    def store_documents(self, directory_list: List[str], type: str) -> 'VectorDatabaseManager':
+    def store_documents(self, directory_list: List[str], doc_type: Literal['draft', 'reference', 'report']) -> 'VectorDatabaseManager':
         """Carrega documentos com chunking e metadados"""
         if not self.vectorstore:
             raise RuntimeError("Database not initialized. Call initialize_db() first.")
@@ -99,7 +99,7 @@ class VectorDatabaseManager:
                     #new_metadata['tables'] = page.get('tables', [])
                     #new_metadata['images'] = page.get('images', [])
                     new_metadata['source'] = c_source
-                    new_metadata['type'] = type
+                    new_metadata['doc_type'] = doc_type
                     pages_as_docs.append(Document(page_content=page.get('text',''), metadata=new_metadata))
 
                 chunks = self.text_splitter.split_documents(pages_as_docs)
@@ -121,7 +121,7 @@ class VectorDatabaseManager:
     def query(
         self,
         query: Optional[str] = "",
-        type: Optional[Literal['draft', 'reference']] = None,
+        doc_type: Optional[Literal['draft', 'reference', 'report']] = None,
         source: Optional[List[str]] = None,
         top_k: Optional[int] = 10
     ) -> List[Dict[str, Any]]:
@@ -140,7 +140,7 @@ class VectorDatabaseManager:
         # Filtros para pesquisa avançada    
         filters = [
             {filter_argument: {"$in": value}} for filter_argument, value in (
-                ("type", type),
+                ("doc_type", doc_type),
                 ("source", source)
             )if value is not None
         ]
@@ -161,7 +161,7 @@ class VectorDatabaseManager:
         self, 
         doc_id: Optional[str] = None,
         source: Optional[str] = None,
-        type: Optional[Literal['draft', 'reference']] = None,
+        doc_type: Optional[Literal['draft', 'reference', 'report']] = None,
         metadata_only: Optional[bool] = True,
         chunk_id: Optional[List[int]] = None
     ) -> List[Dict[str, Any]]:
@@ -178,7 +178,7 @@ class VectorDatabaseManager:
             {filter_argument: spec} for filter_argument, spec in (
                 ("doc_id", {"$eq": doc_id}),
                 ("source", {"$eq": source}),
-                ("type", {"$eq": type})
+                ("doc_type", {"$eq": doc_type})
             )if spec.get('$eq') is not None
         ]
         if chunk_id is not None:
@@ -239,7 +239,7 @@ class VectorDatabaseManager:
         return {
             "text": doc.page_content,
             "source": doc.metadata.get("source"),
-            "type": doc.metadata.get("type"),
+            "doc_type": doc.metadata.get("doc_type"),
             "page": doc.metadata.get("page"),
             "page_count": doc.metadata.get("page_count"),
             "doc_id": doc.metadata.get("doc_id"),
@@ -252,7 +252,7 @@ class VectorDatabaseManager:
     def _format_meta_search_output(only_metadatas) -> List[Dict[str, Any]]:
         """Formatar a saída da consulta para uma lista de metadados únicos"""
         metadatas = only_metadatas['metadatas']
-        meta_to_search = ("source", "total_chunks", "page_count", "type")
+        meta_to_search = ("source", "total_chunks", "page_count", "doc_type")
         unique_ocorrences = {
             tuple(metadata[meta] for meta in meta_to_search)
             for metadata in metadatas

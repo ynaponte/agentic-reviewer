@@ -12,7 +12,7 @@ class FetchMetadataToolInput(BaseModel):
         )
     )
 
-    type: Optional[Literal['draft', 'reference']] = Field(
+    doc_type: Optional[Literal['draft', 'reference']] = Field(
         None, description=(
             "Type of document to fetch information (metadata) from. "
             "Can be used either to fetch information (metadata) from all articles"
@@ -46,12 +46,12 @@ class FetchMetadataTool(BaseTool):
     def _run(
         self,
         source: Optional[str] = None,
-        type: Optional[Literal['draft', 'reference']] = None,
+        doc_type: Optional[Literal['draft', 'reference']] = None,
     ) -> List[Dict[str, Any]]:
         return json.dumps(
             self._vectorstore.search_doc_by_meta(
                 source=source, 
-                type=type,
+                doc_type=doc_type,
                 metadata_only=True
             )
         )

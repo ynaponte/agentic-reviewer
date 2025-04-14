@@ -10,7 +10,7 @@ class QueryArticlesToolInput(BaseModel):
         ..., description="Query to search through out the database's articles for."
     )
 
-    type: Optional[Literal['draft', 'reference']] = Field(
+    doc_type: Optional[Literal['draft', 'reference']] = Field(
         None, description=(
             "Type of document to be searched for. Can be draft or reference"
             "Use to limit the search for documentes of a specific type."
@@ -56,7 +56,7 @@ class QueryArticlesTool(BaseTool):
     def _run(
         self,
         search_query: str,
-        type: Optional[Literal['draft', 'reference']] = None,
+        doc_type: Optional[Literal['draft', 'reference']] = None,
         source: Optional[str] = None,
         top_k: Optional[int] = 10,
 
@@ -64,7 +64,7 @@ class QueryArticlesTool(BaseTool):
         return json.dumps(
             self._vectordatabase.query(
                 query=search_query,
-                type=type,
+                doc_type=doc_type,
                 source=source,
                 top_k=top_k
             ),
