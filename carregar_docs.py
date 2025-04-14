@@ -12,4 +12,4 @@ if __name__ == "__main__":
     articles_db.store_documents(directory_list=['./artigos'], doc_type='reference')
     articles_db.store_documents(directory_list=['./relatorio'], doc_type='report')
 
-    print(articles_db.search_doc_by_meta(source='Resultado1.pdf', type='draft')) 
+    print(articles_db.search_doc_by_meta(source='Resultado1.pdf', doc_type='draft')) 
