@@ -1,50 +1,29 @@
-generate_results_discussion_outline:
+generate_outline_results_discussion:
   description: >
-    analysis:
-    {analysis}
+    Com base no relatório analítico consolidado, gere um outline estruturado para o capítulo de **Resultados e Discussão**,
+    que refleta a estrutura típica esperada para esse capítulo, composta por três partes principais:
+    - Um texto introdutório que contextualize os resultados;
+    - Uma subseção dedicada à apresentação ordenada dos principais achados;
+    - Uma subseção destinada à análise e discussão crítica desses achados.
 
-    Use the provided analysis to create a detailed outline for the **Results and Discussion** chapter of a scientific article.
-    The outline should reflect the logical progression of the results, major findings, and interpretative insights from 
-    the analysis.
-    
-    The generated outline should help the writer structure and write the **Results and Discussion** chapter in a way that 
-    integrates data presentation and discussion fluidly.
+    Utilize exclusivamente o conteúdo do relatório para fundamentar o outline. A seção de **Análise dos Resultados** deve estruturar a parte de apresentação dos dados;
+    a seção de **Interpretação Crítica** deve fundamentar os blocos argumentativos e analíticos da subseção de Discussão; e os elementos listados na 
+    **Apresentação Clara dos Elementos Visuais** devem ser integrados estrategicamente nas partes correspondentes do outline, sem serem transcritos.
+
+    O outline deve apresentar os achados do estudo, articular as evidências e interpretações de forma progressiva 
+    e lógica, e indicar onde e quais elementos visuais (como tabelas, figuras, equações e/ou trechos de código) devem ser 
+    incorporados para apoiar a argumentação.
+
+    Relatório Analítico consolidado:
+
+    {report}
+
   expected_output: >
-    A structured outline for the Results and Discussion chapter, containing:
-    - Section and subsection titles;
-    - A brief description of what each part should cover (e.g., specific findings, comparisons, discussions, etc.);
-    - A logical flow that connects findings with interpretations.  
-  agent: chapter_outliner
+    Um outline completo para o capítulo de Resultados e Discussão, contendo:
+    - Títulos e subtítulos organizados em ordem lógica;
+    - Descrições orientativas de cada seção;
+    - Uma seção inicial introdutória com título e descrição;
+    - Uma subseção de Resultados com tópicos bem definidos, cada um com título, descrição e indicação de onde os elementos visuais serão utilizados;
+    - Uma subseção de Discussão com tópicos interpretativos e analíticos, organizados em sequência lógica e embasados na Interpretação Crítica.
 
-generate_conclusion_outline:
-  description: >
-    analysis:
-    {analysis}
-
-    Based on the provided analysis and the previously generated Results and Discussion outline, create a detailed outline 
-    for the **Conclusion** chapter. The outline should synthesize the key findings, highlight the contribution of the study, 
-    and suggest implications or future directions.
-  expected_output: >
-    A structured outline for the Conclusion chapter, including:
-    - Section headings (if necessary);
-    - Summary points for each paragraph or section;
-    - Reflections on the significance of the results and any proposed future work.
-  agent: chapter_outliner
-  context: [generate_results_discussion_outline]
-
-generate_methodology_outline:
-  description: >
-    analysis:
-    {analysis}
-
-    Based on the analysis and previously generated outlines for Results and Discussion and Conclusion, produce a structured 
-    outline for the **Methodology** chapter. The outline should be coherent with the findings and conclusions and describe 
-    the approach taken in a way that supports reproducibility and credibility.
-  expected_output: >
-    A structured outline for the Methodology chapter, including:
-    - Sections and subsections (e.g., data collection, instrumentation, procedures, analysis techniques);
-    - Descriptions of what content each part should present;
-    - Any specific methodological notes that are relevant to the previously outlined results and conclusions.
-  agent: chapter_outliner
-  context: [generate_results_discussion_outline, generate_conclusion_outline]
-
+  agent: core_chapters_outliner
