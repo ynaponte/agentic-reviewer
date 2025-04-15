@@ -61,7 +61,7 @@ class ArticleWriterFlow(Flow[ArticleWriterState]):
             if task_output.name == "generate_outline_results_discussion":
                 self.state.results_discussion_outline = task_output.raw
                 print(f"Outline de Resultados e Discussao:\n\n{task_output.raw}")
-            elif task_output.name == "generate_conclusion_outline":
+            elif task_output.name == "generate_outline_conclusion":
                 self.state.conclusion_outline = task_output.raw
                 print(f"Outline de conclusão:\n\n{task_output.raw}")
             else:
