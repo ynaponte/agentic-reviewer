@@ -103,10 +103,10 @@ generate_outline_conclusion:
       * O encadeamento textual proposto reflete fechamento, não desenvolvimento de ideias inéditas;
       * A saída é clara, interpretável por outro agente, e permite continuidade coesa com o capítulo anterior.
   expected_output: |
-    Um outline para o capítulo **Conclusão** de um artigo científico, ancorado no relatório analítico consolidado, que cubra os três 
-    elementos essenciais de uma conclusão (síntese, limitações, contribuições), composto por um texto em três níveis hierárquicos: 
-    Título da seção; Tópicos com títulos descritivos e descrições orientativas; Organização sequencial coerente com a função de 
-    encerramento do artigo.
+    Um outline para o capítulo **Conclusão** de um artigo científico, ancorado no relatório analítico consolidado e coeso com o abordado 
+    no capítulo de Resultados e Discussão, que cubra os três elementos essenciais de uma conclusão (síntese, limitações, contribuições), 
+    composto por um texto em três níveis hierárquicos: Título da seção; Tópicos com títulos descritivos e descrições orientativas; Organização 
+    sequencial coerente com a função de encerramento do artigo.
 
     Exemplo de saída:
     ## Conclusão
@@ -125,3 +125,67 @@ generate_outline_conclusion:
   agent: core_chapters_outliner
   context: [generate_outline_results_discussion]
 
+generate_outline_methodology:
+  description: >
+    Relatório analítico consolidado:
+
+    {report}
+
+    Gere um outline estruturado para o capítulo **Metodologia** de um artigo científico, com base no relatório analítico consolidado (report), 
+    e nos outlines previamente gerados para os capítulos de Resultados e Discussão (results_discussion_outline) e Conclusão (conclusion_outline).
+    O objetivo da tarefa é construir um plano técnico e hierárquico que permita a um agente inteligente redator compor o capítulo de Metodologia 
+    com base nos procedimentos, abordagens e critérios inferidos a partir da análise do estudo. O outline deve deixar claro o que foi feito, como 
+    foi feito, e com que objetivos operacionais.
+
+    **Processo para execução da tarefa:**
+      * Examine os resultados descritos no report e no outline de Resultados e Discussão para inferir quais métodos foram utilizados;
+      * Utilize as informações da seção **Apresentação Clara dos Elementos Visuais** para identificar fluxogramas, diagramas, equações e 
+        representações gráficas associadas ao procedimento metodológico;
+      * Use a seção **Interpretação Crítica** para identificar decisões de projeto relevantes e justificativas metodológicas que devem aparecer na 
+        estrutura do capítulo;
+      * A partir da **Avaliação das Limitações do Estudo**, identifique pontos que devem ser abordados explicitamente como limitações do método;
+      * Consulte a seção de **Contribuições** para estruturar um tópico final destacando os diferenciais da metodologia utilizada.
+
+    **Restrições:**
+      * Não incluir trechos redacionais ou narrativas descritivas;
+      * Não alterar a ordem dos procedimentos inferidos do relatório;
+      * A metodologia deve ser estruturada como processo reprodutível: do início ao fim da execução experimental ou computacional;
+      * Não extrapolar a partir do domínio do relatório — apenas descrever o que foi aplicado ou justificado no documento.
+
+    **Diretrizes para geração bem sucedida:**
+      * O outline cobre os principais blocos do método (entrada, processamento, saída);
+      * A ordem dos tópicos reflete o fluxo metodológico do estudo;
+      * Há referência explícita a elementos visuais de suporte técnico (fluxogramas, equações, diagramas);
+      * O conteúdo é suficiente para permitir que outro agente redator gere um capítulo completo, técnico e reprodutível.
+  expected_output: |
+    Um outline para o capítulo **Metodologia** de um artigo científico, ancorado no relatório analítico consolidado e coeso com o abordado 
+    nos capítulos de Resultados e Discussão, e Conclusão, composto por um texto estruturado por seções e subtópicos contendo: Títulos 
+    representando fases metodológicas; Descrições orientativas de como redigir cada parte; Indicação de elementos visuais com função 
+    operacional clara.
+
+    Exemplo de saída:
+    ## Metodologia
+
+    ### 1. Formulação do Problema
+    - Apresenta a necessidade de projetar uma porta lógica OR de cinco entradas com base em modelagem geométrica.
+    - **Elemento visual:** Figura 1 - Esquema conceitual da estrutura fotônica desejada.
+
+    ### 2. Definição dos Parâmetros de Projeto
+    - Explica os parâmetros de entrada considerados (largura dos núcleos, espaçamento, angulação).
+    - **Elemento visual:** Tabela 1 - Lista de parâmetros ajustáveis usados como input no algoritmo.
+
+    ### 3. Implementação do Algoritmo Genético
+    - Descreve a estrutura do algoritmo, operadores utilizados, critério de parada e representação do cromossomo.
+    - **Elemento visual:** Figura 2 - Fluxograma do algoritmo genético utilizado.
+
+    ### 4. Execução das Simulações
+    - Detalha o ambiente de simulação, condições de contorno, número de iterações e critérios de avaliação dos indivíduos.
+    - **Elemento visual:** Equação 1 - Cálculo do fitness com base no contraste óptico.
+
+    ### 5. Reprodutibilidade e Limitações
+    - Aponta limitações como simulação única, sensibilidade a parâmetros iniciais e ausência de repetição estatística.
+
+    ### 6. Diferenciais da Abordagem Metodológica
+    - Destaca o uso do AG como método de projeto automatizado para estruturas ópticas com múltiplas entradas.
+  agent: core_chapters_outliner
+  context: [generate_outline_results_discussion, generate_outline_conclusion]
