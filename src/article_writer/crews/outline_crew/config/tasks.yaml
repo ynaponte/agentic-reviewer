@@ -4,7 +4,7 @@ generate_outline_results_discussion:
 
     {report}
 
-    Gere um outline estruturado para o capítulo de **Resultados e Discussão** de um artigo científico, com base no relatório analítico consolidado. 
+    Gere um outline estruturado para o capítulo **Resultados e Discussão** de um artigo científico, com base no relatório analítico consolidado. 
     O outline deve funcionar como um plano técnico e hierárquico, destinado a orientar um agente inteligente redator na construção do capítulo. 
     O objetivo é garantir que a posterior redação ocorra com alta fidelidade lógica, estrutural e analítica, a partir de instruções precisas e 
     interpretáveis por máquina, dessa forma, fornecendo suporte à escrita científica automatizada com elevado grau de coesão, rastreabilidade
@@ -38,7 +38,7 @@ generate_outline_results_discussion:
       * Os elementos visuais estão contextualizados com função comunicativa clara;
       * A saída está pronta para ser consumida por outro agente inteligente sem necessidade de reinterpretação manual.
   expected_output: |
-    Um outline para o capítulo de **Resultados e Discussão** de um artigo científico, ancorado no relatório analítico consolidado, 
+    Um outline para o capítulo **Resultados e Discussão** de um artigo científico, ancorado no relatório analítico consolidado, 
     composto por um texto em três níveis hierárquicos: Títulos principais (seções); Tópicos e subtópicos (subseções) com: Título conciso; 
     Descrição funcional orientando o foco da escrita; Indicação dos elementos visuais relevantes e sua função.
 
@@ -72,3 +72,56 @@ generate_outline_results_discussion:
     #### 4. Contribuições
     - Destaca a redução de complexidade e o potencial da metodologia para lógica óptica integrada.
   agent: core_chapters_outliner
+
+generate_outline_conclusion:
+  description: >
+    Relatório analítico consolidado:
+
+    {report}
+
+    Gere um outline estruturado para o capítulo de **Conclusão** de um artigo científico, com base no relatório analítico consolidado
+    e no outline previamente gerado para o capítulo de Resultados e Discussão, criado na tarefa anterior, generate_outline_results_discussion.
+    O objetivo do outline é fornecer uma estrutura lógica e funcional que será utilizada por um agente inteligente redator para construir o texto 
+    final do capítulo. A conclusão deve sintetizar os principais achados do estudo, refletir sobre suas limitações e destacar as contribuições 
+    científicas e técnicas da pesquisa. Esse plano textual deve permitir que o redator construa um encerramento forte, coeso e tecnicamente fundamentado.
+
+    **Processo para execução da tarefa:**
+      * Analise os tópicos abordados no outline de Resultados e Discussão para garantir continuidade lógica com o conteúdo anterior.
+      * Utilize a seção **Interpretação Crítica** para sintetizar as conclusões mais relevantes a partir das evidências discutidas.
+      * A partir da seção **Avaliação das Limitações do Estudo**, elabore tópicos que reconheçam as fragilidades metodológicas ou escopos restritos.
+      * Com base na seção **Contribuições**, crie tópicos que destaquem os méritos científicos, metodológicos ou tecnológicos do estudo.
+      * Quando pertinente, inclua um tópico final com **perspectivas para trabalhos futuros**, desde que fundamentado no relatório.
+
+    **Restrições:**
+      * O outline não deve conter trechos redacionais nem repetir texto do capítulo anterior.
+      * Não deve extrapolar ideias ou propor novas interpretações além do que está contido no relatório.
+      * A estrutura do capítulo deve seguir a lógica: síntese dos achados → limitações → contribuições → perspectivas (opcional).
+
+    **Diretrizes para geração bem sucedida:**
+      * O outline cobre os três elementos essenciais de uma conclusão (síntese, limitações, contribuições);
+      * Os tópicos estão fundamentados nas seções corretas do relatório;
+      * O encadeamento textual proposto reflete fechamento, não desenvolvimento de ideias inéditas;
+      * A saída é clara, interpretável por outro agente, e permite continuidade coesa com o capítulo anterior.
+  expected_output: |
+    Um outline para o capítulo **Conclusão** de um artigo científico, ancorado no relatório analítico consolidado, que cubra os três 
+    elementos essenciais de uma conclusão (síntese, limitações, contribuições), composto por um texto em três níveis hierárquicos: 
+    Título da seção; Tópicos com títulos descritivos e descrições orientativas; Organização sequencial coerente com a função de 
+    encerramento do artigo.
+
+    Exemplo de saída:
+    ## Conclusão
+
+    ### 1. Síntese dos Principais Resultados
+    - Retoma os achados mais relevantes do capítulo anterior e reafirma a viabilidade da porta lógica OR multientrada com base na modelagem via AG.
+
+    ### 2. Limitações do Estudo
+    - Discute restrições como a ausência de validação experimental e a dependência de uma única execução do algoritmo.
+
+    ### 3. Contribuições Técnicas e Científicas
+    - Destaca avanços como a redução de elementos ópticos, o uso eficiente do AG no design fotônico e a aplicabilidade da abordagem a outras portas.
+
+    ### 4. Perspectivas para Trabalhos Futuros
+    - Aponta possíveis caminhos como a criação de portas AND, XOR, ou sistemas fotônicos integrados de maior escala.
+  agent: core_chapters_outliner
+  context: [generate_outline_results_discussion]
+
