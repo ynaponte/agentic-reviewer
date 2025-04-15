@@ -30,6 +30,18 @@ class OutlineCrew:
             config=self.tasks_config['generate_outline_results_discussion']
         )
     
+    @task
+    def generate_outline_conclusion(self) -> Task:
+        return Task(
+            config=self.tasks_config['generate_outline_conclusion']
+        )
+    
+    @task
+    def generate_outline_methodology(self) -> Task:
+        return Task(
+            config=self.tasks_config['generate_outline_methodology']
+        )
+    
     @crew
     def crew(self) -> Crew:
         crew = Crew(
