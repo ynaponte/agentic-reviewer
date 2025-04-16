@@ -1,0 +1,59 @@
+write_technical_chapter:
+  description: >
+    OUTLINE DO CAPÍTULO:
+
+    {chapter_outline}
+
+    Escreva o capítulo "{chapter_title}" a partir do OUTLINE DO CAPÍTULO fornecido, tendo a certeza de expandir cada tópico e 
+    subtópico do outline em parágrafos bem fundamentados e detalhados, que desenvolvam as ideias indicadas, garantindo transições 
+    suaves entre os pontos e uma estrutura argumentativa-dissertativa coesa e lógica, conforme as melhores práticas 
+    de redação científica. 
+
+    O foco é desenvolver um capítulo de "{chapter_title}" completo e coeso, utilizando o outline como estrutura primária e 
+    realizando consultas à seu acervo de artigos via QueryArticlesTool para fundamentação. Os elementos visuais devem ser 
+    apenas referenciados e contextualizados nesta etapa.
+
+    **Processo para execução da tarefa:**
+      1. Leia o outline completo, observando sua estrutura hierárquica:
+       - Seções (nível 1) são indicadas por "##".
+       - Subseções (nível 2) por "###".
+       - Tópicos com conteúdo redacional a ser gerado são marcados por "####" seguido de numeração e um título
+       - Descrições aparecem sempre denotados por "- ".
+       
+      2. Percorra o outline sequencialmente, respeitando sua hierarquia e ordem textual. Para cada tópico a ser redigido:
+        a. Identifique a qual seção/subseção ele pertence e crie o respectivo bloco em LaTeX.
+        b. Use o título do da seção ou subseção como cabeçalho (`\subsection` ou `\subsubsection`).
+        c. Utilize a descrição do tópico como termo de busca na ferramenta QueryArticlesTool (respeitando a regra de um termo por vez).
+          - Aguarde o retorno da consulta antes de continuar.
+          - Se retornar resultados, selecione trechos relevantes e fundamente a redação com base neles.
+          - Caso não haja retorno, baseie-se apenas na descrição do outline.
+       d. Escreva parágrafos explicativos e analíticos baseados na consulta e na descrição.
+       e. Caso o tópico contenha uma linha marcada como "**ELEMENTO VISUAL:**", insira uma referência contextual clara (ex: "ver Figura 3") explicando a função do elemento — mas **não** insira o conteúdo literal.
+
+      3. Redija um ou mais parágrafos para o tópico, utilizando os dados da consulta como base para fundamentação.
+        - A redação deve ser analítica, técnica e conectada com os tópicos anteriores.
+        - As transições devem ser suaves e manter o tom acadêmico formal.
+      
+      4. Ao encontrar menções a elementos visuais no outline:
+        - Insira no texto uma indicação clara (ex: “ver Figura 1”), explicando sua função no contexto.
+        - Não insira o conteúdo literal do elemento neste momento.
+
+      5. Ao final, revise a consistência estrutural e lógica do capítulo.
+        - Verifique a conexão entre seções e a clareza de cada parágrafo.
+        - Organize o documento completo em LaTeX, respeitando a hierarquia definida no outline.
+
+    **Restrições:**
+      - Não inserir elementos visuais nesta etapa — apenas contextualizá-los por meio de referências (ex: "ver Figura 2").
+      - Seguir estritamente a ordem e o conteúdo do outline, sem adicionar tópicos externos.
+      - As consultas devem ser feitas uma a uma, por tópico, aguardando a resposta antes de avançar.
+
+    **Critérios de sucesso:**
+      - Cada seção e subseção do outline foi expandida de forma precisa, com conteúdo coerente e fluente.
+      - As transições entre parágrafos e tópicos são naturais e bem conectadas.
+      - As referências a elementos visuais estão bem posicionadas e explicadas, sem conter o conteúdo dos elementos.
+      - O documento final está em LaTeX e pode ser utilizado diretamente para continuação da automação.
+  expected_output: >  
+    Texto estruturado em LaTeX, com seções e subseções completas, parágrafos desenvolvidos para cada tópico e referências posicionadas 
+    a elementos visuais.   
+  agent: technical_chapter_writer
+  output_file: output/capitulo_teste.tex

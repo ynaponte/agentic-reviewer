@@ -5,22 +5,17 @@ from src.tools import QueryArticlesTool
 
 
 @CrewBase
-class ResultAndDiscussionCrew():
+class TechnicalChapterWriterCrew():
 
     agents_config = 'config/agents.yaml'
     tasks_config = 'config/tasks.yaml'
+    
     writer_llm = LLM(
         model="ollama/qwen2.5:32b",
         base_url="http://localhost:11434",
+        timeout=1800.0,
 		max_tokens=128000,
 		temperature=0.7
-    )
-
-    researcher_llm = LLM(
-        model='ollama/qwen2.5:14b-instruct-q8_0',
-        base_url='http://localhost:11434',
-        max_tokens=128000,
-        temperature=0.2
     )
 
     tool_call_llm = LLM(
@@ -31,30 +26,18 @@ class ResultAndDiscussionCrew():
     )
 	
     @agent
-    def research_agent(self) -> Agent:
+    def technical_chapter_writer(self) -> Agent:
         return Agent(
-            config=self.agents_config['research_agent'],
-            llm=self.researcher_llm,
+            config=self.agents_config['technical_chapter_writer'],
+            llm=self.writer_llm,
+            memory=True,
             tools=[QueryArticlesTool()]
-        )
-
-    @agent
-    def results_discussion_writer(self) -> Agent:
-        return Agent(
-            config=self.agents_config['results_discussion_writer'],
-            llm=self.writer_llm
-        )
-
-    @task
-    def select_complementary_elements(self) -> Task:
-        return Task(
-            config=self.tasks_config['select_complementary_elements'],
         )
     
     @task
-    def results_discussion_writting(self) -> Task:
+    def write_technical_chapter(self) -> Task:
         return Task(
-            config=self.tasks_config['results_discussion_writting'],
+            config=self.tasks_config['write_technical_chapter'],
             tools=[QueryArticlesTool()]
         )
     
