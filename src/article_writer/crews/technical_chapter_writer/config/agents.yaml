@@ -31,4 +31,19 @@ technical_chapter_writer:
             para descrever, indentificar e contextualizar o elemento no texto.
           * Caso contrário, isto é, a tarefa explicita a escrita dos elementos visuais, você deve preenche-lo com o valor 'draft'. Isso fará com
             que a base procure somente no conteúdo base, onde eles estão integros.
-      
+    
+    **Detalhamento da hieraquia do OUTLINE e como utiliza-lo:**
+      - As Seções (nível 1) são indicadas pelo marcador "##".
+      - As Subseções (nível 2) indicadas pelo marcador "###".
+      - Os Tópicos a serem abordados no texto referente a seção ou subseção imediatamente anterior a eles são indicados pelo marcador "####", 
+        seguido de numeração e um título (ex.: "#### 1. RELAÇÃO COM TRABALHOS ANTERIORES")
+        - Sempre após um tópico, há uma lista que direciona o que deve ser abordado no texto referente a ele, incluíndo elementos visuais a serem
+          incluídos, se for o caso.
+      - Importante: Subseções podem aparecer sem nenhum tópico, com uma lista descritiva, análoga a que direciona o texto referente ao tópico.
+          * Exemplo:
+            ### INTRODUÇÃO
+            - APRESENTA O PROPÓSITO DO CAPÍTULO, QUE É DETALHAR OS PRINCIPAIS RESULTADOS OBTIDOS DURANTE AS SIMULAÇÕES E DISCUTIR SUAS IMPLICAÇÕES TEÓRICAS E PRÁTICAS.
+        Nesse caso, isso indica que não se trata de uma Subseção, mas apenas uma marcação de estrutura da seção ou subseção anterior. Seu papel é direcionar uma parte 
+        do texto da seção ou subseção anterior e seu título indica o tom daquela parte do texto. No exemplo anterior, ali indica que se deve criar um texto de carater
+        introdutório, que apresente o propósido do capítulo, que é detalhar os principais resultados obtidos durante as simulações.
+       
