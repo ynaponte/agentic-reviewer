@@ -1,5 +1,6 @@
 write_technical_chapter:
   description: >
+  #TODO: QUEBRAR EM MAIS TASKS
     OUTLINE DO CAPÍTULO:
 
     {chapter_outline}
@@ -15,10 +16,6 @@ write_technical_chapter:
 
     **Processo para execução da tarefa:**
       1. Leia o outline completo, observando sua estrutura hierárquica:
-       - Seções (nível 1) são indicadas por "##".
-       - Subseções (nível 2) por "###".
-       - Tópicos com conteúdo redacional a ser gerado são marcados por "####" seguido de numeração e um título
-       - Descrições aparecem sempre denotados por "- ".
        
       2. Percorra o outline sequencialmente, respeitando sua hierarquia e ordem textual. Para cada tópico a ser redigido:
         a. Identifique a qual seção/subseção ele pertence e crie o respectivo bloco em LaTeX.
