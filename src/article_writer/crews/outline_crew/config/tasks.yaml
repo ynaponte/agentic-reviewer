@@ -11,66 +11,65 @@ generate_outline_results_discussion:
     e fidelidade aos dados e análises extraídas de documentos técnicos.
 
     **Processo para execução da tarefa:**
-      * Interprete o relatório analítico consolidado como sua única fonte de verdade;
-      * Estruture o outline em três blocos principais:
-        1. **Introdução**: contextualização do capítulo e dos resultados que serão apresentados.
-        2. **Resultados**: organização dos principais achados conforme a sequência metodológica ou lógica das perguntas de pesquisa. Para cada tópico:
-            - Defina um título representativo;
-            - Descreva o foco argumentativo;
-            - Relacione-o com os dados da seção "Análise dos Resultados";
-            - Indique os elementos visuais relacionados, com uma breve nota funcional (ex: *"Figura 3: Evidencia a melhoria do contraste óptico após 
-              otimização."*).
-        3. **Discussão**: tópicos interpretativos baseados nas seções "Interpretação Crítica", "Limitações" e "Contribuições". Inclua subtópicos com 
-           os seguintes focos:
-            - Relação com a literatura existente;
-            - Implicações teóricas;
-            - Limitações do estudo;
-            - Contribuições científicas.
+      1. Interprete o relatório analítico consolidado como sua única fonte de verdade.
+      2. Estruture o outline com os seguintes blocos:
+         - **Introdução**:
+           - Indicar o objetivo do capítulo e o escopo da análise.
+         - **Resultados**:
+           - Apresentar os principais achados com base nas seções "Análise dos Resultados" e "Apresentação dos Elementos Visuais".
+           - Ordenar os tópicos conforme a lógica metodológica ou sequência das perguntas de pesquisa.
+           - Para cada tópico:
+             * Indicar o foco argumentativo;
+             * Apontar os elementos visuais relevantes, com breve nota funcional;
+             * Incluir quaisquer resultados numéricos relevantes com contexto (ex: “Eficiência média: 93,4% ± 2,1%”).
+         - **Discussão**:
+           - Apoiar-se nas seções "Interpretação Crítica", "Limitações" e "Contribuições".
+           - Organizar os tópicos em torno de quatro grandes eixos:
+             * Relação com literatura existente;
+             * Implicações teóricas;
+             * Limitações do estudo;
+             * Contribuições científicas.
+           - Redigir os pontos como itens instrutivos para desenvolvimento textual, e não como subseções.
 
     **Restrições:**
-      * Não redigir o texto do capítulo, apenas sua estrutura com instruções descritivas e funcionais;
-      * Não utilizar fontes externas ao relatório;
-      * Não modificar a estrutura base (Introdução / Resultados / Discussão);
+      - Não gerar subseções ("####"); usar apenas "###" para seções e "-" para tópicos internos.
+      - Não redigir o conteúdo do capítulo — apenas a estrutura argumentativa.
+      - Não utilizar fontes externas além do relatório.
+      - Manter a sequência: Introdução / Resultados / Discussão.
 
-    **Diretrizes para geração bem sucedida:**
-      * O outline segue integralmente a estrutura especificada;
-      * Todos os tópicos estão diretamente ancorados em seções do relatório;
-      * Os elementos visuais estão contextualizados com função comunicativa clara;
-      * A saída está pronta para ser consumida por outro agente inteligente sem necessidade de reinterpretação manual.
+    **Critérios de sucesso:**
+      - O outline está organizado em três seções, com tópicos técnicos bem definidos;
+      - Cada tópico está ancorado em evidências do relatório e inclui, sempre que possível, elementos visuais e/ou resultados numéricos;
+      - O tom da saída é instrutivo, com verbos no infinitivo;
+      - A estrutura é adequada para uso direto por agentes de escrita automatizada.
   expected_output: |
-    Um outline para o capítulo **Resultados e Discussão** de um artigo científico, ancorado no relatório analítico consolidado, 
-    composto por um texto em três níveis hierárquicos: Títulos principais (seções); Tópicos e subtópicos (subseções) com: Título conciso; 
-    Descrição funcional orientando o foco da escrita; Indicação dos elementos visuais relevantes e sua função.
+    Um outline para o capítulo **Resultados e Discussão**, estruturado com três seções principais ("###") e listas de tópicos internos com marcador "-".
 
     Exemplo de saída:
-     ## Resultados e Discussão
+
+    ## Resultados e Discussão
 
     ### Introdução
-    - Apresenta o propósito do capítulo e o escopo dos dados que serão analisados.
+    - APRESENTAR o propósito do capítulo, que é descrever os principais resultados obtidos nas simulações e analisar suas implicações teóricas e práticas.
+    - ANTECIPAR as dimensões que serão exploradas: desempenho computacional, validade da porta lógica, eficiência estrutural.
 
     ### Resultados
-
-    #### 1. Desempenho do Algoritmo Genético
-    - Apresenta os padrões de convergência e estabilidade obtidos nas simulações.
-    - **Elemento visual:** Figura 4 - Representa o progresso do fitness ao longo das gerações.
-
-    #### 2. Validação da Porta OR
-    - Demonstra o comportamento esperado da lógica OR nas cinco entradas, validado por Tabela 2.
-    - **Elemento visual:** Tabela 2 - Mostra os estados de entrada e saída conforme esperado.
+    - APRESENTAR a eficácia do algoritmo genético na convergência dos parâmetros ótimos da porta lógica.
+      - **Elemento visual:** Figura 3 - Representa o progresso do fitness.
+      - **Resultado numérico:** Convergência alcançada em 84% das execuções em menos de 50 gerações.
+    - DESCREVER os testes de validação da funcionalidade da porta OR com cinco entradas.
+      - **Elemento visual:** Tabela 1 - Estados de entrada e saída esperados.
+      - **Resultado numérico:** Acerto lógico: 100% nos 32 casos simulados.
+    - COMPARAR a complexidade estrutural da solução proposta com abordagens tradicionais.
+      - **Elemento visual:** Figura 2 - Redução do número de elementos óticos.
+      - **Resultado numérico:** Redução de 35% na extensão média do circuito.
 
     ### Discussão
-
-    #### 1. Relação com Trabalhos Anteriores
-    - Compara os resultados obtidos com soluções propostas na literatura.
-
-    #### 2. Implicações Teóricas
-    - Analisa o impacto do uso de AGs na modelagem fotônica.
-
-    #### 3. Limitações do Estudo
-    - Aponta ausência de repetição de simulações e validação experimental.
-
-    #### 4. Contribuições
-    - Destaca a redução de complexidade e o potencial da metodologia para lógica óptica integrada.
+    - RELACIONAR os achados com trabalhos anteriores, destacando a melhoria de desempenho e simplificação arquitetônica.
+    - ANALISAR o impacto do uso de AGs na modelagem de estruturas ópticas escaláveis.
+    - IDENTIFICAR as limitações do estudo, como a ausência de verificação experimental em ambiente real.
+    - DESTACAR as contribuições para o campo de circuitos fotônicos integrados, com foco em escalabilidade e eficiência.
+      - **Elementos visuais esperados:** Figuras 4, 5 e 6.
   agent: core_chapters_outliner
 
 generate_outline_conclusion:
@@ -86,42 +85,57 @@ generate_outline_conclusion:
     científicas e técnicas da pesquisa. Esse plano textual deve permitir que o redator construa um encerramento forte, coeso e tecnicamente fundamentado.
 
     **Processo para execução da tarefa:**
-      * Analise os tópicos abordados no outline de Resultados e Discussão para garantir continuidade lógica com o conteúdo anterior.
-      * Utilize a seção **Interpretação Crítica** para sintetizar as conclusões mais relevantes a partir das evidências discutidas.
-      * A partir da seção **Avaliação das Limitações do Estudo**, elabore tópicos que reconheçam as fragilidades metodológicas ou escopos restritos.
-      * Com base na seção **Contribuições**, crie tópicos que destaquem os méritos científicos, metodológicos ou tecnológicos do estudo.
-      * Quando pertinente, inclua um tópico final com **perspectivas para trabalhos futuros**, desde que fundamentado no relatório.
+      1. Analise o conteúdo do relatório analítico consolidado, com ênfase nas seções "Interpretação Crítica", "Avaliação das Limitações" e "Contribuições".
+      2. Examine o outline de Resultados e Discussão para garantir continuidade lógica com os achados apresentados.
+      3. Estruture o outline com os seguintes blocos (usando "###" para seções):
+         - **Síntese dos Resultados**: 
+           - SINTETIZAR os principais achados discutidos no capítulo anterior;
+           - RETOMAR valores numéricos ou tendências relevantes que sustentam a conclusão.
+         - **Limitações do Estudo**:
+           - RECONHECER eventuais restrições metodológicas ou escopos parciais;
+           - INDICAR consequências práticas dessas limitações na aplicabilidade dos resultados.
+         - **Contribuições Científicas e Técnicas**:
+           - DESTACAR os méritos da abordagem proposta, tanto conceituais quanto metodológicos;
+           - RELACIONAR as contribuições ao estado da arte da área.
+         - **Perspectivas Futuras** (opcional):
+           - SUGERIR caminhos viáveis para continuidade do trabalho, com base nas descobertas e limitações registradas.
 
     **Restrições:**
-      * O outline não deve conter trechos redacionais nem repetir texto do capítulo anterior.
-      * Não deve extrapolar ideias ou propor novas interpretações além do que está contido no relatório.
-      * A estrutura do capítulo deve seguir a lógica: síntese dos achados → limitações → contribuições → perspectivas (opcional).
+      - O outline não deve conter texto redacional completo;
+      - Não devem ser introduzidas novas interpretações ou extrapolações;
+      - Deve-se evitar subtópicos artificiais: a estrutura deve usar apenas seções ("###") e tópicos descritivos em lista ("-").
 
-    **Diretrizes para geração bem sucedida:**
-      * O outline cobre os três elementos essenciais de uma conclusão (síntese, limitações, contribuições);
-      * Os tópicos estão fundamentados nas seções corretas do relatório;
-      * O encadeamento textual proposto reflete fechamento, não desenvolvimento de ideias inéditas;
-      * A saída é clara, interpretável por outro agente, e permite continuidade coesa com o capítulo anterior.
+    **Critérios de sucesso:**
+      - O outline apresenta tópicos claros e objetivos para cada bloco da conclusão;
+      - Os pontos estão diretamente ancorados no relatório;
+      - A sequência favorece o fechamento lógico do artigo, com fluidez em relação ao capítulo anterior;
+      - O tom é instrutivo e adequado para consumo por agentes autônomos de escrita.
   expected_output: |
-    Um outline para o capítulo **Conclusão** de um artigo científico, ancorado no relatório analítico consolidado e coeso com o abordado 
-    no capítulo de Resultados e Discussão, que cubra os três elementos essenciais de uma conclusão (síntese, limitações, contribuições), 
-    composto por um texto em três níveis hierárquicos: Título da seção; Tópicos com títulos descritivos e descrições orientativas; Organização 
-    sequencial coerente com a função de encerramento do artigo.
+    Um outline estruturado para o capítulo **Conclusão**, com seções organizadas por "###" e tópicos internos listados com marcador "-".
+    Os verbos devem ser escritos no infinitivo, orientando o comportamento de um agente redator.
 
     Exemplo de saída:
+
     ## Conclusão
 
-    ### 1. Síntese dos Principais Resultados
-    - Retoma os achados mais relevantes do capítulo anterior e reafirma a viabilidade da porta lógica OR multientrada com base na modelagem via AG.
+    ### Síntese dos Resultados
+    - REAFIRMAR o sucesso da modelagem da porta OR multientrada via algoritmos genéticos.
+    - SINTETIZAR os principais achados: eficiência de 94,7%, redução estrutural de 35%, acurácia de 100% nos testes simulados.
+    - RELACIONAR os achados às perguntas de pesquisa estabelecidas na introdução.
 
-    ### 2. Limitações do Estudo
-    - Discute restrições como a ausência de validação experimental e a dependência de uma única execução do algoritmo.
+    ### Limitações do Estudo
+    - IDENTIFICAR a ausência de validação experimental como um fator que restringe a aplicabilidade direta dos resultados.
+    - APONTAR a dependência de parâmetros do algoritmo genético como possível fonte de variação nos resultados.
+    - INDICAR a necessidade de replicabilidade para reforçar robustez da proposta.
 
-    ### 3. Contribuições Técnicas e Científicas
-    - Destaca avanços como a redução de elementos ópticos, o uso eficiente do AG no design fotônico e a aplicabilidade da abordagem a outras portas.
+    ### Contribuições Científicas e Técnicas
+    - DESTACAR a redução de elementos ópticos como contribuição prática para a miniaturização de circuitos.
+    - RESSALTAR o uso inovador de AGs no contexto de lógica óptica multientrada.
+    - EVIDENCIAR o potencial do método para outras aplicações fotônicas.
 
-    ### 4. Perspectivas para Trabalhos Futuros
-    - Aponta possíveis caminhos como a criação de portas AND, XOR, ou sistemas fotônicos integrados de maior escala.
+    ### Perspectivas Futuras
+    - SUGERIR o desenvolvimento de portas AND, XOR ou estruturas lógicas combinadas com controle programável.
+    - PROPOR a integração da abordagem em sistemas fotônicos maiores e escaláveis.
   agent: core_chapters_outliner
   context: [generate_outline_results_discussion]
 
@@ -139,54 +153,56 @@ generate_outline_methodology:
     interpretações ou resultados.
 
     **Processo para execução da tarefa:**
-      * Analise os outlines dos capítulos técnicos anteriores para garantir alinhamento entre o método descrito e os dados gerados posteriormente;
-      * Utilize a seção **Apresentação Clara dos Elementos Visuais** do relatório consolidado, para identificar fluxogramas, equações, pseudocódigos 
-        ou diagramas metodológicos;
-      * Baseie-se na **Análise dos Resultados** do relatório consolodado apenas para inferir o procedimento executado (e nunca os dados gerados por 
-        ele);
-      * A partir das seções **Interpretação Crítica** e das **Limitações** do relatório consolidado, recupere aspectos do método que merecem ser 
-        descritos como fragilidades técnicas, mas sem discuti-los;
-      * Não utilize nenhuma seção do relatório para descrever resultados, interpretações ou contribuições. Foque apenas no **como foi feito**, 
-        **com que parâmetros**, e **por quê**.
+      1. Examine os outlines dos capítulos de Resultados e Conclusão para garantir consistência entre a metodologia e os dados posteriormente obtidos.
+      2. Utilize a seção **Apresentação dos Elementos Visuais** para identificar fluxogramas, diagramas, equações ou pseudocódigos relacionados ao processo metodológico.
+      3. Use a seção **Análise dos Resultados** apenas como fonte para inferir o que foi feito (jamais para citar resultados).
+      4. Recorra às seções **Interpretação Crítica** e **Limitações** apenas para identificar fragilidades do método, sem discuti-las.
+      5. Estruture o capítulo em blocos metodológicos (com o operador "###") que sigam a lógica do processo técnico, da definição do problema até a avaliação do modelo.
+         Para cada seção, liste tópicos internos como instruções com marcador "-" no infinitivo.
 
     **Restrições:**
-      * O outline deve se restringir exclusivamente à descrição do processo metodológico;
-      * É proibido incluir tópicos com análise de dados, apresentação de resultados, discussão teórica ou conclusão;
-      * O conteúdo deve seguir uma ordem técnica de execução: definição do problema, parametrização, implementação, simulação, avaliação do modelo.
+      - Não incluir análises de dados, valores obtidos, gráficos de resultados ou interpretações.
+      - É proibido transformar tópicos em subtópicos hierárquicos com "####".
+      - O foco é exclusivo no “como foi feito”, “com que critérios” e “por que esses métodos foram adotados”.
 
-    **Diretrizes para geração bem sucedida:**
-      * Todos os tópicos do outline descrevem apenas ações realizadas e critérios metodológicos;
-      * A estrutura reflete o processo técnico de forma clara e reprodutível;
-      * Não há presença de conteúdo pertencente aos capítulos de **Resultados e Discussão** ou **Conclusão**;
-      * Elementos visuais mencionados são de apoio metodológico (não ilustram achados).
+    **Critérios de sucesso:**
+      - O outline descreve com clareza todas as etapas técnicas do processo, com instruções de escrita bem definidas;
+      - Elementos visuais incluídos possuem função exclusivamente técnica;
+      - O encadeamento metodológico segue a ordem: definição do problema → parametrização → implementação → simulação → avaliação → limitações;
+      - A estrutura final está pronta para ser consumida por um agente redator técnico com mínima ambiguidade.
   expected_output: |
-    Um outline para o capítulo **Metodologia** de um artigo científico, ancorado no relatório analítico consolidado e alinhando entre o método 
-    descrito e os dados gerados posteriormente, descrevendo apenas ações realizadas e critérios metodológicos. Deve ser composto por um texto 
-    estruturado em blocos sequenciais, contendo: - Títulos representando cada etapa do processo; Descrições orientativas sobre o que deve ser 
-    redigido em cada seção; Indicação de elementos visuais com função Indicação opcional de elementos visuais com função técnica (ex: 
-    fluxograma, equação, código).
+    Um outline estruturado para o capítulo **Metodologia**, composto por seções "###" correspondentes a cada etapa do processo técnico.
+    Cada seção conterá tópicos internos listados com marcador "-", redigidos no infinitivo, descrevendo com clareza o que o redator deverá abordar.
+    Elementos visuais devem ser incluídos sempre que contribuírem para a compreensão técnica do método.
 
     Exemplo de saída:
+
     ## Metodologia
 
-    ### 1. Definição do Problema e Objetivos Técnicos
-    - Descreve a tarefa de projetar uma porta lógica OR com cinco entradas, com foco na redução de complexidade estrutural.
+    ### Definição do Problema e Objetivos Técnicos
+    - DEFINIR o objetivo de projetar uma porta lógica OR multientrada.
+    - EXPLICAR a motivação para otimizar a complexidade estrutural do circuito fotônico.
 
-    ### 2. Parametrização do Espaço de Soluções
-    - Apresenta os parâmetros de entrada (ex: espaçamento, largura, ângulo) e suas faixas de variação.
-    - **Elemento visual:** Tabela 1 – Lista dos parâmetros utilizados pelo AG.
+    ### Parametrização do Espaço de Soluções
+    - DESCREVER os parâmetros do modelo (ex: espaçamento, largura, ângulo de entrada).
+    - JUSTIFICAR as faixas de variação dos parâmetros com base na viabilidade física.
+    - **Elemento visual:** Tabela 1 - Lista dos parâmetros manipulados pelo algoritmo.
 
-    ### 3. Implementação do Algoritmo Genético
-    - Detalha estrutura do AG, operadores genéticos, função de fitness e critérios de parada.
-    - **Elemento visual:** Figura 2 – Fluxograma do algoritmo.
+    ### Implementação do Algoritmo Genético
+    - EXPLICAR a estrutura do algoritmo (codificação, seleção, cruzamento, mutação).
+    - DEFINIR a função de fitness e os critérios de parada.
+    - **Elemento visual:** Figura 2 - Fluxograma do processo de otimização.
 
-    ### 4. Ambiente de Simulação
-    - Descreve o simulador empregado, condições de contorno, número de execuções e parâmetros computacionais.
+    ### Ambiente de Simulação
+    - INFORMAR o simulador utilizado e os recursos computacionais empregados.
+    - DETALHAR o número de execuções e as condições de contorno aplicadas.
 
-    ### 5. Critérios de Avaliação
-    - Explica como os indivíduos foram avaliados, sem citar os valores obtidos (ex: baseado em contraste óptico ≥ 0.3).
+    ### Critérios de Avaliação
+    - ESPECIFICAR os critérios de avaliação adotados (ex: contraste mínimo, número de elementos).
+    - EVITAR mencionar valores obtidos — apenas as regras de decisão utilizadas.
 
-    ### 6. Limitações da Abordagem
-    - Identifica fragilidades do método, como ausência de repetição estatística ou validação experimental.
+    ### Limitações da Abordagem
+    - IDENTIFICAR eventuais fragilidades metodológicas como ausência de validação experimental.
+    - APONTAR restrições do modelo quanto à generalização ou repetibilidade.
   agent: core_chapters_outliner
   context: [generate_outline_results_discussion, generate_outline_conclusion]
