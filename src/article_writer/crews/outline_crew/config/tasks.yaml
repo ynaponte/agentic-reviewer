@@ -33,9 +33,17 @@ generate_outline_results_discussion:
 
     **Restrições:**
       - Não gerar subseções ("####"); usar apenas "###" para seções e "-" para tópicos internos.
-      - Não redigir o conteúdo do capítulo — apenas a estrutura argumentativa.
+      - Não redigir o conteúdo do capítulo, apenas a estrutura argumentativa.
       - Não utilizar fontes externas além do relatório.
       - Manter a sequência: Introdução / Resultados / Discussão.
+      - Escreva os tópicos na segunda pessoa do singular.
+      - Incluir elementos visuais e resultados numérico referentes a um tópico interno, como lista filha do item que o contém, devidamente os marcando como
+        **Elemento Visual** ou **Resultado numérico**.
+        ex.:
+          - APRESENTAR resultados do experimento
+            - **Elemento Visual:** Figura 1 - resultado 1; 
+            - **Elemento Visual:** Figura 2 - Resultado 2;
+            - **Resultado numérico:** Redução de 35% na extensão média do circuito.
 
     **Critérios de sucesso:**
       - O outline está organizado em três seções, com tópicos técnicos bem definidos;
@@ -69,7 +77,7 @@ generate_outline_results_discussion:
     - ANALISAR o impacto do uso de AGs na modelagem de estruturas ópticas escaláveis.
     - IDENTIFICAR as limitações do estudo, como a ausência de verificação experimental em ambiente real.
     - DESTACAR as contribuições para o campo de circuitos fotônicos integrados, com foco em escalabilidade e eficiência.
-      - **Elementos visuais esperados:** Figuras 4, 5 e 6.
+      - **Elementos visuais:** Figuras 4, 5 e 6.
   agent: core_chapters_outliner
 
 generate_outline_conclusion:
