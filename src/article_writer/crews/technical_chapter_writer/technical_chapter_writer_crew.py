@@ -10,43 +10,60 @@ class TechnicalChapterWriterCrew():
     agents_config = 'config/agents.yaml'
     tasks_config = 'config/tasks.yaml'
     
+    researcher_and_editor_llm = LLM(
+        model="ollama/qwen2.5:3b-instruct-q6_K",
+        base_url="http://localhost:11434",
+        timeout=1800.0,
+		max_tokens=128000,
+		temperature=0.4
+    )
+
     writer_llm = LLM(
-        model="ollama/qwen2.5:32b",
+        model="ollama/qwen2.5:3b-instruct-q6_K",
         base_url="http://localhost:11434",
         timeout=1800.0,
 		max_tokens=128000,
 		temperature=0.7
     )
-
-    tool_call_llm = LLM(
-        model='ollama/qwen2.5:14b',
-        base_url='http://localhost:11434',
-        max_tokens=128000,
-        temperature=0.2
-    )
 	
     @agent
-    def technical_chapter_writer(self) -> Agent:
+    def topic_researcher(self) -> Agent:
         return Agent(
-            config=self.agents_config['technical_chapter_writer'],
-            llm=self.writer_llm,
-            memory=True,
+            config=self.agents_config['topic_researcher'],
+            llm=self.researcher_and_editor_llm,
             tools=[QueryArticlesTool()]
         )
     
+    @agent
+    def technical_writer(self) -> Agent:
+        return Agent(
+            config=self.agents_config['technical_writer'],
+            llm=self.writer_llm,
+        )
+    
+    @agent
+    def technical_editor(self) -> Agent:
+        return Agent(
+            config=self.agents_config['technical_editor'],
+            llm=self.researcher_and_editor_llm,
+        )
+
     @task
     def write_technical_chapter(self) -> Task:
         return Task(
             config=self.tasks_config['write_technical_chapter'],
-            tools=[QueryArticlesTool()]
         )
     
     @crew
     def crew(self) -> Crew:
         return Crew(
-			agents=self.agents,
+			agents=[
+                self.topic_researcher,
+                self.technical_writer,
+                self.technical_editor
+            ],
 			tasks=self.tasks,
-			process=Process.sequential,
+			process=Process.hierarchical,
 			verbose=True,
 		)
     
