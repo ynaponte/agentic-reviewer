@@ -27,6 +27,14 @@ class TechnicalChapterWriterCrew():
     )
 	
     @agent
+    def chapter_manager(self) -> Agent:
+        return Agent(
+            config=self.agents_config['chapter_manager'],
+            llm=self.researcher_and_editor_llm,  # Trocar depois para o deepseek ou QWQ
+            allow_delegation=True,
+        )
+
+    @agent
     def topic_researcher(self) -> Agent:
         return Agent(
             config=self.agents_config['topic_researcher'],
@@ -65,5 +73,6 @@ class TechnicalChapterWriterCrew():
 			tasks=self.tasks,
 			process=Process.hierarchical,
 			verbose=True,
+            memory=True
 		)
     
