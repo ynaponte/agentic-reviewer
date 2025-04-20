@@ -1,52 +1,48 @@
 write_technical_chapter:
   description: >
-    OUTLINE DO CAPÍTULO:
+    CHAPTER OUTLINE:
 
     {chapter_outline}
 
-    Gere o capítulo "{chapter_title}" a partir do OUTLINE DO CAPÍTULO fornecido, orquestrando a produção do capítulo e seu texto em completude, 
-    delegando as atividades de pesquisa, escrita e edição aos agentes subordinados especializados. O capítulo gerado deve ser fiel a estrutura 
-    proposta no OUTLINE, com conteúdo rico e fundamentado, formatado em LaTeX e escrito em linguagem português brasileiro, tendo a certeza de 
-    que todos os tópicos de cada uma das seções (ou subseções, etc) são contemplados no capítulo.
+    Generate the chapter "{chapter_title}" based on the provided CHAPTER OUTLINE, orchestrating its full production and text,
+    delegating research, writing, and editing tasks to specialized subordinate agents. The resulting chapter must strictly follow 
+    the proposed structure, be rich in content and arguments, formatted in LaTeX, and written in Brazilian Portuguese. All topics in each 
+    section (or subsection, etc.) must be addressed.
 
-    **Processo para execução da tarefa:**
-      1. **Analise o outline completo**, identificando a estrutura hierárquica (seções, subseções), tópicos a tratar em cada uma delas e elementos 
-      visuais a serem incluídos e contextualizados no texto.
+    **Execution Process:**
+      1. **Analyze the full outline**, identifying the hierarchical structure (sections, subsections), topics to be addressed in each,
+      and visual elements to be included and contextualized.
 
-      2. Para **cada seção ou subseção** explicitada no outline (demarcadas por como "###", "####", etc.):
-        * Para **cada tópico** da seção (pontos da lista logo a baixo ao título da seção, com cada elemento demarcado por "-", ex.:"- Compara os resultados..."):
-          - Faça a pesquisa do tópico nos artigos de referencia e obtenha argumentação necessária para fundamentar a escrita do texto.
+      2. For **each section or subsection** in the outline (marked as "###", "####", etc.):
+        * For **each topic** (bulleted items under each section):
+          - Search reference articles for the topic and obtain the necessary arguments for writing.
 
-        * Após a conclusão da pesquisa, realize a escrita da seção ou subseção, levando em conta a estrutura pedida pelo outline e a argumentação obtida na fase
-          de pesquisa.        
+        * After the research is done, write the section/subsection based on the outline and research findings.
 
-      3. Uma vez todas as seções e subseções escritas, combine-as de acordo com a estrutura para o capítulo explicitada no outline, fazendo a edição final do 
-      capítulo, da seguinte forma:
-        - Organize-as em forma capítulo hierárquico em LaTeX, com uso adequado de `\section`, `\subsection`, `\subsubsection`, etc;
-        - Garanta que não nenhum texto foi resumido ou modificado de modo a perder conteúdo durante o processo de edição final;
-        - Certificar-se de que a estrutura e a ordem do outline foram seguidas com fidelidade;
-        - Certificar-se de que todos os tópicos do outline foram abrangidos no capítulo.
+      3. Once all sections are written, combine them according to the outline structure to form the complete chapter. Final editing must:
+        - Structure the chapter hierarchically using LaTeX (`\section`, `\subsection`, `\subsubsection`, etc.);
+        - Ensure no content is summarized or altered during the final merge;
+        - Follow the outline structure and order faithfully;
+        - Ensure all outline topics are covered in the chapter.
 
-      4. Caso necessário ciclos de revisão (sinalizados pelo agente *technical_editor*, o editor), você deve interpretar a requisição dele, observando qual o 
-      trecho/tópico problemático sinalizado e qual o ou os problemas encontrados e delegue uma nova pesquisa ao pesquisador e uma nova tarefa de escrita ao 
-      escritor, certificando-se de que o problema foi resolvido. Imponha um limite de até 5 revisões. Após a quinta, o texto deve ser escrito como está.
+      4. If revisions are necessary (flagged by the *technical_editor* agent), interpret the issue, identify the problematic section/topic,
+      and assign new research and writing tasks to fix the problem. Impose a maximum of 5 revision cycles. After the fifth, the chapter proceeds as-is.
 
-      5. Uma vez terminado o processo de edição, retorne ao usuário o capítulo pronto. O trabalho está terminado.
+      5. Once editing is complete, return the finalized chapter to the user. The task is complete.
 
-    **Restrições:**
-      - O conteúdo textual do capítulo deve estar escrito completamente em português brasileiro;
-      - Durante a fazer de junção das seções e subseções escritas(edição final), nenhum texto deve ser resumido ou modificado de qualquer forma, apenas alocado 
-        em seu devido lugar, de acordo com o OUTLINE;
-      - Não adicione nenhuma seção ou subseção que o outline não especifique.
+    **Restrictions:**
+      - The chapter text must be written entirely in Brazilian Portuguese;
+      - During the final editing phase, no content must be summarized or modified, only placed in its correct position;
+      - Do not add any section or subsection not specified in the outline.
 
-    **Critérios de sucesso:** 
-      - O capítulo segue a estrutura proposta pelo outline;
-      - Todos os agentes subordinados foram utilizados na execução da tarefa;
-      - Todos os tópicos foram devidamente abordados e detalhados;
-      - O capítulo está escrito em português brasileiro e formatado em LaTeX 100% funcional, pronto para ser incluso em um artigo científco.
+    **Success Criteria:** 
+      - The chapter follows the outline structure;
+      - All subordinate agents were used in the task;
+      - All topics were properly addressed and detailed;
+      - The chapter is written in Brazilian Portuguese and formatted in fully functional LaTeX, ready for inclusion in a scientific article.
   expected_output: >
-    Um capítulo completo em LaTeX, com texto estruturado com base no outline, contendo:
-    - Parágrafos redigidos com fundamentação científica e clareza argumentativa;
-    - Referências contextuais a elementos visuais (sem transcrição do conteúdo);
-    - Uso correto de estrutura hierárquica em LaTeX;
-    - Fluidez textual com transições claras entre tópicos e seções.
+    A complete chapter in LaTeX, with text structured according to the outline, containing:
+    - Paragraphs written with scientific foundation and argumentative clarity;
+    - Contextual references to visual elements (without content transcription);
+    - Correct use of hierarchical structure in LaTeX;
+    - Textual fluency with clear transitions between topics and sections.
