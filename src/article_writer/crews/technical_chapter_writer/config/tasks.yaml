@@ -31,6 +31,8 @@ write_technical_chapter:
       trecho/tópico problemático sinalizado e qual o ou os problemas encontrados e delegue uma nova pesquisa ao pesquisador e uma nova tarefa de escrita ao 
       escritor, certificando-se de que o problema foi resolvido. Imponha um limite de até 5 revisões. Após a quinta, o texto deve ser escrito como está.
 
+      5. Uma vez terminado o processo de edição, retorne ao usuário o capítulo pronto. O trabalho está terminado.
+
     **Restrições:**
       - O conteúdo textual do capítulo deve estar escrito completamente em português brasileiro;
       - Durante a fazer de junção das seções e subseções escritas(edição final), nenhum texto deve ser resumido ou modificado de qualquer forma, apenas alocado 
