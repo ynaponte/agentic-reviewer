@@ -4,31 +4,46 @@ write_technical_chapter:
 
     {chapter_outline}
 
-    Coordene a criação do capítulo "{chapter_title}" a partir do OUTLINE DO CAPÍTULO fornecido, orquestrando a produção do capítulo e seu texto em completude, 
-    delegando as atividades de pesquisa e escrita aos agentes subordinados especializados. Seu trabalho será executado de forma hierárquica, coordenando cada 
-    tópico do outline individualmente através de um ciclo de **pesquisa + redação**, garantindo qualidade, profundidade e fidelidade à estrutura original, com
-    o objetivo de, ao final do processo, obter um capítulo completo, escrito em LaTeX, em linguagem português brasileiro, abordando todas as seções e 
-    tópico da estrutura proposta pelo OUTLINE, para um artigo científco de alto ímpacto.
+    Gere o capítulo "{chapter_title}" a partir do OUTLINE DO CAPÍTULO fornecido, orquestrando a produção do capítulo e seu texto em completude, 
+    delegando as atividades de pesquisa, escrita e edição aos agentes subordinados especializados. O capítulo gerado deve ser fiel a estrutura 
+    proposta no OUTLINE, com conteúdo rico e fundamentado, formatado em LaTeX e escrito em linguagem português brasileiro, tendo a certeza de 
+    que todos os tópicos de cada uma das seções (ou subseções, etc) são contemplados no capítulo.
 
     **Processo para execução da tarefa:**
-    1. **Analise o outline completo**, identificando a estrutura hierárquica (seções, subseções), tópicos a tratar em cada uma delas e elementos visuais a serem
-      incluídos como contextualização.
+      1. **Analise o outline completo**, identificando a estrutura hierárquica (seções, subseções), tópicos a tratar em cada uma delas e elementos 
+      visuais a serem incluídos e contextualizados no texto.
 
-    2. Para **cada seção ou subseção** explicitada no outline (demarcadas por como "###", "####", etc.):
-      * Para **cada tópico** da seção (pontos da lista logo a baixo ao título da seção, com cada elemento demarcado por "-", ex.:"- Compara os resultados..."):
-        - Faça a pesquisa do tópico nos artigos de referencia e obtenha argumentação necessária para fundamentar a escrita do texto.
+      2. Para **cada seção ou subseção** explicitada no outline (demarcadas por como "###", "####", etc.):
+        * Para **cada tópico** da seção (pontos da lista logo a baixo ao título da seção, com cada elemento demarcado por "-", ex.:"- Compara os resultados..."):
+          - Faça a pesquisa do tópico nos artigos de referencia e obtenha argumentação necessária para fundamentar a escrita do texto.
 
-      * Após a conclusão da pesquisa, realize a escrita da seção ou subseção, levando em conta a estrutura pedida pelo outline e a argumentação obtida na fase
-        de pesquisa.        
+        * Após a conclusão da pesquisa, realize a escrita da seção ou subseção, levando em conta a estrutura pedida pelo outline e a argumentação obtida na fase
+          de pesquisa.        
 
-    3. Uma vez todas as seções e subseções escritas, combine-as de acordo com a estrutura para o capítulo explicitada no outline, da seguinte forma:
-        - Organize-as em forma capítulo hierárquico em LaTeX, com uso adequado de `\section`, `\subsection`, `\subsubsection`, etc.;
-        - Garanta transições suaves entre as partes para evitar fragmentação do capítulo;
-        - Certificar-se de que a estrutura e a ordem do outline foram seguidas com fidelidade.
+      3. Uma vez todas as seções e subseções escritas, combine-as de acordo com a estrutura para o capítulo explicitada no outline, fazendo a edição final do 
+      capítulo, da seguinte forma:
+        - Organize-as em forma capítulo hierárquico em LaTeX, com uso adequado de `\section`, `\subsection`, `\subsubsection`, etc;
+        - Garanta que não nenhum texto foi resumido ou modificado de modo a perder conteúdo durante o processo de edição final;
+        - Certificar-se de que a estrutura e a ordem do outline foram seguidas com fidelidade;
+        - Certificar-se de que todos os tópicos do outline foram abrangidos no capítulo.
 
+      4. Caso necessário ciclos de revisão (sinalizados pelo agente *technical_editor*, o editor), você deve interpretar a requisição dele, observando qual o 
+      trecho/tópico problemático sinalizado e qual o ou os problemas encontrados e delegue uma nova pesquisa ao pesquisador e uma nova tarefa de escrita ao 
+      escritor, certificando-se de que o problema foi resolvido. Imponha um limite de até 5 revisões. Após a quinta, o texto deve ser escrito como está.
+
+    **Restrições:**
+      - O conteúdo textual do capítulo deve estar escrito completamente em português brasileiro;
+      - Durante a fazer de junção das seções e subseções escritas(edição final), nenhum texto deve ser resumido ou modificado de qualquer forma, apenas alocado 
+        em seu devido lugar, de acordo com o OUTLINE;
+      - Não adicione nenhuma seção ou subseção que o outline não especifique.
+
+    **Critérios de sucesso:** 
+      - O capítulo segue a estrutura proposta pelo outline;
+      - Todos os agentes subordinados foram utilizados na execução da tarefa;
+      - Todos os tópicos foram devidamente abordados e detalhados;
+      - O capítulo está escrito em português brasileiro e formatado em LaTeX 100% funcional, pronto para ser incluso em um artigo científco.
   expected_output: >
-    Um capítulo completo em LaTeX, contendo:
-    - Texto técnico estruturado com base no outline;
+    Um capítulo completo em LaTeX, com texto estruturado com base no outline, contendo:
     - Parágrafos redigidos com fundamentação científica e clareza argumentativa;
     - Referências contextuais a elementos visuais (sem transcrição do conteúdo);
     - Uso correto de estrutura hierárquica em LaTeX;
