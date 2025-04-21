@@ -7,14 +7,18 @@ import json
 
 class QueryArticlesToolInput(BaseModel):
     search_query: str = Field(
-        ..., description="Query to search through out the database's articles for."
+        ..., description=(
+            "Query to search through out the database's articles for. "
+            "The tool will search for snippets of text the better allign with the query."
+        )
     )
 
-    doc_type: Optional[Literal['draft', 'reference', 'report']] = Field(
+    doc_type: Optional[List[Literal['draft', 'reference', 'report']]] = Field(
         None, description=(
-            "Type of document to be searched for. Can be draft or reference"
+            "A list of Document's types to filter the search for."
+            "Each value can be either 'draft', 'reference' or 'report'."
             "Use to limit the search for documentes of a specific type."
-            "Can be either 'draft' or 'reference'. It is a optional parameter."
+            "It is a optional parameter."
         )
     )
 
@@ -39,11 +43,9 @@ class QueryArticlesToolInput(BaseModel):
 class QueryArticlesTool(BaseTool):
     name: str = "QueryArticlesTool"
     description: str = (
-        "This tool is used when a broad search through the database is needed."
-        "It searches the articles database for chunks that are most similar to the given search query,"
-        "returning a json string with a list of results that each has the chunk's content and it's metadata"
-        "for identification and contextualization."
-        "Supports filtering by uploader (who uploaded the article to the database) and/or source (name of the article file)."
+        "This tool searches the articles database for snippets of text that are most similar to the given search query,"
+        "returning a json string with the chunks that better allign with the query term, presiting the text content and metadata."
+        "for identification. Supports filtering by type of document (doc_type parameter) and/or source (name of the article file)."
     )
 
     args_schema: Type[BaseModel] = QueryArticlesToolInput
@@ -70,3 +72,7 @@ class QueryArticlesTool(BaseTool):
             ),
             indent=2
         )
+
+if __name__ == "__main__":
+    tool = QueryArticlesTool()
+    print(tool._run(search_query="emulacao de portas logicas em cristais fotonicos", doc_type=['reference'], top_k=5))

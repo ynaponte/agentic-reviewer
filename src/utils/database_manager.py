@@ -122,7 +122,7 @@ class VectorDatabaseManager:
     def query(
         self,
         query: Optional[str] = "",
-        doc_type: Optional[Literal['draft', 'reference', 'report']] = None,
+        doc_type: Optional[List[Literal['draft', 'reference', 'report']]] = None,
         source: Optional[List[str]] = None,
         top_k: Optional[int] = 10
     ) -> List[Dict[str, Any]]:
