@@ -94,7 +94,7 @@ class TechnicalChapterWriterCrew():
                 self.write_technical_chapter(),
                 #self.assemble_and_finalize_chapter()
             ],
-            process=Process.sequential,
+            process=Process.hierarchical,
             verbose=True,
             planning=False,
             #planning_llm=self.planner
