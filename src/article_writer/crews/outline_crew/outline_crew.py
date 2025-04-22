@@ -74,20 +74,6 @@ class OutlineCrew:
             output_json=Outline
         )
     
-    @task
-    def generate_outline_conclusion(self) -> Task:
-        return Task(
-            config=self.tasks_config['generate_outline_conclusion'],
-            output_json=Outline
-        )
-    
-    @task
-    def generate_outline_methodology(self) -> Task:
-        return Task(
-            config=self.tasks_config['generate_outline_methodology'],
-            output_json=Outline
-        )
-    
     @crew
     def crew(self) -> Crew:
         crew = Crew(
