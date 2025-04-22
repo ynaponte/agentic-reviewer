@@ -27,6 +27,14 @@ class TechnicalChapterWriterCrew():
         temperature=0.4
     )
 
+    func_caller = LLM(
+        model="ollama/qwen2.5:3b-instruct-q6_K",
+        base_url="http://localhost:11434",
+        timeout=1800.0,
+        max_tokens=32000,
+        temperature=0.2
+    )
+
     writer_llm = LLM(
         model="ollama/qwen2.5:3b-instruct-q6_K",
         base_url="http://localhost:11434",
@@ -41,6 +49,7 @@ class TechnicalChapterWriterCrew():
             config=self.agents_config['chapter_manager'],
             llm=self.researcher_and_editor_llm,  # Trocar depois para o deepseek ou QWQ
             allow_delegation=True,
+            verbose=True
         )
 
     @agent
@@ -48,7 +57,8 @@ class TechnicalChapterWriterCrew():
         return Agent(
             config=self.agents_config['topic_researcher'],
             llm=self.researcher_and_editor_llm,
-            tools=[QueryArticlesTool()]
+            tools=[QueryArticlesTool()],
+            verbose=True
         )
 
     @agent
@@ -56,6 +66,7 @@ class TechnicalChapterWriterCrew():
         return Agent(
             config=self.agents_config['technical_writer'],
             llm=self.writer_llm,
+            verbose=True
         )
 
     @agent
@@ -63,19 +74,19 @@ class TechnicalChapterWriterCrew():
         return Agent(
             config=self.agents_config['technical_editor'],
             llm=self.researcher_and_editor_llm,
+            verbose=True
         )
 
     @task
-    def research_chapter_outline(self) -> Task:
+    def research_and_write_sections(self) -> Task:
         return Task(
-            config=self.tasks_config['research_chapter_outline'],
-            tools=[QueryArticlesTool()]
+            config=self.tasks_config['research_and_write_sections'],
         )
-
+    
     @task
-    def write_and_edit_chapter(self) -> Task:
+    def assemble_and_finalize_chapter(self) -> Task:
         return Task(
-            config=self.tasks_config['write_and_edit_chapter']
+            config=self.tasks_config['assemble_and_finalize_chapter'],
         )
 
     @crew
@@ -88,8 +99,10 @@ class TechnicalChapterWriterCrew():
                 self.technical_writer(),
                 self.technical_editor()
             ],
-            tasks=[self.research_chapter_outline(
-            ), self.write_and_edit_chapter()],
+            function_calling_llm=self.func_caller,
+            tasks=[self.research_and_write_sections(), self.assemble_and_finalize_chapter()],
             process=Process.hierarchical,
             verbose=True,
+            planning=False,
+            #planning_llm=self.planner
         )

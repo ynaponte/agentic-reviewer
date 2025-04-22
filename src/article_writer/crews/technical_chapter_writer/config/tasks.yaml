@@ -1,81 +1,94 @@
-research_chapter_outline:
+research_and_write_sections:
   description: >
     CHAPTER OUTLINE:
 
     {chapter_outline}
 
-    Este capítulo é intitulado "{chapter_title}". Sua produção será dividida em duas etapas. Esta primeira task é responsável apenas pela 
-    **pesquisa e estruturação argumentativa** com base no CHAPTER OUTLINE fornecido. A redação será feita em uma etapa posterior.
+    Analyze the chapter outline for the chapter "{chapter_title}", and gather information and insights about every *topic to include* and *numerical 
+    results*, for every level of the chapter's structure, in other to get a solid foundation for when it's time to write the content.
+    For each topic to include in the section or subsection content, create a specific research subtask, with the objective of obtaining insights to 
+    anchor the text content. The insights gathered should be included at the end of the outline of the section.
 
-    **Processo de Execução:**
-      1. **Analisar o outline completo**, identificando a estrutura hierárquica (seções, subseções) e os tópicos a serem abordados em cada item.
+    **Execution Process:**
+      1. Analyze the ouline line by line.
+      2. When a *topics to include* list is identifed, note from which section or subsection it belongs. After this, begin this iterative process:
+        - For each topic in the topics to include list of the section or subsection, research for insights and obtain the necessary arguments for writing;
+        - This research must be conducted by a specialized researcher member of your team.
+      3. When a *visual elements to include* list is identifed, do the same steps for the *topics to include* list.
+      4. When a *results to include* list is identifed, do the same steps for the *topics to include* list, but make sure to instruct the researcher to 
+      conduct its job only on documents of type 'draft'
 
-      2. Para **cada seção ou subseção** do outline (marcadas como "###", "####", etc.):
-        * Para **cada tópico listado**:
-          - Pesquisar artigos de referência que tratem do tema;
-          - Extrair e resumir os principais argumentos, evidências, abordagens e consensos da literatura;
-          - Organizar os achados em forma de blocos argumentativos claros, devidamente atribuídos ao tópico;
-          - IMPORTANTE: DELEGUE A PESQUISA PARA O AGENTE `topic_researcher`.
+      5. After a research has been concluded, include after the topic that was researched an item named *Insights*, that includes the insights founded in the
+      chapter_outline.
 
-      3. Consolidar os resultados da pesquisa em uma estrutura argumentativa organizada por seções, mantendo total correspondência com o outline.
+    **Restrictions:**
+      - No section or subsection not listed in the outline may be created;
 
-    **Restrições:**
-      - A pesquisa deve se basear em fontes acadêmicas (preferencialmente artigos científicos);
-      - Não incluir textos redigidos como versão final — apenas os blocos argumentativos e evidências;
-      - Não adicionar tópicos além dos que estão no outline.
+    **Success Criteria:** 
+      - All topics were researched by specialized agents;
+      - Insights were included in the outline;
+  expected_output: |
+    A slightly modified version of the provided chapter outline, including the insights gathered.
 
-    **Critérios de Sucesso:**
-      - Todos os tópicos foram pesquisados e contextualizados;
-      - As seções estão bem organizadas e com conteúdo suficiente para subsidiar a redação;
-      - A estrutura segue fielmente a hierarquia e ordem do outline.
+    example:
+    ### Resultados
+    Tópicos a abordar no texto:
+    - DESCREVER a eficiência do algoritmo genético na convergência das soluções ao longo das gerações.
+    - Insights: O algoritmo genético obteve excelencia em 50 gerações.
+      Elementos visuais a incluir:
+      - **Elemento visual:** Figura 13 - Evolução do fitness para a primeira porta.
+      - **Elemento visual:** Figura 15 - Evolução do fitness para a segunda porta.
+      Resultados a incluir:
+      - **Resultado numérico:** Saturação observada por volta da 30ª e 50ª gerações.
+    - ANALISAR os resultados das tabelas verdade para validar a funcionalidade lógica da porta OR com cinco entradas.
+    - Insights: no caso 0 0 0 0 0 CR(OUT) = 0,012 db
+      Elementos visuais a incluir:
+      - **Elemento visual:** Tabela 1 - Contrastes da primeira porta.
+      - **Elemento visual:** Tabela 2 - Contrastes da segunda porta.
+      Resultados a incluir:
+      - **Resultado numérico:** CR(Out) > 0,30 em 100% dos casos simulados.
+  agent: topic_researcher
 
-  expected_output: >
-    Documento estruturado com base no outline, contendo:
-    - Cada seção e subseção com seus respectivos tópicos;
-    - Blocos argumentativos e evidências organizadas por tópico;
-    - Nenhum texto redacional, apenas conteúdo bruto para uso na escrita.
-
-write_and_edit_chapter:
+assemble_and_finalize_chapter:
   description: >
     CHAPTER OUTLINE:
 
     {chapter_outline}
 
-    Este capítulo é intitulado "{chapter_title}". Você receberá o conteúdo argumentativo estruturado previamente pela task `research_chapter_outline`,
-    que deverá ser transformado no capítulo final em LaTeX. Esta task inclui a **redação, edição, estruturação e consolidação do texto final**.
+    Assemble the chapter "{chapter_title}" using the structured section texts provided. Organize the content hierarchically in LaTeX, 
+    ensuring strict adherence to the structure and topics defined in the outline. If any issues are flagged during the editing phase, 
+    delegate new tasks to fix them and proceed with a maximum of 5 revision cycles.
 
-    **Processo de Execução:**
-      1. **Para cada seção ou subseção** do outline (marcadas como "###", "####", etc.):
-         - Redigir o texto com base nos blocos argumentativos correspondentes;
-         - Garantir fluidez textual e boa transição entre tópicos;
-         - Incluir menções contextualizadas a elementos visuais (sem transcrevê-los).
+    **Execution Process:**
+      1. Analyze the chapter outline to extract the chapter's structure. Note where each prewritten section/subsection text should be allocated.
 
-      2. Após escrever todas as seções:
-         - Combinar os textos respeitando a estrutura do outline;
-         - Formatar o capítulo em LaTeX, utilizando `\section`, `\subsection`, etc.;
-         - Garantir que nenhuma parte do conteúdo seja perdida, resumida ou alterada na fusão final.
+      2. Assemble them according to the chapter's structure to form the complete chapter. Instruct the editor to perform the final editing, 
+      making sure to pass them the structure to follow and the prewritten texts (each with their identification), so they know how to organize.
+      The final edit must:
+        - Structure the chapter hierarchically using LaTeX (\section, \subsection, \subsubsection, etc.);
+        - Ensure each text is allocated in its corresponding section or subsection;
+        - Ensure NO CONTENT is summarized or altered during the final merge;
+        - Follow the outline structure and order exactly.
 
-      3. Caso o agente *technical_editor* identifique problemas:
-         - Localizar a seção/tópico problemático;
-         - Corrigir com base no conteúdo da task anterior ou, se necessário, solicitar nova pesquisa;
-         - Realizar no máximo 5 ciclos de revisão.
+      3. If revisions are necessary (flagged by the editor), interpret the issue, identify the problematic section/topic,
+      and assign new research and writing tasks to fix the problem. Impose a maximum of 5 revision cycles. After the fifth, the chapter proceeds as-is.
 
-      4. Ao final do processo, retornar o capítulo finalizado ao usuário.
+      4. Once editing is complete, return the finalized chapter, making sure to clean up any thoughts or reports that the editor may have included in its response.
 
-    **Restrições:**
-      - O texto deve estar integralmente em português brasileiro;
-      - Não alterar a estrutura ou ordem do outline;
-      - Não adicionar novas seções ou tópicos além dos especificados.
+    **Restrictions:**
+      - The chapter text must be written entirely in Brazilian Portuguese;
+      - No section or subsection not specified in the outline may be added;
+      - During the final editing phase, no content may be summarized or modified — only structured and placed.
 
-    **Critérios de Sucesso:**
-      - O texto segue fielmente o outline;
-      - Todas as seções foram escritas com base em conteúdo previamente pesquisado;
-      - O capítulo está escrito em português e formatado corretamente em LaTeX, pronto para ser incluído em um artigo científico.
-
+    **Success Criteria:** 
+      - The chapter follows the outline structure precisely;
+      - All sections and subsections were properly assembled;
+      - The final version is in LaTeX, fully structured and ready for publication;
+      - Revisions were handled up to 5 times if needed.
   expected_output: >
-    Capítulo completo em LaTeX, com:
-    - Texto redigido com base nas evidências pesquisadas;
-    - Estrutura hierárquica correta em LaTeX;
-    - Menções adequadas a elementos visuais;
-    - Transições claras e linguagem científica fluente.
-  context: [research_chapter_outline]
+    A complete chapter in LaTeX, structured according to the outline and containing:
+    - Texts written with scientific foundation and clarity;
+    - Proper LaTeX formatting using hierarchical commands;
+    - Integration of previously written content without modifications;
+    - Fluent transitions between sections.
+  context: [research_and_write_sections]

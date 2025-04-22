@@ -5,79 +5,76 @@ generate_outline_results_discussion:
     {report}
 
     Gere um outline estruturado para o capítulo **Resultados e Discussão** de um artigo científico, com base no relatório analítico consolidado. 
-    O outline deve funcionar como um plano técnico e hierárquico, destinado a orientar um agente inteligente redator na construção do capítulo. 
-    O objetivo é garantir que a posterior redação ocorra com alta fidelidade lógica, estrutural e analítica, a partir de instruções precisas e 
-    interpretáveis por máquina, dessa forma, fornecendo suporte à escrita científica automatizada com elevado grau de coesão, rastreabilidade
-    e fidelidade aos dados e análises extraídas de documentos técnicos.
+    O outline deve servir como um **plano técnico e hierárquico**, projetado para orientar um agente redator na produção do capítulo com alta fidelidade lógica, 
+    estrutural e argumentativa.
+
+    A estrutura esperada do outline segue três blocos principais, com seções nomeadas e listas de tópicos que devem ser abordados na redação de cada uma.
 
     **Processo para execução da tarefa:**
-      1. Interprete o relatório analítico consolidado como sua única fonte de verdade.
-      2. Estruture o outline com os seguintes blocos:
-         - **Introdução**:
-           - Indicar o objetivo do capítulo e o escopo da análise.
-         - **Resultados**:
-           - Apresentar os principais achados com base nas seções "Análise dos Resultados" e "Apresentação dos Elementos Visuais".
-           - Ordenar os tópicos conforme a lógica metodológica ou sequência das perguntas de pesquisa.
-           - Para cada tópico:
-             * Indicar o foco argumentativo;
-             * Apontar os elementos visuais relevantes, com breve nota funcional;
-             * Incluir quaisquer resultados numéricos relevantes com contexto (ex: “Eficiência média: 93,4% ± 2,1%”).
-         - **Discussão**:
-           - Apoiar-se nas seções "Interpretação Crítica", "Limitações" e "Contribuições".
-           - Organizar os tópicos em torno de quatro grandes eixos:
-             * Relação com literatura existente;
-             * Implicações teóricas;
-             * Limitações do estudo;
-             * Contribuições científicas.
-           - Redigir os pontos como itens instrutivos para desenvolvimento textual, e não como subseções.
+      1. Use exclusivamente o relatório como base — não consulte fontes externas.
+      2. Estruture o outline com os seguintes blocos de nível 2:
+         - ### Introdução
+         - ### Resultados
+         - ### Discussão
+      3. Para cada uma dessas seções, crie uma subseção chamada:
+         - **Tópicos a abordar no texto:**
+      4. Liste sob essa subseção os pontos que o redator deverá abordar, como instruções textuais em tom imperativo (ex: DESCREVER, ANALISAR, ILUSTRAR...).
+      5. Quando pertinente, adicione a elementos visuais e/ou resultados numéricos como **subitens de um tópico**, usando os seguintes formatos:
+         - **Elemento visual:** Figura X - descrição funcional.
+         - **Resultado numérico:** Descrição clara e contextualizada do valor.
 
     **Restrições:**
-      - Não gerar subseções ("####"); usar apenas "###" para seções e "-" para tópicos internos.
-      - Não redigir o conteúdo do capítulo, apenas a estrutura argumentativa.
-      - Não utilizar fontes externas além do relatório.
-      - Manter a sequência: Introdução / Resultados / Discussão.
-      - Escreva os tópicos na segunda pessoa do singular.
-      - Incluir elementos visuais e resultados numérico referentes a um tópico interno, como lista filha do item que o contém, devidamente os marcando como
-        **Elemento Visual** ou **Resultado numérico**.
-        ex.:
-          - APRESENTAR resultados do experimento
-            - **Elemento Visual:** Figura 1 - resultado 1; 
-            - **Elemento Visual:** Figura 2 - Resultado 2;
-            - **Resultado numérico:** Redução de 35% na extensão média do circuito.
+      - Não crie subseções ou numeração hierárquica inferior a "###".
+      - Não redija nenhum conteúdo do capítulo, apenas o outline conforme modelo.
+      - Os tópicos devem estar no **imperativo** e redigidos na segunda pessoa do singular (ex: “DESCREVER os resultados obtidos...”).
 
     **Critérios de sucesso:**
-      - O outline está organizado em três seções, com tópicos técnicos bem definidos;
-      - Cada tópico está ancorado em evidências do relatório e inclui, sempre que possível, elementos visuais e/ou resultados numéricos;
-      - O tom da saída é instrutivo, com verbos no infinitivo;
-      - A estrutura é adequada para uso direto por agentes de escrita automatizada.
+      - A saída possui três seções principais: Introdução, Resultados e Discussão.
+      - Cada seção contém um bloco de tópicos com marcador "Tópicos a abordar no texto:".
+      - Os tópicos estão bem definidos, específicos, e diretamente ancorados no relatório.
+      - Elementos visuais e resultados numéricos são incluídos de forma funcional como subitens quando pertinentes.
+      - A saída está pronta para uso direto por um agente escritor automatizado.
   expected_output: |
-    Um outline para o capítulo **Resultados e Discussão**, estruturado com três seções principais ("###") e listas de tópicos internos com marcador "-".
+    Um outline para o capítulo **Resultados e Discussão**, com três seções (Introdução, Resultados, Discussão), 
+    cada uma contendo um bloco de "Tópicos a abordar no texto:" e, quando necessário, subitens de elementos visuais e resultados numéricos.
 
-    Exemplo de saída:
+    Exemplo:
 
     ## Resultados e Discussão
 
     ### Introdução
-    - APRESENTAR o propósito do capítulo, que é descrever os principais resultados obtidos nas simulações e analisar suas implicações teóricas e práticas.
-    - ANTECIPAR as dimensões que serão exploradas: desempenho computacional, validade da porta lógica, eficiência estrutural.
+    Tópicos a abordar no texto:
+    - APRESENTAR o propósito do capítulo: relatar os resultados obtidos com a modelagem da porta lógica OR de cinco entradas utilizando algoritmos genéticos e discutir suas implicações. 
+    - ANTECIPAR os aspectos que serão explorados: eficiência do algoritmo, desempenho óptico da porta OR, robustez estrutural e limitações identificadas. 
 
     ### Resultados
-    - APRESENTAR a eficácia do algoritmo genético na convergência dos parâmetros ótimos da porta lógica.
-      - **Elemento visual:** Figura 3 - Representa o progresso do fitness.
-      - **Resultado numérico:** Convergência alcançada em 84% das execuções em menos de 50 gerações.
-    - DESCREVER os testes de validação da funcionalidade da porta OR com cinco entradas.
-      - **Elemento visual:** Tabela 1 - Estados de entrada e saída esperados.
-      - **Resultado numérico:** Acerto lógico: 100% nos 32 casos simulados.
-    - COMPARAR a complexidade estrutural da solução proposta com abordagens tradicionais.
-      - **Elemento visual:** Figura 2 - Redução do número de elementos óticos.
-      - **Resultado numérico:** Redução de 35% na extensão média do circuito.
+    Tópicos a abordar no texto:
+    - DESCREVER a eficiência do algoritmo genético na convergência das soluções ao longo das gerações.
+      Elementos visuais a incluir:
+      - **Elemento visual:** Figura 13 - Evolução do fitness para a primeira porta.
+      - **Elemento visual:** Figura 15 - Evolução do fitness para a segunda porta.
+      Resultados a incluir:
+      - **Resultado numérico:** Saturação observada por volta da 30ª e 50ª gerações.
+    - ANALISAR os resultados das tabelas verdade para validar a funcionalidade lógica da porta OR com cinco entradas.
+      Elementos visuais a incluir:
+      - **Elemento visual:** Tabela 1 - Contrastes da primeira porta.
+      - **Elemento visual:** Tabela 2 - Contrastes da segunda porta.
+      Resultados a incluir:
+      - **Resultado numérico:** CR(Out) > 0,30 em 100% dos casos simulados.
 
     ### Discussão
-    - RELACIONAR os achados com trabalhos anteriores, destacando a melhoria de desempenho e simplificação arquitetônica.
-    - ANALISAR o impacto do uso de AGs na modelagem de estruturas ópticas escaláveis.
-    - IDENTIFICAR as limitações do estudo, como a ausência de verificação experimental em ambiente real.
-    - DESTACAR as contribuições para o campo de circuitos fotônicos integrados, com foco em escalabilidade e eficiência.
-      - **Elementos visuais:** Figuras 4, 5 e 6.
+    Tópicos a abordar no texto:
+    - RELACIONAR os resultados obtidos com a literatura anterior, destacando a viabilidade da solução proposta e sugerindo necessidade de comparação quantitativa.
+    - ANALISAR as implicações teóricas do uso de algoritmos genéticos na modelagem de circuitos ópticos multientrada.
+    - IDENTIFICAR as principais limitações da pesquisa, como:
+      - Ausência de validação experimental;
+      - Violação parcial de critérios geométricos;
+      - Ausência de análise estatística entre múltiplas execuções.
+    - DESTACAR as contribuições do estudo, incluindo:
+      - Preenchimento de lacuna na literatura sobre portas OR quíntuplas em fibra óptica;
+      - Redução da complexidade estrutural em circuitos lógicos ópticos;
+      - Proposta replicável com base em código-fonte claro e condições bem definidas.
+      - **Elementos visuais:** Figuras 13, 15, 16; Código-fonte 12.
   agent: core_chapters_outliner
 
 generate_outline_conclusion:
