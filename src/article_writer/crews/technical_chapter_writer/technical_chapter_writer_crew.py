@@ -10,7 +10,7 @@ class TechnicalChapterWriterCrew():
     agents_config = 'config/agents.yaml'
     tasks_config = 'config/tasks.yaml'
 
-    planner = LLM(
+    manager_llm = LLM(
         model="ollama/deepseek-r1:7b",
         base_url="http://localhost:11434",
         timeout=1800.0,
@@ -44,15 +44,6 @@ class TechnicalChapterWriterCrew():
     )
 
     @agent
-    def chapter_manager(self) -> Agent:
-        return Agent(
-            config=self.agents_config['chapter_manager'],
-            llm=self.researcher_and_editor_llm,  # Trocar depois para o deepseek ou QWQ
-            allow_delegation=True,
-            verbose=True
-        )
-
-    @agent
     def topic_researcher(self) -> Agent:
         return Agent(
             config=self.agents_config['topic_researcher'],
@@ -78,30 +69,32 @@ class TechnicalChapterWriterCrew():
         )
 
     @task
-    def research_and_write_sections(self) -> Task:
+    def write_technical_chapter(self) -> Task:
         return Task(
-            config=self.tasks_config['research_and_write_sections'],
+            config=self.tasks_config['write_technical_chapter'],
         )
-    
-    @task
-    def assemble_and_finalize_chapter(self) -> Task:
-        return Task(
-            config=self.tasks_config['assemble_and_finalize_chapter'],
-        )
+
+    #@task
+    #def assemble_and_finalize_chapter(self) -> Task:
+    #    return Task(
+    #        config=self.tasks_config['assemble_and_finalize_chapter'],
+    #    )
 
     @crew
     def crew(self) -> Crew:
         return Crew(
-            manager_agent=self.chapter_manager(),
-            manager_llm=self.researcher_and_editor_llm,
+            #manager_agent=self.chapter_manager(),
+            manager_llm=self.manager_llm,
             agents=[
                 self.topic_researcher(),
                 self.technical_writer(),
                 self.technical_editor()
             ],
-            function_calling_llm=self.func_caller,
-            tasks=[self.research_and_write_sections(), self.assemble_and_finalize_chapter()],
-            process=Process.hierarchical,
+            tasks=[
+                self.write_technical_chapter(),
+                #self.assemble_and_finalize_chapter()
+            ],
+            process=Process.sequential,
             verbose=True,
             planning=False,
             #planning_llm=self.planner
