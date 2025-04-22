@@ -4,66 +4,53 @@ generate_outline_results_discussion:
 
     {report}
 
-    Gere um outline estruturado para o capítulo **Resultados e Discussão** de um artigo científico, com base no relatório analítico consolidado. 
-    O outline deve servir como um **plano técnico e hierárquico**, projetado para orientar um agente redator na produção do capítulo com alta fidelidade lógica, 
+    Gere um outline estruturado para a seção de **Resultados e Discussão** de um artigo científico, com base no relatório analítico consolidado. 
+    O outline deve servir como um **plano técnico e hierárquico**, projetado para orientar um agente redator na produção da seção com alta fidelidade lógica, 
     estrutural e argumentativa.
-
-    A estrutura esperada do outline segue três blocos principais, com seções nomeadas e listas de tópicos que devem ser abordados na redação de cada uma.
 
     **Processo para execução da tarefa:**
       1. Use exclusivamente o relatório como base — não consulte fontes externas.
-      2. Estruture o outline com os seguintes blocos de nível 2:
-         - ### Introdução
-         - ### Resultados
-         - ### Discussão
-      3. Para cada uma dessas seções, crie uma subseção chamada:
-         - **Tópicos a abordar no texto:**
-      4. Liste sob essa subseção os pontos que o redator deverá abordar, como instruções textuais em tom imperativo (ex: DESCREVER, ANALISAR, ILUSTRAR...).
-      5. Quando pertinente, adicione a elementos visuais e/ou resultados numéricos como **subitens de um tópico**, usando os seguintes formatos:
-         - **Elemento visual:** Figura X - descrição funcional.
-         - **Resultado numérico:** Descrição clara e contextualizada do valor.
+      2. Estruture o outline com os com uma única seção de nível 1, com o título principal da seção "Resultados e Discussão", contendo a introdução a ela.
+      Escreva os tópicos a serem abordados na introdução da seção.
+      3. Estruture a primeira subseção de nível 2, com título "Resultados". Essa subseção deverá abordar todos os resultados obtidos no estudo.
+      4. Estruture a segunda subseção de nível 2, com título "Discussões". Essa subseção deverá discutir todos os resultados obtidos no estudo.S
+      5. Os tópicos devem ser escritos como instruções textuais em tom imperativo (ex: DESCREVER, ANALISAR, ILUSTRAR...).
+      5. Quando pertinente, adicione resultados numéricos como **subitens de um tópico**, com descrição clara e contextualizada do valor.
 
     **Restrições:**
-      - Não crie subseções ou numeração hierárquica inferior a "###".
       - Não redija nenhum conteúdo do capítulo, apenas o outline conforme modelo.
       - Os tópicos devem estar no **imperativo** e redigidos na segunda pessoa do singular (ex: “DESCREVER os resultados obtidos...”).
 
     **Critérios de sucesso:**
-      - A saída possui três seções principais: Introdução, Resultados e Discussão.
-      - Cada seção contém um bloco de tópicos com marcador "Tópicos a abordar no texto:".
+      - A saída possui uma seção principal: "Resultados e Discussão"; e duas subseções: "Resultados" e "Discussão"
+      - Cada seção contém um bloco de tópicos a serem abordados no seu respectivo texto.
       - Os tópicos estão bem definidos, específicos, e diretamente ancorados no relatório.
-      - Elementos visuais e resultados numéricos são incluídos de forma funcional como subitens quando pertinentes.
       - A saída está pronta para uso direto por um agente escritor automatizado.
   expected_output: |
-    Um outline para o capítulo **Resultados e Discussão**, com três seções (Introdução, Resultados, Discussão), 
-    cada uma contendo um bloco de "Tópicos a abordar no texto:" e, quando necessário, subitens de elementos visuais e resultados numéricos.
+    Um outline para a seção **Resultados e Discussão** de um artigo ciêntífico, com uma seção e duas subseções, 
+    cada uma contendo um bloco de "Tópicos a abordar no texto:" e, quando necessário, subitens de resultados numéricos.
 
     Exemplo:
 
     ## Resultados e Discussão
-
-    ### Introdução
-    Tópicos a abordar no texto:
     - APRESENTAR o propósito do capítulo: relatar os resultados obtidos com a modelagem da porta lógica OR de cinco entradas utilizando algoritmos genéticos e discutir suas implicações. 
     - ANTECIPAR os aspectos que serão explorados: eficiência do algoritmo, desempenho óptico da porta OR, robustez estrutural e limitações identificadas. 
 
     ### Resultados
-    Tópicos a abordar no texto:
     - DESCREVER a eficiência do algoritmo genético na convergência das soluções ao longo das gerações.
-      Elementos visuais a incluir:
+      Elementos visuais a contextualizar:
       - **Elemento visual:** Figura 13 - Evolução do fitness para a primeira porta.
       - **Elemento visual:** Figura 15 - Evolução do fitness para a segunda porta.
       Resultados a incluir:
       - **Resultado numérico:** Saturação observada por volta da 30ª e 50ª gerações.
     - ANALISAR os resultados das tabelas verdade para validar a funcionalidade lógica da porta OR com cinco entradas.
-      Elementos visuais a incluir:
+      Elementos visuais a contextualizar:
       - **Elemento visual:** Tabela 1 - Contrastes da primeira porta.
       - **Elemento visual:** Tabela 2 - Contrastes da segunda porta.
       Resultados a incluir:
       - **Resultado numérico:** CR(Out) > 0,30 em 100% dos casos simulados.
 
     ### Discussão
-    Tópicos a abordar no texto:
     - RELACIONAR os resultados obtidos com a literatura anterior, destacando a viabilidade da solução proposta e sugerindo necessidade de comparação quantitativa.
     - ANALISAR as implicações teóricas do uso de algoritmos genéticos na modelagem de circuitos ópticos multientrada.
     - IDENTIFICAR as principais limitações da pesquisa, como:
@@ -74,6 +61,7 @@ generate_outline_results_discussion:
       - Preenchimento de lacuna na literatura sobre portas OR quíntuplas em fibra óptica;
       - Redução da complexidade estrutural em circuitos lógicos ópticos;
       - Proposta replicável com base em código-fonte claro e condições bem definidas.
+      Elementos visuais a contextualizar:
       - **Elementos visuais:** Figuras 13, 15, 16; Código-fonte 12.
   agent: core_chapters_outliner
 

@@ -4,34 +4,24 @@ write_technical_chapter:
 
     {chapter_outline}
 
-    Gere o capítulo "{chapter_title}" a partir do OUTLINE DO CAPÍTULO fornecido, orquestrando a produção do capítulo e seu texto em completude, 
-    delegando as atividades de pesquisa, escrita e edição aos agentes subordinados especializados. O capítulo gerado deve ser fiel a estrutura 
-    proposta no OUTLINE, com conteúdo rico e fundamentado, formatado em LaTeX e escrito em linguagem português brasileiro, tendo a certeza de 
-    que todos os tópicos de cada uma das seções (ou subseções, etc) são contemplados no capítulo.
+    Você é o coordenador dessa tarefa. Organize e delegue subtarefas, orquestrando a produção do capítulo e seu texto em completude
+    . O capítulo gerado deve ser fiel a estrutura proposta no OUTLINE, com conteúdo rico e fundamentado, formatado em LaTeX e escrito em 
+    linguagem português brasileiro, tendo a certeza de que todos os tópicos de cada uma das seções (ou subseções, etc) são contemplados no capítulo.
 
     **Processo para execução da tarefa:**
-      1. **Analise o outline completo**, identificando a estrutura hierárquica (seções, subseções), tópicos a tratar em cada uma delas e elementos 
-      visuais a serem incluídos e contextualizados no texto.
+      1. Percorra o outline e envie os tópicos de cada nível para pesquisa.
 
-      2. Para **cada seção ou subseção** explicitada no outline (demarcadas por como "###", "####", etc.):
-        * Para **cada tópico** da seção (pontos da lista logo a baixo ao título da seção, com cada elemento demarcado por "-", ex.:"- Compara os resultados..."):
-          - Faça a pesquisa do tópico nos artigos de referencia e obtenha argumentação necessária para fundamentar a escrita do texto.
+      2. Após a pesquisa, envie nível a nível explicitado no outline e seus tópicos, juntamente com o resultado da pesquisa do nível para o agente escritor
+      do conteúdo, para que ele possa gerar o texto da seção.
 
-        * Após a conclusão da pesquisa, realize a escrita da seção ou subseção, levando em conta a estrutura pedida pelo outline e a argumentação obtida na fase
-          de pesquisa.        
-
-      3. Uma vez todas as seções e subseções escritas, combine-as de acordo com a estrutura para o capítulo explicitada no outline, fazendo a edição final do 
+      3. Uma vez o conteúdo de todos os níveis escritos, combine-os de acordo com a estrutura para o capítulo explicitada no outline, fazendo a edição final do 
       capítulo, da seguinte forma:
         - Organize-as em forma capítulo hierárquico em LaTeX, com uso adequado de `\section`, `\subsection`, `\subsubsection`, etc;
         - Garanta que não nenhum texto foi resumido ou modificado de modo a perder conteúdo durante o processo de edição final;
         - Certificar-se de que a estrutura e a ordem do outline foram seguidas com fidelidade;
         - Certificar-se de que todos os tópicos do outline foram abrangidos no capítulo.
 
-      4. Caso necessário ciclos de revisão (sinalizados pelo agente *technical_editor*, o editor), você deve interpretar a requisição dele, observando qual o 
-      trecho/tópico problemático sinalizado e qual o ou os problemas encontrados e delegue uma nova pesquisa ao pesquisador e uma nova tarefa de escrita ao 
-      escritor, certificando-se de que o problema foi resolvido. Imponha um limite de até 5 revisões. Após a quinta, o texto deve ser escrito como está.
-
-      5. Uma vez terminado o processo de edição, retorne ao usuário o capítulo pronto. O trabalho está terminado.
+      5. Uma vez terminado o processo de edição, faça uma revisão final e retorne para o usuário.
 
     **Restrições:**
       - O conteúdo textual do capítulo deve estar escrito completamente em português brasileiro;
@@ -50,3 +40,79 @@ write_technical_chapter:
     - Referências contextuais a elementos visuais (sem transcrição do conteúdo);
     - Uso correto de estrutura hierárquica em LaTeX;
     - Fluidez textual com transições claras entre tópicos e seções.
+  agent: chapter_manager
+
+research_task:
+  description: >
+    Com base na análise do coordenador, realize uma pesquisa aprofundada sobre os tópicos do capítulo.
+    1. Pesquise cada termo-chave definido pelo coordenador
+    2. Encontre referências atualizadas e relevantes sobre cada tópico
+    3. Organize as informações encontradas por seção do capítulo
+    4. Prepare um relatório de pesquisa com as principais descobertas e referências
+    
+    Crie um documento com as informações mais relevantes para cada seção do capítulo,
+    incluindo citações diretas de fontes confiáveis.
+  expected_output: >
+    Um relatório de pesquisa abrangente contendo:
+    1. Informações fundamentadas para cada tópico requerido, sem exceção
+    2. Citações diretas e dados que possam ser utilizados no texto
+    3. Organização clara seguindo exatamente a estrutura do outline
+  agent: topic_researcher
+  context: [write_technical_chapter]
+
+write_section:
+  description: >
+    Com base no relatório de pesquisa e no outline original, escreva o conteúdo da seção (nível) do capítulo completo em português brasileiro,
+    abordando TODOS os tópicos e subtópicos sem exceção.
+    
+    1. Siga rigorosamente a estrutura de seções e subseções definida no outline
+    2. Incorpore as informações e referências do relatório de pesquisa para cada tópico
+    3. Mantenha um estilo acadêmico-científico formal
+    4. Escreva em português brasileiro claro e conciso
+    5. Inclua sugestões para citações bibliográficas
+    6. Garanta que absolutamente TODOS os tópicos e subtópicos listados no outline sejam abordados
+        com profundidade adequada
+    
+    O texto deve ser acadêmico, fundamentado nas pesquisas e seguir rigorosamente o outline fornecido.
+    Não negligencie nenhum tópico ou subtópico, independentemente de sua complexidade.
+  expected_output: >
+    Conteúdo textual completo da seção em português brasileiro que:
+    1. Aborda todos os tópicos e subtópicos do outline sem exceção
+    2. Segue exatamente a estrutura hierárquica definida no outline
+    3. Incorpora adequadamente as informações da pesquisa
+    4. Utiliza citações apropriadas no formato
+    5. Mantém linguagem acadêmica e rigor científico
+    6. Apresenta profundidade de conteúdo adequada para cada seção
+    
+    O texto deve estar pronto para formatação em LaTeX, com todas as seções e subseções
+    claramente identificadas.
+  agent: technical_writer
+  context: [write_technical_chapter]
+
+final_editing:
+  description: >
+    Faça a montagem final do capítulo em LaTeX adequado para documentos acadêmicos em português brasileiro,
+    preservando integralmente todo o conteúdo e tendo a certeza de que todos os conteúdos textuais estão em 
+    suas devidas seções(nível).
+    
+    1. Converta o texto completo para o formato LaTeX
+    2. Estruture adequadamente todas as seções e subseções com comandos LaTeX apropriados
+    3. Formate corretamente as citações bibliográficas
+    4. Adicione comandos para numerar e referenciar tabelas e figuras se mencionadas
+    5. Garanta que o texto esteja adequado para compilação em LaTeX
+    6. Use pacotes necessários para suporte ao português brasileiro
+    
+    É ESSENCIAL que você preserve absolutamente todo o conteúdo original durante a formatação,
+    sem omitir nenhuma parte do texto ou seção.
+  expected_output: >
+    Um documento LaTeX completo e pronto para compilação contendo:
+    1. Estrutura completa do capítulo com todas as seções e subseções
+    2. Todo o conteúdo do texto original preservado e formatado adequadamente
+    3. Citações e referências no formato correto de LaTeX
+    4. Formatação adequada para elementos como tabelas, figuras, equações, etc.
+    5. Numeração adequada de seções e outros elementos conforme padrões acadêmicos
+    
+    O documento deve estar pronto para ser compilado em um sistema TeX sem necessidade de
+    edições adicionais.
+  agent: technical_editor
+  context: [write_technical_chapter]
