@@ -21,29 +21,20 @@ class DiscussionTopic(BaseModel):
         description="Numerical results that are important to the topic"
     )
 
-class ChapterSection(BaseModel):
+class SubSection(BaseModel):
     section_title: str = Field(
-        description="Title of the section"
-    )
-    level: int = Field(
-        description=(
-            "An integer refering to the hierarchical level of the section in the chapter."
-            "The number 1 indicates a section, 2 a subsection, 3 a subsubsection and 4 a subsubsubsection."
-        )
-    )
-    children: Optional[List[str]] = Field(
-        default=[],
-        description="A list with the titles of every section that's a subsection of the current one."
+        description="Title of the subsection"
     )
     discution_topics: List[DiscussionTopic] = Field(
-        description="List of topics that the text content of the chapter should discuss"
+        description="List of topics that the text content of the subsection should discuss"
     )
 
 
 class Outline(BaseModel):
-    chapter_name: str = Field(description="Name of the chapter")
-    sections: List[ChapterSection] = Field(
-        description="Sections, subsections, subsubsections, etc, that the chapter contains."
+    section_name: str = Field(description="Name of section")
+    discution_topics: List[DiscussionTopic] = Field(description="Topics to discuss in the section's introduction text")
+    subsections: List[SubSection] = Field(
+        description="Subsections that the main section contains"
     )
 
 
