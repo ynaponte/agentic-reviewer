@@ -1,64 +1,54 @@
-write_technical_chapter:
-  description: >
-    OUTLINE DO CAPÍTULO:
-
-    {chapter_outline}
-
-    Você é o coordenador dessa tarefa. Organize e delegue subtarefas, orquestrando a produção do capítulo e seu texto em completude
-    . O capítulo gerado deve ser fiel a estrutura proposta no OUTLINE, com conteúdo rico e fundamentado, formatado em LaTeX e escrito em 
-    linguagem português brasileiro, tendo a certeza de que todos os tópicos de cada uma das seções (ou subseções, etc) são contemplados no capítulo.
-
-    **Processo para execução da tarefa:**
-      1. Percorra o outline e envie os tópicos de cada nível para pesquisa.
-
-      2. Após a pesquisa, envie nível a nível explicitado no outline e seus tópicos, juntamente com o resultado da pesquisa do nível para o agente escritor
-      do conteúdo, para que ele possa gerar o texto da seção.
-
-      3. Uma vez o conteúdo de todos os níveis escritos, combine-os de acordo com a estrutura para o capítulo explicitada no outline, fazendo a edição final do 
-      capítulo, da seguinte forma:
-        - Organize-as em forma capítulo hierárquico em LaTeX, com uso adequado de `\section`, `\subsection`, `\subsubsection`, etc;
-        - Garanta que não nenhum texto foi resumido ou modificado de modo a perder conteúdo durante o processo de edição final;
-        - Certificar-se de que a estrutura e a ordem do outline foram seguidas com fidelidade;
-        - Certificar-se de que todos os tópicos do outline foram abrangidos no capítulo.
-
-      5. Uma vez terminado o processo de edição, faça uma revisão final e retorne para o usuário.
-
-    **Restrições:**
-      - O conteúdo textual do capítulo deve estar escrito completamente em português brasileiro;
-      - Durante a fazer de junção das seções e subseções escritas(edição final), nenhum texto deve ser resumido ou modificado de qualquer forma, apenas alocado 
-        em seu devido lugar, de acordo com o OUTLINE;
-      - Não adicione nenhuma seção ou subseção que o outline não especifique.
-
-    **Critérios de sucesso:** 
-      - O capítulo segue a estrutura proposta pelo outline;
-      - Todos os agentes subordinados foram utilizados na execução da tarefa;
-      - Todos os tópicos foram devidamente abordados e detalhados;
-      - O capítulo está escrito em português brasileiro e formatado em LaTeX 100% funcional, pronto para ser incluso em um artigo científco.
-  expected_output: >
-    Um capítulo completo em LaTeX, com texto estruturado com base no outline, contendo:
-    - Parágrafos redigidos com fundamentação científica e clareza argumentativa;
-    - Referências contextuais a elementos visuais (sem transcrição do conteúdo);
-    - Uso correto de estrutura hierárquica em LaTeX;
-    - Fluidez textual com transições claras entre tópicos e seções.
-  agent: chapter_manager
-
 research_task:
   description: >
-    Com base na análise do coordenador, realize uma pesquisa aprofundada sobre os tópicos do capítulo.
-    1. Pesquise cada termo-chave definido pelo coordenador
-    2. Encontre referências atualizadas e relevantes sobre cada tópico
-    3. Organize as informações encontradas por seção do capítulo
-    4. Prepare um relatório de pesquisa com as principais descobertas e referências
+    Topicos de discussão:
+    {discussion_topics}
+
+    Analise os JSON contendo os tópicos de discussão da subseção "{section_title}" da seção "Resultados e Discussão" de um artigo científico, 
+    tendo a certeza de:   
+    1. Processar cada object presente no JSON array, passado em Topicos de discussao;
+    2. Conduzir uma pequisa separada para cada chave presente no object, isto é, uma para "tópic", uma para "visual_elements_to_contextualize"
+       (se existir) e outra para "numerical_results_to_contextualize" (se existir);
+
+    Processo de execução da pesquisa (executar para cada item):
+      - Extraia o termo-chave que melhor descreve o "tópic", "visual_elements_to_contextualize" ou "numerical_results_to_contextualize";
+      - Execute sua ferramenta QueryArticlesTool, passando o termo-chave no parâmetro '\search_query\' e especificando corretamente o parametro '\doc_type\';
+      - A partir do retornado, gere um texto de 1000+ palavras, com insights detalhados do item.
     
-    Crie um documento com as informações mais relevantes para cada seção do capítulo,
-    incluindo citações diretas de fontes confiáveis.
+    Criterio para sucesso:
+      - Todos os campos "tópic", "visual_elements_to_contextualize" e "numerical_results_to_contextualize" contidos nos tópicos de discussao foram pesquisados;
+      - Os insights gerados são extremamente detalhados e conseguem ser utilizados para criar textos.
   expected_output: >
-    Um relatório de pesquisa abrangente contendo:
-    1. Informações fundamentadas para cada tópico requerido, sem exceção
-    2. Citações diretas e dados que possam ser utilizados no texto
-    3. Organização clara seguindo exatamente a estrutura do outline
+    Um objeto JSON contendo uma lista de insights detalhados, onde cada elemento da lista é um insight detalhado individual 
+  
+    Exemplo de saída:
+    {
+      "insights":["
+        **Obtenção de Portas Lógicas**: A pesquisa apresenta o conceito e implementação de portas lógicas utilizando um
+        acoplador em fibra óptica, onde é demonstrado que é possível extrair operações lógicas através desta estrutura
+        única. Esta técnica utiliza a álgebra booleana para realizar cálculos, com as entradas podendo oscilar entre os
+        valores 0 ou 1 lógicos.
+
+        **Modelo Simbólico vs Real**: Os estudos literários destacam a viabilidade teórica da utilização de acopladores
+        em fibra óptica para obter portas lógicas, mas a pesquisa apresenta um modelo prático e experimental com os
+        resultados demonstrados no software implementando o método de Runge-Kutta.
+
+        **Efeitos Lineares e Não-Lineares**: A literatura anterior aborda a modelagem dos efeitos lineares (dispersão
+        de velocidade de grupo, variação desta dispersão) e não-lineares na fibra óptica (automodulação de fase,
+        auto-inclinação, efeito Raman). A pesquisa apresenta esses mesmos efeitos como fatores relevantes no processo de
+        modulação da entrada do pulso óptico.
+
+        **Evolução das Comunicações Ópticas**: O Capítulo 1 do referido trabalho mostra um contexto histórico breve da
+        evolução das comunicações ópticas, bem como a necessidade de desenvolvimento de dispositivos completamente ópticos
+        e o surgimento da nova classe de fibras ópticas, a Fibra de Cristal Fotônico (PCF). A pesquisa se alinha com esta
+        visão, destacando a importância do estudo físico das PCFs.
+
+        **Efeitos Não-Lineares na PCF**: O Capítulo 3 do trabalho apresenta um estudo físico sobre os efeitos
+        não-lineares na PCF e a derivação da equação de Schrödinger generalizada para aplicações em NLDC-PCF, mostrando
+        como os acopladores podem ser usados neste contexto.
+        "
+      ]
+    }
   agent: topic_researcher
-  context: [write_technical_chapter]
 
 write_section:
   description: >
@@ -87,7 +77,6 @@ write_section:
     O texto deve estar pronto para formatação em LaTeX, com todas as seções e subseções
     claramente identificadas.
   agent: technical_writer
-  context: [write_technical_chapter]
 
 final_editing:
   description: >
@@ -115,4 +104,3 @@ final_editing:
     O documento deve estar pronto para ser compilado em um sistema TeX sem necessidade de
     edições adicionais.
   agent: technical_editor
-  context: [write_technical_chapter]

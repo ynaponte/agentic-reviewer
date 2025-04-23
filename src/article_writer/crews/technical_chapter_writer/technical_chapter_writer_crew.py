@@ -2,6 +2,12 @@ from crewai import Agent, Crew, Process, Task
 from crewai.llm import LLM
 from crewai.project import CrewBase, agent, crew, task
 from src.tools import QueryArticlesTool
+from pydantic import BaseModel, Field
+from typing import Literal, List, Optional, Union
+
+
+class Insights(BaseModel):
+    insights: List[str] = Field(description="List of detailed insights about the researched item")
 
 
 @CrewBase
@@ -11,7 +17,7 @@ class TechnicalChapterWriterCrew():
     tasks_config = 'config/tasks.yaml'
 
     manager_llm = LLM(
-        model="ollama/deepseek-r1:32b",
+        model="ollama/deepseek-r1:7b",
         base_url="http://localhost:11434",
         timeout=1800.0,
         max_tokens=32000,
@@ -20,7 +26,7 @@ class TechnicalChapterWriterCrew():
     )
 
     researcher_and_editor_llm = LLM(
-        model="ollama/qwen2.5:32b",
+        model="ollama/qwen2.5:3b-instruct-q6_K",
         base_url="http://localhost:11434",
         timeout=1800.0,
         max_tokens=32000,
@@ -78,16 +84,11 @@ class TechnicalChapterWriterCrew():
         )
 
     @task
-    def write_technical_chapter(self) -> Task:
-        return Task(
-            config=self.tasks_config['write_technical_chapter'],
-        )
-
-    @task
     def research_task(self) -> Task:
         return Task(
             config=self.tasks_config['research_task'],
-            tools=[QueryArticlesTool()]
+            tools=[QueryArticlesTool()],
+            output_json=Insights
         )
     
     @task
@@ -105,20 +106,14 @@ class TechnicalChapterWriterCrew():
     @crew
     def crew(self) -> Crew:
         return Crew(
-            manager_agent=self.chapter_manager(),
+            #manager_llm=self.manager_llm,
             agents=[
                 self.topic_researcher(),
-                self.technical_writer(),
-                self.technical_editor()
             ],
             tasks=[
-                self.write_technical_chapter(),
                 self.research_task(),
-                self.write_section(),
-                self.final_editing()
             ],
-            process=Process.hierarchical,
+            process=Process.sequential,
             verbose=True,
-            planning=True,
-            planning_llm=self.manager_llm
+            planning=False
         )

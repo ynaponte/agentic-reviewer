@@ -51,8 +51,6 @@ class ArticleWriterFlow(Flow[ArticleWriterState]):
         )
 
         self.state.results_discussion_outline = """
-Outline de Resultados e Discussao:
-
 {
   "section_name": "Resultados e Discussão",
   "discution_topics": [
@@ -66,7 +64,7 @@ Outline de Resultados e Discussao:
   "subsections": [
     {
       "section_title": "Resultados",
-      "discution_topics": [
+      "discussion_topics": [
         {
           "topic": "DESCREVER a eficiência do algoritmo genético na convergência das soluções ao longo das gerações.",
           "visual_elements_to_contextualize": [
@@ -79,7 +77,7 @@ Outline de Resultados e Discussao:
               "description": "Evolução do fitness para a segunda porta."
             }
           ],
-          "numerical_results": [
+          "numerical_results_to_include": [
             "Saturação observada por volta da 30ª e 50ª gerações."
           ]
         },
@@ -95,7 +93,7 @@ Outline de Resultados e Discussao:
               "description": "Contrastes da segunda porta."
             }
           ],
-          "numerical_results": [
+          "numerical_results_to_include": [
             "CR(Out) > 0,30 em 100% dos casos simulados."
           ]
         }
@@ -103,7 +101,7 @@ Outline de Resultados e Discussao:
     },
     {
       "section_title": "Discussão",
-      "discution_topics": [
+      "discussion_topics": [
         {
           "topic": "RELACIONAR os resultados obtidos com a literatura anterior, destacando a viabilidade da solução proposta e sugerindo necessidade de comparação quantitativa."
         },
@@ -111,15 +109,10 @@ Outline de Resultados e Discussao:
           "topic": "ANALISAR as implicações teóricas do uso de algoritmos genéticos na modelagem de circuitos ópticos multientrada."
         },
         {
-          "topic": "IDENTIFICAR as principais limitações da pesquisa, como:",
-          "numerical_results": [
-            "Ausência de validação experimental;",
-            "Violação parcial de critérios geométricos;",
-            "Ausência de análise estatística entre múltiplas execuções."
-          ]
+          "topic": "IDENTIFICAR as principais limitações da pesquisa, como: Ausência de validação experimental; Violação parcial de critérios geométricos; Ausência de análise estatística entre múltiplas execuções."
         },
         {
-          "topic": "DESTACAR as contribuições do estudo, incluindo:",
+          "topic": "DESTACAR as contribuições do estudo, incluindo: Preenchimento de lacuna na literatura sobre portas OR quíntuplas em fibra óptica; Redução da complexidade estrutural em circuitos lógicos ópticos; Proposta replicável com base em código-fonte claro e condições bem definidas.",
           "visual_elements_to_contextualize": [
             {
               "name": "Figuras 13, 15, 16",
@@ -129,22 +122,17 @@ Outline de Resultados e Discussao:
               "name": "Código-fonte 12",
               "description": "O código utilizado para a modelagem da porta lógica OR de cinco entradas."
             }
-          ],
-          "numerical_results": [
-            "Preenchimento de lacuna na literatura sobre portas OR quíntuplas em fibra óptica;",
-            "Redução da complexidade estrutural em circuitos lógicos ópticos;",
-            "Proposta replicável com base em código-fonte claro e condições bem definidas."
           ]
         }
       ]
     }
   ]
-        
+}        
         """
 
     @listen(start_flow)
     def generate_outlines(self):
-        
+        return
         draft_report = self.articles_db.search_doc_by_meta(
             source='Relatorio.pdf', metadata_only=False)
         outcrew_output = OutlineCrew().crew().kickoff(
@@ -166,14 +154,15 @@ Outline de Resultados e Discussao:
 
     @listen(generate_outlines)
     def res_and_disc_chapter_generation(self):
-        return
-        chapter = TechnicalChapterWriterCrew().crew().kickoff(
-            inputs={
-                "chapter_title": "Resultados e Discussão",
-                "chapter_outline": self.state.results_discussion_outline,
-            }
-        )
-        print(chapter.raw)
+        outline = json.loads(self.state.results_discussion_outline)
+        for subsection in outline['subsections']:
+          chapter = TechnicalChapterWriterCrew().crew().kickoff(
+              inputs={
+                  "section_title": subsection['section_title'],
+                  "discussion_topics": subsection['discussion_topics'],
+              }
+          )
+          print(chapter.json_dict)
 
 
 def kickoff():

@@ -25,14 +25,14 @@ class SubSection(BaseModel):
     section_title: str = Field(
         description="Title of the subsection"
     )
-    discution_topics: List[DiscussionTopic] = Field(
+    discussion_topics: List[DiscussionTopic] = Field(
         description="List of topics that the text content of the subsection should discuss"
     )
 
 
 class Outline(BaseModel):
     section_name: str = Field(description="Name of section")
-    discution_topics: List[DiscussionTopic] = Field(description="Topics to discuss in the section's introduction text")
+    discussion_topics: List[DiscussionTopic] = Field(description="Topics to discuss in the section's introduction text")
     subsections: List[SubSection] = Field(
         description="Subsections that the main section contains"
     )
