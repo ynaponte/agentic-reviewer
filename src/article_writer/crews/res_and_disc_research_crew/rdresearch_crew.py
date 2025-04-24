@@ -42,7 +42,7 @@ class TechnicalChapterWriterCrew():
     )
 
     writer_llm = LLM(
-        model="ollama/qwen2.5:32b",
+        model="ollama/qwen2.5:3b-instruct-q6_K",
         base_url="http://localhost:11434",
         timeout=1800.0,
         max_tokens=32000,
@@ -64,7 +64,8 @@ class TechnicalChapterWriterCrew():
             config=self.agents_config['topic_researcher'],
             llm=self.researcher_and_editor_llm,
             tools=[QueryArticlesTool()],
-            verbose=True
+            verbose=True,
+            memory=True
         )
 
     @agent
@@ -109,9 +110,11 @@ class TechnicalChapterWriterCrew():
             #manager_llm=self.manager_llm,
             agents=[
                 self.topic_researcher(),
+                self.technical_writer()
             ],
             tasks=[
                 self.research_task(),
+                self.write_section()
             ],
             process=Process.sequential,
             verbose=True,
