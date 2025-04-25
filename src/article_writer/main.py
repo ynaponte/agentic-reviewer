@@ -3,7 +3,7 @@ from crewai.flow import Flow, listen, start
 from .crews.doc_chunk_review_crew import ChunkReviewCrew
 from .crews.report_writer_crew.report_writer_crew import ReportWriterCrew
 from .crews.outline_crew.outline_crew import OutlineCrew
-from .crews.technical_chapter_writer.technical_chapter_writer_crew import TechnicalChapterWriterCrew
+from .crews.res_and_disc_research_crew.rdresearch_crew import RDResearchCrew
 from ..tools import QueryArticlesTool
 from typing import Dict, List
 from ..utils import VectorDatabaseManager
@@ -49,7 +49,6 @@ class ArticleWriterFlow(Flow[ArticleWriterState]):
             persist_directory="article_vectorstore",
             collection_name="flow_test_collection"
         )
-
         self.state.results_discussion_outline = """
 {
   "section_name": "Resultados e Discussão",
@@ -153,16 +152,49 @@ class ArticleWriterFlow(Flow[ArticleWriterState]):
                 print(f"Outline de metodologia:\n\n{task_output.raw}")
 
     @listen(generate_outlines)
-    def res_and_disc_chapter_generation(self):
-        outline = json.loads(self.state.results_discussion_outline)
-        for subsection in outline['subsections']:
-          chapter = TechnicalChapterWriterCrew().crew().kickoff(
-              inputs={
-                  "section_title": subsection['section_title'],
-                  "discussion_topics": subsection['discussion_topics'],
-              }
+    async def res_and_disc_chapter_generation(self):
+      # Função para chamada assincrona da crew
+      async def acall_research_crew(
+        section_title, 
+        topic, 
+        visual_elements_to_contextualize, 
+        numerical_results_to_include
+      ):
+        reasearch_crew_output = await RDResearchCrew().crew().kickoff_async(
+          inputs={
+            "section_title": section_title,
+            "discussion_topic": topic,
+            "visual_elements_to_contextualize": visual_elements_to_contextualize,
+            "numerical_results_to_include": numerical_results_to_include
+          }
+        )
+        return reasearch_crew_output.json_dict
+      
+      outline = json.loads(self.state.results_discussion_outline)
+      async_tasks_to_exec = []
+      for subsection in outline['subsections']:
+        for disc_topic in subsection['discussion_topics']:
+          visual_elements_to_contextualize = "\n".join([
+            f"- {element["name"]}: {element["description"]}"
+            for element in disc_topic.get('visual_elements_to_contextualize', [])
+          ])
+          numerical_results_to_include = "\n".join([
+            f'- {result}' for result in disc_topic.get('numerical_results_to_include', [])
+          ])
+          
+          async_tasks_to_exec.append(
+            asyncio.create_task(
+              acall_research_crew(
+                  subsection['section_title'], 
+                  disc_topic['topic'], 
+                  visual_elements_to_contextualize, 
+                  numerical_results_to_include
+              )
+            )
           )
-          print(chapter.json_dict)
+      research_outputs = await asyncio.gather(*async_tasks_to_exec)
+      insights = {topic: insights for research_output in research_outputs for topic, insights in research_output.items()}
+      print(insights)
 
 
 def kickoff():

@@ -1,27 +1,123 @@
-research_task:
+topic_research:
   description: >
-    Topicos de discussão:
-    {discussion_topics}
+    topico de discussao:
+    {discussion_topic}
 
-    Analise os JSON contendo os tópicos de discussão da subseção "{section_title}" da seção "Resultados e Discussão" de um artigo científico, 
-    tendo a certeza de:   
-    1. Processar cada object presente no JSON array, passado em Topicos de discussao;
-    2. Conduzir uma pequisa separada para cada chave presente no object, isto é, uma para "tópic", uma para "visual_elements_to_contextualize"
-       (se existir) e outra para "numerical_results_to_contextualize" (se existir);
+    Você deve pesquisar sobre o *topico de discussao* informado acima, a ser discutido na subseção "{section_title}" da seção "Resultados e Discussão" de um 
+    artigo científico. Utilize a ferramenta QueryArticlesTool para realizar a pesquisa.
 
-    Processo de execução da pesquisa (executar para cada item):
-      - Extraia o termo-chave que melhor descreve o "tópic", "visual_elements_to_contextualize" ou "numerical_results_to_contextualize";
-      - Execute sua ferramenta QueryArticlesTool, passando o termo-chave no parâmetro '\search_query\' e especificando corretamente o parametro '\doc_type\';
-      - A partir do retornado, gere um texto de 1000+ palavras, com insights detalhados do item.
+    **Passos de obrigatórios da tarefa:**
+    1. Extraia o termo chave que melhor descreve o tema do topico de discussao.
+    2. Pesquise sobre o topico de discussao "{discussion_topic}" utilizando a ferramenta `QueryArticlesTool`. Para isso:
+      - Execute a pesquisa utilizando sua ferramenta `QueryArticlesTool`;
+      - Use o termo-chave como valor do parametro 'search_query'
+      - Defina o parâmetro 'doc_type' como ['reference', 'draft', 'report'];
+      - Defina o parâmetro 'top_k' como 5;
+      - Execute a ferramenta `QueryArticlesTool` e registre o resultado;
+      - Se não forem retornardos bons trechos pela ferramenta, aumente o valor de 'top_k' e repita a execução da ferramenta.
+
+    **Restrições:**
+      - Não defina 'top_k' com um valor menor que 5.
+
+    **Criterio de sucesso:**
+      - A ferramenta foi executada corretamente e retornou trechos de maior alinhamento com o tópico
+  expected_output: >
+    Um JSON contendo a chave "about_the_topic", cujo valor é um objeto possuindo os pares chave-valor:
+      - "item_name": Nome do tópico pesquisado;
+      - "research_results": o conteúdo retornado pela ferramenta QueryArticlesTool.
+  agent: topic_researcher
+
+visual_elements_research:
+  description: >
+    Lista de Elementos visuais:
+    {visual_elements_to_contextualize}
+
+    Você deve pesquisar sobre cada item listado acima, caso existam, para serem discutidos e incluídos na subseção "{section_title}" da seção "Resultados e Discussão" 
+    de um artigo científico. Utilize a ferramenta `QueryArticlesTool` para realizar cada uma das pesquisas.
+
+    **Passos obrigatórios da tarefa:**
+    1. Elabore um plano de execução. Este plano deve listar cada item da lista de elementos visuais, indicar que será feita uma pesquisa separada para cada um,
+       e especificar que o tipo de documento a ser consultado será sempre 'report' e 'draft'.
+    2. Execute o plano de forma sequencial. Para cada item:
+       - Use o item como valor do parâmetro 'search_query';
+       - Defina o parâmetro 'doc_type' como ['report', 'draft'];
+       - Defina o parâmetro 'top_k' como 5;
+       - Execute a ferramenta `QueryArticlesTool` e registre o resultado;
+       - Se não forem retornardos bons trechos pela ferramenta, aumente o valor de 'top_k' e repita a execução da ferramenta.
+
+    **Restrições:**
+      - Execute apenas se a lista de elementos visuais não estiver vazia.
+      - Pesquise exclusivamente em documentos do tipo 'report' e 'draft'.
+
+    **Critério de sucesso:**
+      - A ferramenta foi chamada uma vez para cada item da lista (se existirem), e retornou os trechos mais alinhados com o conteúdo do item visual pesquisado.
+  expected_output: >
+    Um JSON contendo a chave "about_the_visual_elements". O valor deve ser:
+      - Uma lista de objetos (um por item visual pesquisado), onde cada objeto possui:
+          - "item_name": o nome do item pesquisado;
+          - "research_results": o conteúdo retornado pela QueryArticlesTool.
+      - Ou uma lista vazia, caso nenhum item tenha sido fornecido para pesquisa.
+  agent: topic_researcher
+
+numerical_results_research:
+  description: >
+    Lista de Resultados numericos:
+    {numerical_results_to_include}
+
+    Você deve pesquisar sobre cada item listado acima, caso existam, para serem discutidos e incluídos na subseção "{section_title}" da seção "Resultados e Discussão" 
+    de um artigo científico. Utilize a ferramenta `QueryArticlesTool` para realizar cada uma das pesquisas.
+
+    **Passos obrigatórios da tarefa:**
+    1. Elabore um plano de execução. Este plano deve listar cada item da lista de Resultados numericos, indicar que será feita uma pesquisa separada para cada um,
+       e especificar que o tipo de documento a ser consultado será sempre 'draft'.
+    2. Execute o plano de forma sequencial. Para cada item:
+       - Use o item como valor do parâmetro 'search_query';
+       - Defina o parâmetro 'doc_type' como ['draft'];
+       - Defina o parametro 'top_k' como 5;
+       - Execute a ferramenta `QueryArticlesTool` e registre o resultado;
+       - Se não forem retornardos bons trechos pela ferramenta, aumente o valor de 'top_k' e repita a execução da ferramenta.
+
+    **Restrições:**
+      - Execute apenas se a lista de elementos visuais não estiver vazia.
+      - Pesquise exclusivamente em documentos do tipo 'draft'.
+
+    **Critério de sucesso:**
+      - A ferramenta foi chamada uma vez para cada item da lista (se existirem), e retornou os trechos mais alinhados com o conteúdo do item visual pesquisado.
+  expected_output: >
+    Um JSON contendo a chave "about_the_numerical_results". O valor deve ser:
+      - Uma lista de objetos (um por item visual pesquisado), onde cada objeto possui:
+          - "item_name": o nome do item pesquisado;
+          - "research_results": o conteúdo retornado pela QueryArticlesTool.
+      - Ou uma lista vazia, caso nenhum item tenha sido fornecido para pesquisa.
+  agent: topic_researcher
+
+gather_insights:
+  description: >
+    Uma vez todas as pesquisas realizadas, escreva insights detalhados sobre o tópico "{discussion_topic}", utilizando como base o que foi obtido pelas pesquisas sobre 
+    o próprio tópico e os elementos visuais e resultados numericos que nele devem estar inclusos. Seja detalhista e certifique-se de incorporar todos os resultados numéricos 
+    relevantes, com valores exatos sempre que possível. Os insights devem ser escritos em português brasileiro, em um texto de 400 a 600 palavras, preferindo respostas longas, 
+    desde tenham relevancia.
+
+    **Passos para a tarefa:**
+    1. Leia atentamente os resultados das tasks anteriores (`topic_research`, `visual_elements_research`, `numerical_results_research`) que estarão disponíveis para você no 
+       contexto desta tarefa;
+    2. Com base nessas pesquisas, redija um texto técnico com os insights mais relevantes, incluindo argumentações, dados e ligações entre os elementos.
     
-    Criterio para sucesso:
-      - Todos os campos "tópic", "visual_elements_to_contextualize" e "numerical_results_to_contextualize" contidos nos tópicos de discussao foram pesquisados;
-      - Os insights gerados são extremamente detalhados e conseguem ser utilizados para criar textos.
+    **Restrições:**
+      - Sua resposta deve ser baseada nos resultados das tasks anteriores;
+      - Sua resposta com os insights sobre tópico não deve ter menos que 200 palavras;
+      - Sua resposta com os insights sobre tópico não deve ter mais que 600 palavras;
+      - Você deve preservar resultados numéricos de alta relevancia em sua resposta.
+
+    **Criterios para sucesso**:
+      - Os insights gerados são baseados nos resultados das pesquisas e de extrema relevancia ao topico de discussao;
+      - Os insights gerados são extremamente detalhados e conseguem ser utilizados para criar textos sobre o topico de discussao.
   expected_output: >
     Um objeto JSON contendo uma lista de insights detalhados, onde cada elemento da lista é um insight detalhado individual 
   
     Exemplo de saída:
     {
+      "topic": {discussion_topic}
       "insights":["
         **Obtenção de Portas Lógicas**: A pesquisa apresenta o conceito e implementação de portas lógicas utilizando um
         acoplador em fibra óptica, onde é demonstrado que é possível extrair operações lógicas através desta estrutura
@@ -49,4 +145,4 @@ research_task:
       ]
     }
   agent: topic_researcher
-
+  context: [topic_research, visual_elements_research, numerical_results_research]
