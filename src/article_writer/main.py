@@ -168,7 +168,7 @@ class ArticleWriterFlow(Flow[ArticleWriterState]):
             "numerical_results_to_include": numerical_results_to_include
           }
         )
-        return reasearch_crew_output.json_dict
+        return reasearch_crew_output
       
       outline = json.loads(self.state.results_discussion_outline)
       async_tasks_to_exec = []
@@ -193,7 +193,7 @@ class ArticleWriterFlow(Flow[ArticleWriterState]):
             )
           )
       research_outputs = await asyncio.gather(*async_tasks_to_exec)
-      insights = {topic: insights for research_output in research_outputs for topic, insights in research_output.items()}
+      insights = {research_output.json_dict for research_output in research_outputs}
       print(insights)
 
 
