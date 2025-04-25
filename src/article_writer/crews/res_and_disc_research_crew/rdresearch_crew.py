@@ -55,10 +55,10 @@ class RDResearchCrew():
     )
 
     researcher_llm = LLM(
-        model="ollama/qwen2.5:3b-instruct-q6_K",
+        model="ollama/qwen2.5:14b-instruct-q8_0",
         base_url="http://localhost:11434",
         timeout=1800.0,
-        max_tokens=32000,
+        max_tokens=128000,
         temperature=0.4
     )
 
@@ -70,6 +70,14 @@ class RDResearchCrew():
             tools=[QueryArticlesTool()],
             verbose=True,
             memory=True
+        )
+    
+    @agent
+    def insight_writer(self) -> Agent:
+        return Agent(
+            config=self.agents_config['insight_writer'],
+            llm=self.researcher_llm,
+            verbose=True,
         )
     
     @task
@@ -106,6 +114,7 @@ class RDResearchCrew():
             #manager_llm=self.manager_llm,
             agents=[
                 self.topic_researcher(),
+                self.insight_writer()
             ],
             tasks=[
                 self.topic_research(),

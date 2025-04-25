@@ -7,10 +7,8 @@ topic_research:
     artigo científico. Utilize a ferramenta QueryArticlesTool para realizar a pesquisa.
 
     **Passos de obrigatórios da tarefa:**
-    1. Extraia o termo chave que melhor descreve o tema do topico de discussao.
-    2. Pesquise sobre o topico de discussao "{discussion_topic}" utilizando a ferramenta `QueryArticlesTool`. Para isso:
-      - Execute a pesquisa utilizando sua ferramenta `QueryArticlesTool`;
-      - Use o termo-chave como valor do parametro 'search_query'
+    1. Pesquise sobre o topico de discussao "{discussion_topic}" utilizando a ferramenta `QueryArticlesTool`. Para isso:
+      - Use o tópico como valor do parametro 'search_query'
       - Defina o parâmetro 'doc_type' como ['reference', 'draft', 'report'];
       - Defina o parâmetro 'top_k' como 5;
       - Execute a ferramenta `QueryArticlesTool` e registre o resultado;
@@ -30,6 +28,7 @@ topic_research:
 visual_elements_research:
   description: >
     Lista de Elementos visuais:
+
     {visual_elements_to_contextualize}
 
     Você deve pesquisar sobre cada item listado acima, caso existam, para serem discutidos e incluídos na subseção "{section_title}" da seção "Resultados e Discussão" 
@@ -62,6 +61,7 @@ visual_elements_research:
 numerical_results_research:
   description: >
     Lista de Resultados numericos:
+    
     {numerical_results_to_include}
 
     Você deve pesquisar sobre cada item listado acima, caso existam, para serem discutidos e incluídos na subseção "{section_title}" da seção "Resultados e Discussão" 
@@ -93,56 +93,44 @@ numerical_results_research:
 
 gather_insights:
   description: >
-    Uma vez todas as pesquisas realizadas, escreva insights detalhados sobre o tópico "{discussion_topic}", utilizando como base o que foi obtido pelas pesquisas sobre 
-    o próprio tópico e os elementos visuais e resultados numericos que nele devem estar inclusos. Seja detalhista e certifique-se de incorporar todos os resultados numéricos 
-    relevantes, com valores exatos sempre que possível. Os insights devem ser escritos em português brasileiro, em um texto de 400 a 600 palavras, preferindo respostas longas, 
-    desde tenham relevancia.
+    Agora que todas as pesquisas foram realizadas, escreva insights detalhados com base nos resultados das tasks anteriores:
+
+    - `topic_research`: pesquisa sobre o tópico principal;
+    - `visual_elements_research`: pesquisa sobre os elementos visuais;
+    - `numerical_results_research`: pesquisa sobre os resultados numéricos.
+
+    Seu texto deve ser sobre o tópico:
+    "{discussion_topic}"
+
+    Use os dados fornecidos no contexto. Não execute novas pesquisas. Escreva um texto técnico, em português brasileiro, com linguagem formal, entre 400 e 600 palavras, integrando:
+
+    - O conteúdo da pesquisa sobre o tópico central;
+    - As informações obtidas sobre os elementos visuais;
+    - E os resultados numéricos relevantes, com valores mantidos com exatidão.
 
     **Passos para a tarefa:**
     1. Leia atentamente os resultados das tasks anteriores (`topic_research`, `visual_elements_research`, `numerical_results_research`) que estarão disponíveis para você no 
        contexto desta tarefa;
-    2. Com base nessas pesquisas, redija um texto técnico com os insights mais relevantes, incluindo argumentações, dados e ligações entre os elementos.
+    2. Redija um texto técnico com insights sobre o tópico "{discussion_topic}", incluindo argumentações, dados e ligações entre os elementos, se baseando nos resultados 
+       lidos anteriormente.
     
     **Restrições:**
-      - Sua resposta deve ser baseada nos resultados das tasks anteriores;
+      - Não altere ou crie chaves adicionais no resultado.
+      - A chave tópico sempre dever ser "{discussion_topic}"
+      - O texto deve fornecer insights unica e exclusivamente sobre o tópico {discussion_topic}
       - Sua resposta com os insights sobre tópico não deve ter menos que 200 palavras;
       - Sua resposta com os insights sobre tópico não deve ter mais que 600 palavras;
-      - Você deve preservar resultados numéricos de alta relevancia em sua resposta.
+      - Você deve preservar resultados numéricos de alta relevancia em sua resposta;
+      - Sua resposta deve ser escrita em português brasileiro.
 
     **Criterios para sucesso**:
-      - Os insights gerados são baseados nos resultados das pesquisas e de extrema relevancia ao topico de discussao;
-      - Os insights gerados são extremamente detalhados e conseguem ser utilizados para criar textos sobre o topico de discussao.
+      - Os insights gerados são sobre o tópico: {discussion_topic};
+      - O texto gerado para os apresentar os insights está escrito em português brasileiro;
+      - Os insights gerados são baseados nos resultados das pesquisas e de extrema relevancia ao tópico {discussion_topic};
+      - Os insights gerados são extremamente detalhados e conseguem ser utilizados para criar textos sobre o topico {discussion_topic}.
   expected_output: >
-    Um objeto JSON contendo uma lista de insights detalhados, onde cada elemento da lista é um insight detalhado individual 
-  
-    Exemplo de saída:
-    {
-      "topic": {discussion_topic}
-      "insights":["
-        **Obtenção de Portas Lógicas**: A pesquisa apresenta o conceito e implementação de portas lógicas utilizando um
-        acoplador em fibra óptica, onde é demonstrado que é possível extrair operações lógicas através desta estrutura
-        única. Esta técnica utiliza a álgebra booleana para realizar cálculos, com as entradas podendo oscilar entre os
-        valores 0 ou 1 lógicos.
-
-        **Modelo Simbólico vs Real**: Os estudos literários destacam a viabilidade teórica da utilização de acopladores
-        em fibra óptica para obter portas lógicas, mas a pesquisa apresenta um modelo prático e experimental com os
-        resultados demonstrados no software implementando o método de Runge-Kutta.
-
-        **Efeitos Lineares e Não-Lineares**: A literatura anterior aborda a modelagem dos efeitos lineares (dispersão
-        de velocidade de grupo, variação desta dispersão) e não-lineares na fibra óptica (automodulação de fase,
-        auto-inclinação, efeito Raman). A pesquisa apresenta esses mesmos efeitos como fatores relevantes no processo de
-        modulação da entrada do pulso óptico.
-
-        **Evolução das Comunicações Ópticas**: O Capítulo 1 do referido trabalho mostra um contexto histórico breve da
-        evolução das comunicações ópticas, bem como a necessidade de desenvolvimento de dispositivos completamente ópticos
-        e o surgimento da nova classe de fibras ópticas, a Fibra de Cristal Fotônico (PCF). A pesquisa se alinha com esta
-        visão, destacando a importância do estudo físico das PCFs.
-
-        **Efeitos Não-Lineares na PCF**: O Capítulo 3 do trabalho apresenta um estudo físico sobre os efeitos
-        não-lineares na PCF e a derivação da equação de Schrödinger generalizada para aplicações em NLDC-PCF, mostrando
-        como os acopladores podem ser usados neste contexto.
-        "
-      ]
-    }
-  agent: topic_researcher
+    Um objeto JSON contendo as seguintes duas chaves com os seguintes valores:
+      - "topic": O nome do tópico ao qual os insights são sobre, nesse caso {discussion_topic}
+      - "insights": Insights detalhados sobre o tópico "{discussion_topic}", escritos em texto de 400 a 600 palavras, em português brasileiro.
+  agent: insight_writer
   context: [topic_research, visual_elements_research, numerical_results_research]
