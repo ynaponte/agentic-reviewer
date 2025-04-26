@@ -7,11 +7,11 @@ topic_research:
     artigo científico. Utilize a ferramenta QueryArticlesTool para realizar a pesquisa.
 
     **Passos de obrigatórios da tarefa:**
-    1. Pesquise sobre o topico de discussao "{discussion_topic}" utilizando a ferramenta `QueryArticlesTool`. Para isso:
+    1. Pesquise sobre o topico de discussao "{discussion_topic}" utilizando a ferramenta QueryArticlesTool. Para isso:
       - Use o tópico como valor do parametro 'search_query'
       - Defina o parâmetro 'doc_type' como ['reference', 'draft', 'report'];
       - Defina o parâmetro 'top_k' como 5;
-      - Execute a ferramenta `QueryArticlesTool` e registre o resultado;
+      - Execute a ferramenta QueryArticlesTool e registre o resultado;
       - Se não forem retornardos bons trechos pela ferramenta, aumente o valor de 'top_k' e repita a execução da ferramenta.
 
     **Restrições:**
@@ -20,9 +20,13 @@ topic_research:
     **Criterio de sucesso:**
       - A ferramenta foi executada corretamente e retornou trechos de maior alinhamento com o tópico
   expected_output: >
-    Um JSON contendo a chave "about_the_topic", cujo valor é um objeto possuindo os pares chave-valor:
-      - "item_name": Nome do tópico pesquisado;
-      - "research_results": o conteúdo retornado pela ferramenta QueryArticlesTool.
+    Um JSON com a seguinte estrutura:
+    {
+      "about_the_topic": {
+        "item_name": "{discussion_topic}",
+        "research_results": "Texto informativo estruturado sobre o tópico, baseado nas pesquisas realizadas, com 500+ palavras, em português brasileiro."
+      }
+    }
   agent: topic_researcher
 
 visual_elements_research:
@@ -31,30 +35,49 @@ visual_elements_research:
 
     {visual_elements_to_contextualize}
 
-    Você deve pesquisar sobre cada item listado acima, caso existam, para serem discutidos e incluídos na subseção "{section_title}" da seção "Resultados e Discussão" 
-    de um artigo científico. Utilize a ferramenta `QueryArticlesTool` para realizar cada uma das pesquisas.
+    Você deve pesquisar sobre cada item listado acima, caso existam, para serem discutidos e incluídos na subseção "{section_title}", mais 
+    especificamente no tópico "{discussion_topic}" da seção "Resultados e Discussão" de um artigo científico. Utilize a ferramenta 
+    `QueryArticlesTool` para realizar cada uma das pesquisas.
 
     **Passos obrigatórios da tarefa:**
-    1. Elabore um plano de execução. Este plano deve listar cada item da lista de elementos visuais, indicar que será feita uma pesquisa separada para cada um,
-       e especificar que o tipo de documento a ser consultado será sempre 'report' e 'draft'.
-    2. Execute o plano de forma sequencial. Para cada item:
-       - Use o item como valor do parâmetro 'search_query';
-       - Defina o parâmetro 'doc_type' como ['report', 'draft'];
-       - Defina o parâmetro 'top_k' como 5;
-       - Execute a ferramenta `QueryArticlesTool` e registre o resultado;
-       - Se não forem retornardos bons trechos pela ferramenta, aumente o valor de 'top_k' e repita a execução da ferramenta.
+
+    1. Elabore um plano de execução:
+      - Liste cada item da lista de elementos visuais;
+      - Indique que cada item será pesquisado separadamente;
+      - Confirme que os tipos de documento serão exclusivamente ['report', 'draft'].
+
+    2. Execute o plano de forma sequencial:
+      - Para cada item visual:
+        - Use o nome ou descrição do item como valor do parâmetro 'search_query';
+        - Defina 'doc_type' como ['report', 'draft'];
+        - Defina 'top_k' como 5 inicialmente;
+        - Execute a ferramenta `QueryArticlesTool`.
+
+    3. Se o resultado for insuficiente:
+      - Aumente o valor de 'top_k' progressivamente e repita a pesquisa.
+
+    4. Para cada item visual:
+      - Organize e apresente os resultados obtidos de forma clara e estruturada em forma de insights descritivos, que explicitem a contribuição 
+        do elemento visual ao tópico;
+      - Sempre considere o contexto do tópico "{discussion_topic}" ao interpretar o que for encontrado;
+      - Cada resposta sobre um item deve ter entre 300 e 500 palavras.
 
     **Restrições:**
       - Execute apenas se a lista de elementos visuais não estiver vazia.
       - Pesquise exclusivamente em documentos do tipo 'report' e 'draft'.
+      - Cada insight sobre o item deve ser descritivo, informativo e baseado apenas no material pesquisado.
 
     **Critério de sucesso:**
-      - A ferramenta foi chamada uma vez para cada item da lista (se existirem), e retornou os trechos mais alinhados com o conteúdo do item visual pesquisado.
+      - A ferramenta foi chamada uma vez para cada item da lista (se existirem), e retornou os trechos mais alinhados com o conteúdo do item 
+        visual pesquisado.
+      - Cada elemento visual listado gerou um insight descritivo e estruturado;
+      - As respostas seguem o limite de 300 a 500 palavras por item;
+      - O material apresentado é útil e fiel ao que foi encontrado na pesquisa.
   expected_output: >
     Um JSON contendo a chave "about_the_visual_elements". O valor deve ser:
-      - Uma lista de objetos (um por item visual pesquisado), onde cada objeto possui:
-          - "item_name": o nome do item pesquisado;
-          - "research_results": o conteúdo retornado pela QueryArticlesTool.
+      - Uma lista de objetos (um para cada item visual pesquisado), onde cada objeto contém:
+          - "item_name": o nome exato do item visual pesquisado;
+          - "research_results": um texto descritivo estruturado sobre o item pesquisado, com 300 a 500 palavras, escrito em português brasileiro.
       - Ou uma lista vazia, caso nenhum item tenha sido fornecido para pesquisa.
   agent: topic_researcher
 
@@ -64,73 +87,94 @@ numerical_results_research:
     
     {numerical_results_to_include}
 
-    Você deve pesquisar sobre cada item listado acima, caso existam, para serem discutidos e incluídos na subseção "{section_title}" da seção "Resultados e Discussão" 
-    de um artigo científico. Utilize a ferramenta `QueryArticlesTool` para realizar cada uma das pesquisas.
+    Você deve pesquisar sobre cada item listado acima, caso existam, para serem discutidos e incluídos na subseção "{section_title}", mais 
+    especificamente no tópico "{discussion_topic}" da seção "Resultados e Discussão" de um artigo científico. Utilize a ferramenta 
+    `QueryArticlesTool` para realizar cada uma das pesquisas.
 
     **Passos obrigatórios da tarefa:**
-    1. Elabore um plano de execução. Este plano deve listar cada item da lista de Resultados numericos, indicar que será feita uma pesquisa separada para cada um,
-       e especificar que o tipo de documento a ser consultado será sempre 'draft'.
-    2. Execute o plano de forma sequencial. Para cada item:
-       - Use o item como valor do parâmetro 'search_query';
-       - Defina o parâmetro 'doc_type' como ['draft'];
-       - Defina o parametro 'top_k' como 5;
-       - Execute a ferramenta `QueryArticlesTool` e registre o resultado;
-       - Se não forem retornardos bons trechos pela ferramenta, aumente o valor de 'top_k' e repita a execução da ferramenta.
+
+    1. Elabore um plano de execução:
+      - Liste cada item da lista de resultados numéricos;
+      - Indique que cada item será pesquisado separadamente;
+      - Confirme que o tipo de documento a ser consultado será exclusivamente ['draft'].
+
+    2. Execute o plano de forma sequencial:
+      - Para cada item de resultado numérico:
+        - Use a descrição exata do item como valor do parâmetro 'search_query';
+        - Defina 'doc_type' como ['draft'];
+        - Defina 'top_k' como 5 inicialmente;
+        - Execute a ferramenta `QueryArticlesTool`.
+
+    3. Se o resultado for insuficiente:
+      - Aumente o valor de 'top_k' progressivamente e repita a pesquisa.
+
+    4. Para cada resultado numérico:
+      - Organize e apresente os resultados obtidos de forma clara e estruturada em forma de insights descritivos, que explicitem os resultados 
+        obtidos e, se possível, como foram obtidos;
+      - Cada insight deve ter entre 400 e 700 palavras.
 
     **Restrições:**
       - Execute apenas se a lista de elementos visuais não estiver vazia.
       - Pesquise exclusivamente em documentos do tipo 'draft'.
+      - Não adicionar interpretações próprias ou transformá-los em texto crítico.
+      - Cada insight deve ser descritivo, informativo e baseado somente nos dados pesquisados.
 
     **Critério de sucesso:**
-      - A ferramenta foi chamada uma vez para cada item da lista (se existirem), e retornou os trechos mais alinhados com o conteúdo do item visual pesquisado.
+      - A ferramenta foi chamada uma vez para cada item da lista (se existirem)(ou mais vezes, se necessário via ajuste de top_k);
+      - Cada resultado numérico listado gerou um insight descritivo estruturado.
+      - As respostas seguem o limite de 400 a 700 palavras por item.
+      - O material apresentado é claro, informativo e útil para uma futura redação.
   expected_output: >
     Um JSON contendo a chave "about_the_numerical_results". O valor deve ser:
-      - Uma lista de objetos (um por item visual pesquisado), onde cada objeto possui:
-          - "item_name": o nome do item pesquisado;
-          - "research_results": o conteúdo retornado pela QueryArticlesTool.
+      - Uma lista de objetos (um para cada resultado numérico pesquisado), onde cada objeto contém:
+          - "item_name": o nome exato do item pesquisado;
+          - "research_results": um texto descritivo estruturado sobre o item pesquisado, com 400 a 700 palavras, escrito em português brasileiro.
       - Ou uma lista vazia, caso nenhum item tenha sido fornecido para pesquisa.
   agent: topic_researcher
 
-gather_insights:
+write_topic_text:
   description: >
-    Agora que todas as pesquisas foram realizadas, escreva insights detalhados com base nos resultados das tasks anteriores:
+    Write a detailed, argumentative, multi-paragraph scientific text based exclusively on the insights provided from the context of the tasks:
 
-    - `topic_research`: pesquisa sobre o tópico principal;
-    - `visual_elements_research`: pesquisa sobre os elementos visuais;
-    - `numerical_results_research`: pesquisa sobre os resultados numéricos.
+    - `topic_research`
 
-    Seu texto deve ser sobre o tópico:
+    - `visual_elements_research`
+
+    - `numerical_results_research`
+
+    Your writing must be about the topic:
     "{discussion_topic}"
 
-    Use os dados fornecidos no contexto. Não execute novas pesquisas. Escreva um texto técnico, em português brasileiro, com linguagem formal, entre 400 e 600 palavras, integrando:
+    and should be suitable for the subsection:
+    "{section_title}" of the "Results and Discussion" section in a scientific article.
 
-    - O conteúdo da pesquisa sobre o tópico central;
-    - As informações obtidas sobre os elementos visuais;
-    - E os resultados numéricos relevantes, com valores mantidos com exatidão.
+    **Execution steps:**
+    1. Read and understand the research results provided in the context.
+    2. Organize and compose a coherent and detailed text based on these insights, following the writing directives of your role.
 
-    **Passos para a tarefa:**
-    1. Leia atentamente os resultados das tasks anteriores (`topic_research`, `visual_elements_research`, `numerical_results_research`) que estarão disponíveis para você no 
-       contexto desta tarefa;
-    2. Redija um texto técnico com insights sobre o tópico "{discussion_topic}", incluindo argumentações, dados e ligações entre os elementos, se baseando nos resultados 
-       lidos anteriormente.
-    
-    **Restrições:**
-      - Não altere ou crie chaves adicionais no resultado.
-      - A chave tópico sempre dever ser "{discussion_topic}"
-      - O texto deve fornecer insights unica e exclusivamente sobre o tópico {discussion_topic}
-      - Sua resposta com os insights sobre tópico não deve ter menos que 200 palavras;
-      - Sua resposta com os insights sobre tópico não deve ter mais que 600 palavras;
-      - Você deve preservar resultados numéricos de alta relevancia em sua resposta;
-      - Sua resposta deve ser escrita em português brasileiro.
+    **Writing rules:**
+      - DO NOT create lists, bullet points, or enumerated structures.
+      - Integrate insights fluidly and argumentatively in continuous paragraphs.
+      - ALWAYS write in Brazilian Portuguese.
+      - Preserve all relevant numerical results exactly as they are.
+      - Only refer to visual elements contextually, without describing them explicitly.
+      - Maintain a formal, technical, and academic tone.
 
-    **Criterios para sucesso**:
-      - Os insights gerados são sobre o tópico: {discussion_topic};
-      - O texto gerado para os apresentar os insights está escrito em português brasileiro;
-      - Os insights gerados são baseados nos resultados das pesquisas e de extrema relevancia ao tópico {discussion_topic};
-      - Os insights gerados são extremamente detalhados e conseguem ser utilizados para criar textos sobre o topico {discussion_topic}.
+    **Restrictions:**
+      - You MUST NOT perform any new research or invent information.
+      - Your text must be have 1000+ words.
+
+    **Success criteria:**
+      - The text must be fully based on the provided insights.
+      - The topic must match exactly "{discussion_topic}".
+      - The language must be Brazilian Portuguese.
+      - The writing must be argumentative, coherent, and flowing without lists.
   expected_output: >
-    Um objeto JSON contendo as seguintes duas chaves com os seguintes valores:
-      - "topic": O nome do tópico ao qual os insights são sobre, nesse caso {discussion_topic}
-      - "insights": Insights detalhados sobre o tópico "{discussion_topic}", escritos em texto de 400 a 600 palavras, em português brasileiro.
-  agent: insight_writer
+    Full multi-paragraph scientific text about the topic, with 1000+ words, written in brazilian portuguese, organized in a JSON 
+    object with the following structure:
+    {
+      "topic": "{discussion_topic}",
+      "text": "Full multi-paragraph scientific text here, with 1000+ words, in Brazilian Portuguese."
+    }
+  agent: technical_writer
   context: [topic_research, visual_elements_research, numerical_results_research]

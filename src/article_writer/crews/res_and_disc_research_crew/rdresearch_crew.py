@@ -8,15 +8,17 @@ from typing import List
 
 class ResearchOutput(BaseModel):
     item_name: str = Field(description="Name of the researched item")
-    research_results: str = Field(
-        default_factory=str,
-        description="The research results about the item"
+    research_results: str = Field(description="The research results about the item")
+
+
+class TopicTextContent(BaseModel):
+    topic: str = Field(description="Exact name of the topic that writing was requested upon")
+    text: str = Field(
+        description=(
+            "Full multi-paragraph scientific text about the topic, with 1000+ words, "
+            "written in brazilian portuguese"
+        )
     )
-
-
-class Insights(BaseModel):
-    topic: str = Field(description="Name of the topic")
-    insights: str = Field(description="Text with the detailed insights about the topic")
 
 
 class VisualElementsResearchOutput(BaseModel):
@@ -45,7 +47,6 @@ class RDResearchCrew():
 
     agents_config = 'config/agents.yaml'
     tasks_config = 'config/tasks.yaml'
-    
     manager_llm = LLM(
         model="ollama/deepseek-r1:7b",
         base_url="http://localhost:11434",
@@ -53,13 +54,19 @@ class RDResearchCrew():
         max_tokens=128000,
         temperature=0.4
     )
-
     researcher_llm = LLM(
-        model="ollama/qwen2.5:14b-instruct-q8_0",
+        model="ollama/qwen2.5:3b-instruct-q6_K",
+        base_url="http://localhost:11434",
+        timeout=1800.0,
+        max_tokens=32000,
+        temperature=0.4
+    )
+    writer_llm = LLM(
+        model="ollama/qwen2.5:7b-instruct",
         base_url="http://localhost:11434",
         timeout=1800.0,
         max_tokens=128000,
-        temperature=0.4
+        temperature=0.6
     )
 
     @agent
@@ -73,10 +80,10 @@ class RDResearchCrew():
         )
     
     @agent
-    def insight_writer(self) -> Agent:
+    def technical_writer(self) -> Agent:
         return Agent(
-            config=self.agents_config['insight_writer'],
-            llm=self.researcher_llm,
+            config=self.agents_config['technical_writer'],
+            llm=self.writer_llm,
             verbose=True,
         )
     
@@ -84,44 +91,39 @@ class RDResearchCrew():
     def topic_research(self) -> Task:
         return Task(
             config=self.tasks_config['topic_research'],
-            output_json=TopicResearchOutput
+            #output_json=TopicResearchOutput,
+            async_execution=False
         )
 
     @task
     def visual_elements_research(self) -> Task:
         return Task(
             config=self.tasks_config['visual_elements_research'],
-            output_json=VisualElementsResearchOutput
+            #output_json=VisualElementsResearchOutput,
+            async_execution=False
         )
 
     @task
     def numerical_results_research(self) -> Task:
         return Task(
             config=self.tasks_config['numerical_results_research'],
-            output_json=NumericalResultsResearchOutput
+            #output_json=NumericalResultsResearchOutput,
+            async_execution=False
         )
 
     @task
-    def gather_insights(self) -> Task:
+    def write_topic_text(self) -> Task:
         return Task(
-            config=self.tasks_config['gather_insights'],
-            output_json=Insights
+            config=self.tasks_config['write_topic_text'],
+            output_json=TopicTextContent
         )
     
     @crew
     def crew(self) -> Crew:
         return Crew(
             #manager_llm=self.manager_llm,
-            agents=[
-                self.topic_researcher(),
-                self.insight_writer()
-            ],
-            tasks=[
-                self.topic_research(),
-                self.visual_elements_research(),
-                self.numerical_results_research(),
-                self.gather_insights(),
-            ],
+            agents=self.agents,
+            tasks=self.tasks,
             process=Process.sequential,
             verbose=True,
             planning=False
