@@ -192,7 +192,6 @@ class ArticleWriterFlow(Flow[ArticleWriterState]):
               )
             )
           )
-        break
       research_outputs = await asyncio.gather(*async_tasks_to_exec)
       insights = [research_output.json_dict for research_output in research_outputs]
       print(insights)

@@ -163,6 +163,8 @@ write_topic_text:
     **Restrictions:**
       - You MUST NOT perform any new research or invent information.
       - Your text must be have 1000+ words.
+      - When identifing the topic on your answer, it MUST BE EXACTLY "{discussion_topic}".
+      - Your answer must be written in Brazilian Portuguese.
 
     **Success criteria:**
       - The text must be fully based on the provided insights.
