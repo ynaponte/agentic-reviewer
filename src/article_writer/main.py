@@ -11,8 +11,8 @@ from ..utils import VectorDatabaseManager
 from crewai import Agent, Crew, Process, Task
 from crewai.llm import LLM
 import asyncio
+import itertools
 import json
-
 
 class ChunkReview(BaseModel):
     """A class representing a chunk review."""
@@ -193,8 +193,11 @@ class ArticleWriterFlow(Flow[ArticleWriterState]):
             )
           )
       research_outputs = await asyncio.gather(*async_tasks_to_exec)
-      insights = [research_output.json_dict for research_output in research_outputs]
-      print(insights)
+      topics_text_content = iter([research_output.json_dict for research_output in research_outputs])
+      assign_topics = lambda section: (section['section_title'], itertools.islice(topics_text_content, len(section['discussion_topics'])))
+      text_per_section = dict(map(assign_topics, self.state.results_discussion_outline['subsections']))
+      
+      print(topics_text_content)
 
 
 def kickoff():
