@@ -1,0 +1,48 @@
+merge_subsection:
+  description: >
+    Raw Text:
+
+    {concatenated_text}
+
+    You are provided with a raw text composed by the concatenation of several parts written for different discussion topics of the subsection 
+    "{section_title}" from the "Results and Discussion" section of a scientific article. The Raw Text may contain abrupt breaks, unnecessary 
+    repetitions, or uneven transitions between ideas. Your task is to transform this material into a continuous, coherent and fluid text, as 
+    if it was written continuously from the start.
+
+    **Your main objectives are:**
+      - Improve the fluidity and continuity of the text;
+      - Correct or eliminate artificial transitions;
+      - Adjust connectors and initial/final sentences to maintain the natural flow;
+      - Eliminate repetitions without losing important information;
+      - Maintain the original technical content without adding new information;
+      - Preserve the technical precision and formality of the text.
+
+    **STEPS OF EXECUTION:**:
+    1. Read the entire text carefully and:
+      - Understand the thematic flow;
+      - Identify points where connections between paragraphs can be improved;
+      - Identify where there are unnecessary repetitions, abrupt breaks and or uneven transitions between ideas;
+    2. Remove unnecessary repetitions;
+    3. Adjust sentence structures or add connecting phrases as minimally as possible to ensure logical continuity, no abrupt breaks and even transitions
+       between ideas;
+    4. Review the final text to ensure grammatical accuracy, formal tone, and information preservation.
+
+    **Constrains:**
+      - Preserve all main original information, without any changes
+      - Do not introduce new information, interpretations, or remove content.
+      - Maintain the scientific tone throughout the entire text.
+      - Language must be formal, precise, and suitable for academic publication
+
+    **Success Criteria:**
+      - The final text must read as if it was written continuously, not as separate parts stitched together.
+      - Information must remain factually accurate and untouched.
+      - Language must be formal and academic.
+      - Transitions between topics must feel natural and logical.
+      - The final text is in Brazilian Portuguese.
+  expected_output: >
+    Um JSON com a seguinte estrutura:
+    {
+      "subsection_title": "{section_title}",
+      "merged_text": "Texto reestruturado, fluido e contínuo da subseção, escrito em português brasileiro acadêmico."
+    }
+  agent: subsection_merger
