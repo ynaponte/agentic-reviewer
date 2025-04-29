@@ -134,35 +134,33 @@ numerical_results_research:
 
 write_topic_text:
   description: >
-    Write a detailed, argumentative, multi-paragraph scientific text based exclusively on the insights provided from the context of the tasks:
+    Write a detailed, argumentative, multi-paragraph text, in must be formal, precise, and suitable for academic publication language, about the topic 
+    "{discussion_topic}" for the text content of the subsection "{section_title}" of the "Results and Discussion" section of a scientific article. 
+    Your writing should be based on the insights provided from the context of the task `topic_research`. You must seamlessly integrate the contextualization 
+    of visual elements based on the insights provided from the context of the task `visual_elements_research`, as if they were visible to the reader, but 
+    without explicitly describing their appearance. It is IMPERATIVE that all results gathered in the `numerical_results_research` task are included.
 
-    - `topic_research`
-
-    - `visual_elements_research`
-
-    - `numerical_results_research`
-
-    Your writing must be about the topic:
-    "{discussion_topic}"
-
-    and should be suitable for the subsection:
-    "{section_title}" of the "Results and Discussion" section in a scientific article.
+    You must produce a scientifically robust, coherent, and well-argued text that meaningfully contributes to the "Results and Discussion" section of the 
+    scientific article, enabling readers to understand, contextualize, and critically assess the research findings.
 
     **Execution steps:**
-    1. Read and understand the research results provided in the context.
-    2. Organize and compose a coherent and detailed text based on these insights, following the writing directives of your role.
+    1. Read and understand the insights provided from the context of the task `topic_research`;
+    2. Read and understand the contextualization and contribuition of the visual elements from the context of the task `visual_elements_research`;
+    3. Read and understand the research findings from the context of the task `numerical_results_research`;
+    4. Organize and compose a coherent and detailed text based on these insights, following the writing directives.
 
-    **Writing rules:**
+    **Writing directives:**
       - DO NOT create lists, bullet points, or enumerated structures.
       - Integrate insights fluidly and argumentatively in continuous paragraphs.
       - ALWAYS write in Brazilian Portuguese.
       - Preserve all relevant numerical results exactly as they are.
       - Only refer to visual elements contextually, without describing them explicitly.
       - Maintain a formal, technical, and academic tone.
+      - The text MUST be strictly descriptive or analytical. DO NOT introduce critiques, judgments, opinions, or suggestions for improvement.
 
-    **Restrictions:**
+    **Constraints:**
       - You MUST NOT perform any new research or invent information.
-      - Your text must be have 1000+ words.
+      - The generated text must have 1000+ words.
       - When identifing the topic on your answer, it MUST BE EXACTLY "{discussion_topic}".
       - Your answer must be written in Brazilian Portuguese.
 
@@ -176,7 +174,7 @@ write_topic_text:
     object with the following structure:
     {
       "topic": "{discussion_topic}",
-      "text": "Full multi-paragraph scientific text here, with 1000+ words, in Brazilian Portuguese."
+      "text": 'Fully multi-paragraphed scientific text, with 1000+ words, in Brazilian Portuguese'.
     }
   agent: technical_writer
   context: [topic_research, visual_elements_research, numerical_results_research]
