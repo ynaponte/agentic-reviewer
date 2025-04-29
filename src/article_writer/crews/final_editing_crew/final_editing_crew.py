@@ -14,7 +14,7 @@ class MergedTextOutput(BaseModel):
 
 
 @CrewBase
-class ContentMergerCrew:
+class FinalEditingCrew:
   agents_config = 'config/agents.yaml'
   tasks_config = 'config/tasks.yaml'
   merger_llm = LLM(
