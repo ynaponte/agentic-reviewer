@@ -5,62 +5,109 @@ generate_outline_results_discussion:
     {report}
 
     Gere um outline estruturado para a seção de **Resultados e Discussão** de um artigo científico, com base no relatório analítico consolidado. 
-    O outline deve servir como um **plano técnico e hierárquico**, projetado para orientar um agente redator na produção da seção com alta fidelidade lógica, 
-    estrutural e argumentativa.
+    O outline deve funcionar como um **plano técnico e hierárquico**, projetado para orientar um agente redator na produção dessa seção com alta 
+    fidelidade lógica, estrutural e argumentativa.
+    Separate *Results* (factual findings) from *Discussion* (interpretations), incorporate section-specific guidelines, and indicate precise placements 
+    for visual elements (tables, figures, graphs).
 
     **Processo para execução da tarefa:**
       1. Use exclusivamente o relatório como base — não consulte fontes externas.
-      2. Estruture o outline com os com uma única seção de nível 1, com o título principal da seção "Resultados e Discussão", contendo a introdução a ela.
-      Escreva os tópicos a serem abordados na introdução da seção.
-      3. Estruture a primeira subseção de nível 2, com título "Resultados". Essa subseção deverá abordar todos os resultados obtidos no estudo.
-      4. Estruture a segunda subseção de nível 2, com título "Discussões". Essa subseção deverá discutir todos os resultados obtidos no estudo.S
-      5. Os tópicos devem ser escritos como instruções textuais em tom imperativo (ex: DESCREVER, ANALISAR, ILUSTRAR...).
-      5. Quando pertinente, adicione resultados numéricos como **subitens de um tópico**, com descrição clara e contextualizada do valor.
+      2. Estruture o outline com uma única seção de nível 1: "Resultados e Discussão", contendo tópicos introdutórios para contextualizar a seção.
+      3. Crie a subseção de nível 2: "Resultados", contendo todos os achados factuais organizados logicamente.
+      4. Crie a subseção de nível 2: "Discussão", contendo interpretações críticas dos achados, relações com a literatura, limitações e implicações.
+      4. Escreva os tópicos como instruções claras, no **imperativo** e na **segunda pessoa do singular** (ex: "DESCREVER os resultados...").
+      5. Quando necessário, adicione **subitens** com resultados numéricos ou elementos visuais, sempre com breve descrição contextual.
+      6. Indique explicitamente onde inserir cada elemento visual, com nome e legenda resumida.
 
     **Restrições:**
-      - Não redija nenhum conteúdo do capítulo, apenas o outline conforme modelo.
-      - Os tópicos devem estar no **imperativo** e redigidos na segunda pessoa do singular (ex: “DESCREVER os resultados obtidos...”).
+      - Não redigir conteúdo do capítulo; apenas o outline conforme especificado.
+      - Não sair da estrutura de três blocos: Introdução, Resultados, Discussão.
+      - Evite tópicos genéricos ou vagos — todos devem estar ancorados diretamente no conteúdo do relatório.
 
     **Critérios de sucesso:**
-      - A saída possui uma seção principal: "Resultados e Discussão"; e duas subseções: "Resultados" e "Discussão"
-      - Cada seção contém um bloco de tópicos a serem abordados no seu respectivo texto.
-      - Os tópicos estão bem definidos, específicos, e diretamente ancorados no relatório.
-      - A saída está pronta para uso direto por um agente escritor automatizado.
+      - O outline contém: uma seção "Resultados e Discussão", com duas subseções: "Resultados" e "Discussão".
+      - Cada bloco apresenta tópicos claros, específicos e imperativos, guiando a redação com base nos achados e interpretações.
+      - Elementos visuais e resultados numéricos estão corretamente posicionados e contextualizados.
+      - A estrutura final é diretamente utilizável por um agente redator automatizado, sem necessidade de ajustes posteriores.
+
   expected_output: |
-    Um outline para a seção **Resultados e Discussão** de um artigo ciêntífico, com uma seção e duas subseções, 
-    cada uma contendo um bloco de "Tópicos a abordar no texto:" e, quando necessário, subitens de resultados numéricos.
+    Um outline técnico estruturado para a seção **Resultados e Discussão** de um artigo científico, composto por:
+      - Uma seção principal: "Resultados e Discussão"
+      - Duas subseções: "Resultados" e "Discussão"
+      - Tópicos redigidos no imperativo e na segunda pessoa do singular
+      - Subitens contendo resultados numéricos e elementos visuais com legendas resumidas, quando necessário.
 
     Exemplo:
 
     ## Resultados e Discussão
-    - APRESENTAR o propósito do capítulo: relatar os resultados obtidos com a modelagem da porta lógica OR de cinco entradas utilizando algoritmos genéticos e discutir suas implicações. 
-    - ANTECIPAR os aspectos que serão explorados: eficiência do algoritmo, desempenho óptico da porta OR, robustez estrutural e limitações identificadas. 
+    - APRESENTAR o objetivo da seção e conectar com os objetivos gerais da pesquisa.
+    - DESTACAR a estrutura que será seguida: apresentação dos achados, seguida de discussão crítica.
 
     ### Resultados
-    - DESCREVER a eficiência do algoritmo genético na convergência das soluções ao longo das gerações.
-      Elementos visuais a contextualizar:
-      - **Elemento visual:** Figura 13 - Evolução do fitness para a primeira porta.
-      - **Elemento visual:** Figura 15 - Evolução do fitness para a segunda porta.
+    - DESCREVER a evolução do fitness ao longo das gerações nos dois experimentos realizados.
       Resultados a incluir:
-      - **Resultado numérico:** Saturação observada por volta da 30ª e 50ª gerações.
-    - ANALISAR os resultados das tabelas verdade para validar a funcionalidade lógica da porta OR com cinco entradas.
-      Elementos visuais a contextualizar:
-      - **Elemento visual:** Tabela 1 - Contrastes da primeira porta.
-      - **Elemento visual:** Tabela 2 - Contrastes da segunda porta.
+      - **Resultado numérico:** Saturação observada a partir da geração 30 no primeiro experimento.
+      - **Resultado numérico:** Estabilização após a geração 50 no segundo experimento.
+      Elementos visuais:
+      - **Figura 13:** Evolução do fitness - Experimento 1.
+      - **Figura 15:** Evolução do fitness - Experimento 2.
+    - ANALISAR os contrastes lógicos obtidos nas tabelas verdade.
       Resultados a incluir:
-      - **Resultado numérico:** CR(Out) > 0,30 em 100% dos casos simulados.
+      - **Resultado numérico:** CR(Out) > 0,30 em 100% dos casos.
+      Elementos visuais:
+      - **Tabela 1:** Resultados lógicos - Primeira porta.
+      - **Tabela 2:** Resultados lógicos - Segunda porta.
 
     ### Discussão
-    - RELACIONAR os resultados obtidos com a literatura anterior, destacando a viabilidade da solução proposta e sugerindo necessidade de comparação quantitativa.
-    - ANALISAR as implicações teóricas do uso de algoritmos genéticos na modelagem de circuitos ópticos multientrada.
-    - IDENTIFICAR as principais limitações da pesquisa, como:
-      - Ausência de validação experimental;
-      - Violação parcial de critérios geométricos;
-      - Ausência de análise estatística entre múltiplas execuções.
-    - DESTACAR as contribuições do estudo, incluindo:
-      - Preenchimento de lacuna na literatura sobre portas OR quíntuplas em fibra óptica;
-      - Redução da complexidade estrutural em circuitos lógicos ópticos;
-      - Proposta replicável com base em código-fonte claro e condições bem definidas.
-      Elementos visuais a contextualizar:
-      - **Elementos visuais:** Figuras 13, 15, 16; Código-fonte 12.
-  agent: core_chapters_outliner
+    - INTERPRETAR os resultados de convergência e sua relação com a eficiência do algoritmo genético.
+    - COMPARAR os resultados obtidos com estudos anteriores na área de portas ópticas multientrada.
+    - AVALIAR as limitações do estudo, incluindo:
+      - Falta de validação experimental.
+      - Possível viés geométrico.
+      - Ausência de análise estatística interexecuções.
+    - APONTAR contribuições relevantes do estudo, como:
+      - Inovação no design da porta OR com cinco entradas.
+      - Potencial replicação da abordagem proposta.
+      Elementos visuais:
+      - **Código-fonte 12:** Lógica de modelagem proposta.
+  agent: results_discussion_outliner
+
+generate_conclusion_outline:
+  description: >
+    Analytical report
+
+    {report}
+
+    Generate a structured outline for the Conclusion section of a scientific article, based on the provided analytical report.
+    The Conclusion section should reflect upon what was written in the "Results and Discussion" section. You are also provided 
+    with the outline of this section, so you can base yours upon.
+    This outline will be consumed by another agent responsible for writing the full Conclusion.
+    Your outline must guide that agent step by step, ensuring logical flow and rhetorical clarity.
+
+    Execution_steps:
+    1. Read and understand the outline of "Results and Discussion";
+    2. Read and understand the Analytical report;
+    3. Reaffirm the research problem and purpose in a concise opening bullet.
+    4. Synthesize the key findings or arguments, grouping related results.
+    5. Discuss broader implications, linking findings to the wider field.
+    6. Reflect critically on the study's limitations, if not already addressed.
+    7. Propose specific, actionable suggestions for future research.
+    8. Offer a closing perspective or insight without introducing new data.
+    9. End with a strong, cohesive final remark that reinforces the contribution.
+
+    Restrictions:
+    - Do not introduce any new information or data.
+    - Avoid redundancy—each bullet must cover a unique rhetorical function.
+    - Keep each bullet to 1-2 sentences, with clear academic tone.
+
+    Success_criteria:
+    - 5 to 7 bullets, each corresponding to one logical paragraph.
+    - Each bullet includes a brief description of its content and rhetorical goal.
+    - Bullets follow the exact order: Problem → Findings → Implications → Limitations → Future Research → Perspective → Final Remark.
+    - Ready for direct consumption by an automated writing agent without further edits.
+
+  expected_output: |
+    A list of 5-7 bullets, each 1-2 sentences long, structured as above so that a downstream agent can generate the full Conclusion section 
+    in polished academic English.
+
+  agent: conclusion_outliner

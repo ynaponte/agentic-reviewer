@@ -52,7 +52,14 @@ class OutlineCrew:
     )
 
     @agent
-    def core_chapters_outliner(self) -> Agent:
+    def results_discussion_outliner(self) -> Agent:
+        return Agent(
+            config=self.agents_config['results_discussion_outliner'],
+            llm=self.std_llm,
+        )
+
+    @agent
+    def conclusion_outliner(self) -> Agent:
         return Agent(
             config=self.agents_config['core_chapters_outliner'],
             llm=self.std_llm,
@@ -65,6 +72,13 @@ class OutlineCrew:
             output_json=Outline
         )
     
+    @task
+    def generate_conclusion_outline(self) -> Task:
+        return Task(
+            config=self.tasks_config['generate_conclusion_outline'],
+            output_json=Outline
+        )
+
     @crew
     def crew(self) -> Crew:
         crew = Crew(
