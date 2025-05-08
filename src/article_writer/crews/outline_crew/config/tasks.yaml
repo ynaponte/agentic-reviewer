@@ -264,4 +264,4 @@ generate_discussion_outline:
       - `narrative_guidance`: A sentence providing clear instructions for the Writer Agent, specifying how to sequence the narrative, what to emphasize, and which visuals or data to reference (e.g., "Start by restating the 35% throughput increase, then compare to literature, using Figure 1").
     - `discrepancies`: A string noting any issues (e.g., "Unclear literature reference"), or empty if none, to inform the Writer Agent of potential limitations.
   agent: results_discussion_outliner
-  context: [analyze_report_for_discussion]
+  context: [analyze_report_for_discussion, generate_results_outline]
