@@ -1,113 +1,267 @@
-generate_outline_results_discussion:
+analyze_report_for_results:
   description: >
-    Relatório analítico consolidado:
+    **Analytical Report**  
+    {report}  
 
-    {report}
+    Analyze the provided analytical report to extract key information necessary for generating a structured outline for the "Results" subsection 
+    of a scientific paper. Focus on identifying primary findings, relevant statistics, and supporting visuals that align with the research questions 
+    and follow the Methods section's order. Produce a concise, structured text summary to serve as input for the `generate_results_outline` task. 
 
-    Gere um outline estruturado para a seção de **Resultados e Discussão** de um artigo científico, com base no relatório analítico consolidado. 
-    O outline deve funcionar como um **plano técnico e hierárquico**, projetado para orientar um agente redator na produção dessa seção com alta 
-    fidelidade lógica, estrutural e argumentativa.
-    Separate *Results* (factual findings) from *Discussion* (interpretations), incorporate section-specific guidelines, and indicate precise placements 
-    for visual elements (tables, figures, graphs).
+    **Input**:  
+    - Analytical report with five sections:  
+      1. Apresentação Clara dos Elementos Visuais (Presentation of Visual Elements)  
+      2. Análise dos Resultados (Analysis of Results)  
+      3. Interpretação Crítica (Critical Interpretation)  
+      4. Avaliação das Limitações do Estudo (Evaluation of Study Limitations)  
+      5. Contribuições (Contributions)  
 
-    **Processo para execução da tarefa:**
-      1. Use exclusivamente o relatório como base — não consulte fontes externas.
-      2. Estruture o outline com uma única seção de nível 1: "Resultados e Discussão", contendo tópicos introdutórios para contextualizar a seção.
-      3. Crie a subseção de nível 2: "Resultados", contendo todos os achados factuais organizados logicamente.
-      4. Crie a subseção de nível 2: "Discussão", contendo interpretações críticas dos achados, relações com a literatura, limitações e implicações.
-      4. Escreva os tópicos como instruções claras, no **imperativo** e na **segunda pessoa do singular** (ex: "DESCREVER os resultados...").
-      5. Quando necessário, adicione **subitens** com resultados numéricos ou elementos visuais, sempre com breve descrição contextual.
-      6. Indique explicitamente onde inserir cada elemento visual, com nome e legenda resumida.
+    **Execution Steps**:  
+    1. Review sections 1 (Presentation of Visual Elements) and 2 (Analysis of Results) to identify:  
+        - Primary findings (e.g., quantitative results, qualitative observations) addressing research questions.  
+        - Essential statistics or metrics (e.g., p-values, effect sizes, frequencies), excluding raw data.  
+        - Relevant visuals (e.g., graphs, tables) with complete metadata (e.g., title, source, legend).  
+    2. Organize findings by the Methods section's order (e.g., data collection, analysis, validation).  
+    3. Note any discrepancies (e.g., missing legends, incomplete data) for flagging in the outline.  
+    4. Summarize the extracted information in a structured text format, including:  
+        - A brief link to research questions.  
+        - 3-5 key findings with associated statistics.  
+        - 1-2 visuals with metadata and short descriptions.  
+        - Any discrepancies or missing data.  
 
-    **Restrições:**
-      - Não redigir conteúdo do capítulo; apenas o outline conforme especificado.
-      - Não sair da estrutura de três blocos: Introdução, Resultados, Discussão.
-      - Evite tópicos genéricos ou vagos — todos devem estar ancorados diretamente no conteúdo do relatório.
+    **Guidelines**:  
+    - **Findings**: Identify 3-5 primary results (positive or negative) tied to research questions.  
+    - **Statistics/Metrics**: Extract processed results (e.g., "p < 0.05", "R² = 0.85"), avoiding raw data.  
+    - **Visuals**: Select 1-2 visuals from section 1 with complete metadata (e.g., title, source, legend).  
+    - **Discrepancies**: Note incomplete data or visuals (e.g., "Table 1 lacks legend").  
+    - **Order**: Follow the Methods section's sequence (e.g., data collection to validation).  
 
-    **Critérios de sucesso:**
-      - O outline contém: uma seção "Resultados e Discussão", com duas subseções: "Resultados" e "Discussão".
-      - Cada bloco apresenta tópicos claros, específicos e imperativos, guiando a redação com base nos achados e interpretações.
-      - Elementos visuais e resultados numéricos estão corretamente posicionados e contextualizados.
-      - A estrutura final é diretamente utilizável por um agente redator automatizado, sem necessidade de ajustes posteriores.
+    **Restrictions**:  
+    - Focus only on sections 1 and 2; exclude interpretations or comparisons from sections 3-5.  
+    - Do not invent data or modify report content.  
+    - Limit to 3-5 findings for conciseness.  
 
-  expected_output: |
-    Um outline técnico estruturado para a seção **Resultados e Discussão** de um artigo científico, composto por:
-      - Uma seção principal: "Resultados e Discussão"
-      - Duas subseções: "Resultados" e "Discussão"
-      - Tópicos redigidos no imperativo e na segunda pessoa do singular
-      - Subitens contendo resultados numéricos e elementos visuais com legendas resumidas, quando necessário.
+    **Success Criteria**:  
+    - Produces a clear, structured text summary of 3-5 findings, 1-2 visuals, and associated statistics.  
+    - Aligns with research questions and Methods section order.  
+    - Flags any discrepancies for outline generation.  
+    - Suitable as direct input for `generate_results_outline`.  
 
-    Exemplo:
+  expected_output: >
+    A structured text summary, formatted as:  
+    **Results Analysis Summary**:  
+    - **Link to Research Questions**: Brief statement tying findings to research questions.  
+    - **Findings**:  
+      - Finding 1: Description, statistic (e.g., "p < 0.05").  
+      - Finding 2: Description, statistic.  
+      - ...  
+    - **Visuals**:  
+      - Visual 1: Title, source, legend, short description.  
+      - Visual 2: Title, source, legend, short description.  
+    - **Discrepancies**: Any missing data or incomplete visuals (e.g., "Table 1 lacks legend").  
 
-    ## Resultados e Discussão
-    - APRESENTAR o objetivo da seção e conectar com os objetivos gerais da pesquisa.
-    - DESTACAR a estrutura que será seguida: apresentação dos achados, seguida de discussão crítica.
+  agent: report_analyst
 
-    ### Resultados
-    - DESCREVER a evolução do fitness ao longo das gerações nos dois experimentos realizados.
-      Resultados a incluir:
-      - **Resultado numérico:** Saturação observada a partir da geração 30 no primeiro experimento.
-      - **Resultado numérico:** Estabilização após a geração 50 no segundo experimento.
-      Elementos visuais:
-      - **Figura 13:** Evolução do fitness - Experimento 1.
-      - **Figura 15:** Evolução do fitness - Experimento 2.
-    - ANALISAR os contrastes lógicos obtidos nas tabelas verdade.
-      Resultados a incluir:
-      - **Resultado numérico:** CR(Out) > 0,30 em 100% dos casos.
-      Elementos visuais:
-      - **Tabela 1:** Resultados lógicos - Primeira porta.
-      - **Tabela 2:** Resultados lógicos - Segunda porta.
+generate_results_outline:
+  description: >
+    Generate a structured outline for the "Results" subsection of a scientific paper based on the provided analysis summary. The outline must present 
+    findings objectively, align with the research objectives inferred from the summary, and follow the Methods section's order, serving as a blueprint for 
+    a downstream Writer Agent. The output will be used as input for the subsequent `generate_discussion_outline` task to ensure continuity.  
 
-    ### Discussão
-    - INTERPRETAR os resultados de convergência e sua relação com a eficiência do algoritmo genético.
-    - COMPARAR os resultados obtidos com estudos anteriores na área de portas ópticas multientrada.
-    - AVALIAR as limitações do estudo, incluindo:
-      - Falta de validação experimental.
-      - Possível viés geométrico.
-      - Ausência de análise estatística interexecuções.
-    - APONTAR contribuições relevantes do estudo, como:
-      - Inovação no design da porta OR com cinco entradas.
-      - Potencial replicação da abordagem proposta.
-      Elementos visuais:
-      - **Código-fonte 12:** Lógica de modelagem proposta.
+    **Execution Steps**: 
+      1. Review the output of `analyze_report_for_results` to identify key findings, supporting data, and inferred research objectives.
+      2. Organize 3-5 discussion topics, each representing a distinct finding, arranged thematically (e.g., by variable measured) or chronologically 
+         (e.g., by experimental phase) based on the summary's structure.
+      3. For each discussion topic:
+         - Set a rhetorical purpose to "Present findings" to ensure an objective, descriptive tone focused on reporting results.
+         - Assign a topic name as a concise, descriptive title summarizing the finding.
+         - Include 0-1 `visual_elements`, if relevant, with metadata: `identifier` (e.g., "Figure 1"), `name` (e.g., "Throughput Graph"), `description` 
+           (caption summarizing content), `source` (e.g., "Experimental Data"), and `role_in_topic` (e.g., "Illustrates performance trend").
+         - Include 0-1 `numerical_results`, if relevant, with metadata: `verbatim_value` (e.g., "35% increase"), `context_description` (e.g., "Indicates 
+           improved efficiency"), and `associated_visual` (e.g., "Figure 1", if linked).
+         - Write a narrative guidance sentence with actionable instructions for the Writer Agent, specifying the sequence (e.g., "Start by presenting the 
+           finding"), emphasis (e.g., "then detail supporting data"), and references (e.g., "using Figure 1").
+      4. Define a subsection flow as a string listing the topic's titles in order, separated by " -> " (e.g., "Setup -> Performance -> Validation"), to guide 
+         the Writer Agent in structuring the subsection's narrative arc.
+
+    **Guidelines**:
+    - Maintain an objective, descriptive tone; avoid interpretation or speculation (e.g., no implications or comparisons to literature).
+    - Base all content on `analyze_report_for_results`; do not assume external data (e.g., Methods).
+    - Ensure that the narrative guidance for each topic is a clear instruction (e.g., "Start by presenting X, then describe Y"), not a summary.
+    - For the first topic, ensure that the narrative guidance includes an introductory statement linking the finding to the research objective 
+      (e.g., "Start by stating the objective of measuring throughput, then present the 35% increase").
+    - Use past-tense verbs for findings (e.g., "Measured", "Found").
+    - Limit to 3-5 topics for conciseness and focus.
+    - Ensure that the subsection flow reflects a logical progression of topics, using exact topic's titles.
+
+    **Restrictions**:
+    - Do not include interpretive content (e.g., implications, future work).
+    - Avoid redundancy by focusing on distinct findings per topic.
+    - Do not rely on a Methods section; organize based on the summary's structure.
+
+    **Success Criteria**:
+    - Produces a clear, structured outline with 3-5 topics, each objectively presenting a finding.
+    - Includes `subsection_flow` listing `topic` titles in a logical order.
+    - Each topic has a `rhetorical_purpose` of "Present findings", a descriptive `topic` title, optional `visual_elements` and `numerical_results`, and actionable `narrative_guidance`.
+    - Aligns with research objectives and supports the Writer Agent in producing coherent text.
+    - Notes any discrepancies for transparency.
+
+  expected_output: >
+    A structured outline for the "Results" subsection, designed to guide a Writer Agent in producing a descriptive narrative of research findings. The outline includes:
+    - `subsection_name`: Set to "Results", indicating the subsection's purpose.
+    - `subsection_flow`: A string listing the titles of 3-5 discussion topics in order, separated by " -> ", defining the narrative progression of the subsection (e.g., "Setup -> Performance -> Validation").
+    - `discussion_topics`: A list of 3-5 topics, each representing a key finding, with:
+      - `rhetorical_purpose`: Set to "Present findings", ensuring an objective tone.
+      - `topic`: A concise, descriptive title summarizing the finding (e.g., "Throughput Performance of Optical Gate").
+      - `visual_elements`: A list of 0-1 visuals, each with metadata (`identifier`, `name`, `description`, `source`, `role_in_topic`) to support the finding, if applicable.
+      - `numerical_results`: A list of 0-1 numerical results, each with metadata (`verbatim_value`, `context_description`, `associated_visual`) to provide quantitative evidence, if applicable.
+      - `narrative_guidance`: A sentence providing clear instructions for the Writer Agent, specifying how to sequence the narrative, what to emphasize, and which visuals or data to reference (e.g., "Start by presenting the 35% throughput increase, then detail its significance, using Figure 1").
+    - `discrepancies`: A string noting any issues (e.g., "Missing caption for Figure 1"), or empty if none, to inform the Writer Agent of potential limitations.
   agent: results_discussion_outliner
+  context: [analyze_report_for_results]
 
-generate_conclusion_outline:
+analyze_report_for_discussion:
   description: >
-    Analytical report
+    **Analytical Report**  
+    {report}  
 
-    {report}
+    Extract interpretive content, implications, limitations, and visuals from the provided analytical report and Results outline to support generating 
+    a structured outline for the "Discussion" subsection of a scientific paper. Focus on sections 3 (Critical Interpretation), 4 (Evaluation of Study 
+    Limitations), and 5 (Contributions) of the report, and use the Results outline to ground interpretations. Produce a concise, structured text 
+    summary as input for the `generate_discussion_outline` task.  
 
-    Generate a structured outline for the Conclusion section of a scientific article, based on the provided analytical report.
-    The Conclusion section should reflect upon what was written in the "Results and Discussion" section. You are also provided 
-    with the outline of this section, so you can base yours upon.
-    This outline will be consumed by another agent responsible for writing the full Conclusion.
-    Your outline must guide that agent step by step, ensuring logical flow and rhetorical clarity.
+    **Inputs**:  
+    - Analytical report with five sections:  
+      1. Apresentação Clara dos Elementos Visuais (Presentation of Visual Elements)  
+      2. Análise dos Resultados (Analysis of Results)  
+      3. Interpretação Crítica (Critical Interpretation)  
+      4. Avaliação das Limitações do Estudo (Evaluation of Study Limitations)  
+      5. Contribuições (Contributions)  
+    - Structured outline from `generate_results_outline`, containing:  
+      - Introductory bullet linking to research questions.  
+      - 3-5 finding bullets with statistics and visuals.  
+      - Summary bullet.  
 
-    Execution_steps:
-    1. Read and understand the outline of "Results and Discussion";
-    2. Read and understand the Analytical report;
-    3. Reaffirm the research problem and purpose in a concise opening bullet.
-    4. Synthesize the key findings or arguments, grouping related results.
-    5. Discuss broader implications, linking findings to the wider field.
-    6. Reflect critically on the study's limitations, if not already addressed.
-    7. Propose specific, actionable suggestions for future research.
-    8. Offer a closing perspective or insight without introducing new data.
-    9. End with a strong, cohesive final remark that reinforces the contribution.
+    **Execution Steps**:  
+    1. Review sections 3, 4, and 5 of the report to identify:  
+        - Literature comparisons or gaps (section 3, e.g., comparisons to prior studies).  
+        - Implications (section 5, e.g., practical or theoretical impacts).  
+        - Limitations (section 4, e.g., methodological constraints).  
+        - Future research directions (sections 4 and 5, e.g., next steps).  
+    2. Review the Results outline to extract:  
+        - Key findings to ground interpretations.  
+        - Visuals for potential reuse (e.g., "Figure 1").  
+    3. If needed, check section 1 for 1-2 additional visuals with metadata (title, source, legend).  
+    4. Flag any discrepancies (e.g., missing literature references, incomplete visuals).  
+    5. Write a structured text summary with:  
+        - **Research Question and Findings**: Restate the research question and key findings from the Results outline.  
+        - **Literature Connections**: 1-2 comparisons or gaps from section 3.  
+        - **Implications**: Key impacts from section 5.  
+        - **Limitations**: Constraints from section 4.  
+        - **Future Directions**: Proposed next steps from sections 4 and 5.  
+        - **Visuals**: 1-2 visuals (reused from Results or new from section 1), with title, source, legend, and description.  
+        - **Discrepancies**: Any missing or incomplete data.  
 
-    Restrictions:
-    - Do not introduce any new information or data.
-    - Avoid redundancy—each bullet must cover a unique rhetorical function.
-    - Keep each bullet to 1-2 sentences, with clear academic tone.
+    **Guidelines**:  
+    - **Literature Connections**: Extract 1-2 specific comparisons or gaps (e.g., "Study X found Y, but our results show Z").  
+    - **Implications**: Focus on practical or theoretical impacts from section 5.  
+    - **Limitations**: List methodological or scope constraints from section 4.  
+    - **Future Directions**: Propose research based on sections 4 and 5.  
+    - **Visuals**: Prioritize Results outline visuals; add from section 1 if needed, with full metadata.  
+    - **Discrepancies**: Note issues like missing references or legends.  
 
-    Success_criteria:
-    - 5 to 7 bullets, each corresponding to one logical paragraph.
-    - Each bullet includes a brief description of its content and rhetorical goal.
-    - Bullets follow the exact order: Problem → Findings → Implications → Limitations → Future Research → Perspective → Final Remark.
-    - Ready for direct consumption by an automated writing agent without further edits.
+    **Restrictions**:  
+    - Use only sections 3, 4, 5 for interpretive content and section 1 for new visuals; ignore section 2.  
+    - Do not modify or reinterpret Results outline findings.  
+    - Do not invent data or add external information.  
+    - Limit to 1-2 literature connections, 1 implication, 1 limitation, and 1 future direction for brevity.  
 
-  expected_output: |
-    A list of 5-7 bullets, each 1-2 sentences long, structured as above so that a downstream agent can generate the full Conclusion section 
-    in polished academic English.
+    **Success Criteria**:  
+    - Delivers a structured text summary with literature connections, implications, limitations, future directions, and 1-2 visuals.  
+    - Grounds content in Results outline findings and report sections 3, 4, 5.  
+    - Notes discrepancies for the next task.  
+    - Suitable for `generate_discussion_outline`.  
 
-  agent: conclusion_outliner
+  expected_output: >
+    A structured text summary, formatted as:  
+    **Discussion Analysis Summary**:  
+    - **Research Question and Findings**: Restatement of research question and key findings from Results outline.  
+    - **Literature Connections**:  
+      - Connection 1: Description (e.g., comparison to prior study).  
+      - Connection 2: Description.  
+    - **Implications**: Description of impacts.  
+    - **Limitations**: Description of constraints.  
+    - **Future Directions**: Proposed next steps.  
+    - **Visuals**:  
+      - Visual 1: Title, source, legend, description.  
+      - Visual 2: Title, source, legend, description.  
+    - **Discrepancies**: Any missing data or incomplete visuals (e.g., "Figure 1 lacks legend").  
+
+  agent: report_analyst
+  context: [generate_results_outline]
+
+generate_discussion_outline:
+  description: >
+    Generate a structured outline for the "Discussion" subsection of a scientific paper based on the provided discussion analysis summary. The outline 
+    must interpret findings, connect them to existing literature, and address implications, limitations, and future directions, serving as a blueprint 
+    for a downstream writing agent.  
+
+    **Input**:  
+    - Structured text summary from `analyze_discussion_report`, containing:  
+      - Research question and key findings.  
+      - 1-2 literature connections.  
+      - Implications, limitations, and future directions.  
+      - 1-2 visuals with metadata and descriptions.  
+    - JSON outline from `generate_results_outline`, containing:  
+      - `discussion_topics` with findings, `visual_elements`, `numerical_results`.  
+
+    **Execution Steps**:  
+    1. Review the outputs of `analyze_report_for_discussion` and `generate_results_outline` to extract research question, findings, literature 
+       connections, implications, limitations, future directions, visuals, numerical results, and discrepancies.  
+    2. Organize 3-5 discussion topics, each representing a distinct finding, arranged thematically (e.g., by variable measured) or chronologically 
+       (e.g., by experimental phase) based on the summary's structure.
+    3. For each discussion topic:  
+        - Define a topic as a concise title summarizing the interpretive focus.  
+        - Assign a rhetorical purpose to reflect the topic's interpretive role.  
+        - Include 0-1 visual elements  with metadata (`identifier`, `name`, `description`, `source`, `role_in_topic`) from the summary or Results 
+          outline, ensuring relevance to the topic.  
+        - Include 0-1 numerical results with metadata (`verbatim_value`, `context_description`, `research_scope`, `associated_visual`) from the Results 
+          outline, if relevant to interpretation.  
+        - Generate narrative guidance, providing instructions for structuring the topic's narrative in the Discussion text, specifying how to 
+          present the interpretation, what to emphasize, and which visuals or results to reference.  
+    4. Define the `subsection_flow` as a string listing the `topic` names in order, separated by " -> " (e.g., "Performance vs. Previous Studies -> 
+       Implications -> Limitations -> Future Directions").  
+
+    **Guidelines**:  
+     - Maintain an interpretive, analytical tone; focus on *why* findings matter, not just what was found.
+    - Base content on `analyze_report_for_discussion` and `generate_results_outline`; do not assume external data.
+    - Ensure the narrative guidance is a clear instruction (e.g., "Start by comparing X, then discuss Y"), not a summary.
+    - Use present-tense verbs for interpretations (e.g., "This finding suggests"), past-tense for results (e.g., "The study found").
+    - Limit to 3-5 topics for conciseness and focus. 
+    - Ensure the first topic's narrative guidance includes an introductory statement restating the research question and key findings.  
+    - Ensure the final topic addresses future directions, with `narrative_guidance` proposing next steps.
+
+    **Restrictions**:  
+    - Do not restate Results findings without interpretation (e.g., avoid repeating metrics without context).
+    - Avoid introducing new data beyond inputs.
+    - Do not rely on a Methods section; use the inputs' structure.
+
+    **Success Criteria**:
+    - Produces a clear, structured outline with 3-5 topics, each interpreting findings in a distinct way.
+    - Includes `subsection_flow` listing `topic` titles in a logical order.
+    - Each topic has an appropriate `rhetorical_purpose`, interpretive `topic` title, optional `visual_elements` and `numerical_results`, and actionable `narrative_guidance`.
+    - Aligns with Results findings and supports the Writer Agent in producing coherent text.
+    - Notes any discrepancies for transparency.
+
+  expected_output: >
+    A structured outline for the "Discussion" subsection, designed to guide a Writer Agent in producing an interpretive narrative of research findings. The outline includes:
+    - `subsection_name`: Set to "Discussion", indicating the subsection's purpose.
+    - `subsection_flow`: A string listing the titles of 3-5 discussion topics in order, separated by " -> ", defining the narrative progression of the subsection (e.g., "Comparison -> Implications -> Limitations -> Future Directions").
+    - `discussion_topics`: A list of 3-5 topics, each addressing an interpretive aspect, with:
+      - `rhetorical_purpose`: the topic's rhetorical purpose specific interpretive goal (e.g., "Compare findings", "Discuss implications", "Propose future research").
+      - `topic`: A concise title summarizing the interpretive focus (e.g., "Performance vs. Previous Studies").
+      - `visual_elements`: A list of 0-1 visuals, each with metadata (`identifier`, `name`, `description`, `source`, `role_in_topic`) to support the interpretation, if applicable.
+      - `numerical_results`: A list of 0-1 numerical results, each with metadata (`verbatim_value`, `context_description`, `associated_visual`) to ground the interpretation, if applicable.
+      - `narrative_guidance`: A sentence providing clear instructions for the Writer Agent, specifying how to sequence the narrative, what to emphasize, and which visuals or data to reference (e.g., "Start by restating the 35% throughput increase, then compare to literature, using Figure 1").
+    - `discrepancies`: A string noting any issues (e.g., "Unclear literature reference"), or empty if none, to inform the Writer Agent of potential limitations.
+  agent: results_discussion_outliner
+  context: [analyze_report_for_discussion]

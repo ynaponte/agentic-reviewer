@@ -4,6 +4,8 @@ from .crews.doc_chunk_review_crew import ChunkReviewCrew
 from .crews.report_writer_crew.report_writer_crew import ReportWriterCrew
 from .crews.outline_crew.outline_crew import OutlineCrew
 from .crews.res_and_disc_research_crew.rdresearch_crew import RDResearchCrew
+from .crews.final_editing_crew.final_editing_crew import FinalEditingCrew
+from pydantic import BaseModel  
 from ..tools import QueryArticlesTool
 from typing import Dict, List
 from ..utils import VectorDatabaseManager
@@ -23,14 +25,10 @@ class ChunkReview(BaseModel):
 
 
 class ArticleWriterState(BaseModel):
-    theme: str = (
-        "Utilização de algorítimos genéticos para criação de portas lógicas ópticas "
-        "em cristal fotônico"
-    )
     drafts_documents: List[str] = ['Resultado1.pdf']
     full_analysis: str = ""
     technical_elements: str = ""
-    results_discussion_outline: str = ""
+    results_discussion_outline: dict = {}
     conclusion_outline: str = ""
     methodology_outline: str = ""
     discussion: str = ""
@@ -49,7 +47,7 @@ class ArticleWriterFlow(Flow[ArticleWriterState]):
             persist_directory="article_vectorstore",
             collection_name="flow_test_collection"
         )
-        self.state.results_discussion_outline = """
+        results_discussion_outline = """
 {
   "section_name": "Resultados e Discussão",
   "discution_topics": [
@@ -93,7 +91,7 @@ class ArticleWriterFlow(Flow[ArticleWriterState]):
             }
           ],
           "numerical_results_to_include": [
-            "CR(Out) > 0,30 em 100% dos casos simulados."
+            "CR(Out) > 0,30 em 100\u0025 dos casos simulados."
           ]
         }
       ]
@@ -123,15 +121,14 @@ class ArticleWriterFlow(Flow[ArticleWriterState]):
             }
           ]
         }
-      ]
+      ] 
     }
   ]
 }        
         """
 
     @listen(start_flow)
-    def generate_outlines(self):
-        return
+    def generate_res_and_disc_outlines(self):
         draft_report = self.articles_db.search_doc_by_meta(
             source='Relatorio.pdf', metadata_only=False)
         outcrew_output = OutlineCrew().crew().kickoff(
@@ -139,65 +136,108 @@ class ArticleWriterFlow(Flow[ArticleWriterState]):
                 "report": draft_report['Relatorio.pdf']['text_content'],
             }
         )
-        for task_output in outcrew_output.tasks_output:
-            if task_output.name == "generate_outline_results_discussion":
-                self.state.results_discussion_outline = task_output.json_dict
-                print(
-                    f"Outline de Resultados e Discussao:\n\n{task_output.raw}")
-            elif task_output.name == "generate_outline_conclusion":
-                self.state.conclusion_outline = task_output.json_dict
-                print(f"Outline de conclusão:\n\n{task_output.raw}")
-            else:
-                self.state.methodology_outline = task_output.json_dict
-                print(f"Outline de metodologia:\n\n{task_output.raw}")
+        self.state.results_discussion_outline = outcrew_output
 
-    @listen(generate_outlines)
+    @listen(generate_res_and_disc_outlines)
     async def res_and_disc_chapter_generation(self):
-      # Função para chamada assincrona da crew
-      async def acall_research_crew(
+      # Função para chamada assincrona da crew de escrita dos tópicos
+      async def acall_write_topic_crew(
         section_title, 
         topic, 
         visual_elements_to_contextualize, 
-        numerical_results_to_include
+        numerical_results_to_include,
+        rhetorical_purpose,
+        narrative_guidance,
+        subsection_flow
       ):
         reasearch_crew_output = await RDResearchCrew().crew().kickoff_async(
           inputs={
             "section_title": section_title,
             "discussion_topic": topic,
             "visual_elements_to_contextualize": visual_elements_to_contextualize,
-            "numerical_results_to_include": numerical_results_to_include
+            "numerical_results_to_include": numerical_results_to_include,
+            "rhetorical_purpose": rhetorical_purpose,
+            "narrative_guidance": narrative_guidance,
+            "subsection_flow": subsection_flow
           }
         )
         return reasearch_crew_output
       
-      outline = json.loads(self.state.results_discussion_outline)
+      async def acall_final_editing_crew(
+        section_title: str,
+        concatenated_text: str,
+        visual_elements_list: str
+      ):
+        final_edit_output = FinalEditingCrew().crew().kickoff_async(
+          inputs={
+            "section_title": section_title,
+            "concatenated_text": concatenated_text,
+            "visual_elements_list": visual_elements_list
+          }
+        )
+        return final_edit_output
+
+      #outline = json.loads(self.state.results_discussion_outline)
+      subs_outlines = self.state.results_discussion_outline
       async_tasks_to_exec = []
-      for subsection in outline['subsections']:
+      visual_elements_to_retrive = {}
+      section_and_topics = {}
+      for subsection in subs_outlines:
         for disc_topic in subsection['discussion_topics']:
           visual_elements_to_contextualize = "\n".join([
-            f"- {element["name"]}: {element["description"]}"
-            for element in disc_topic.get('visual_elements_to_contextualize', [])
+            (
+              f"- name: {element["identifier"]} {element["name"]}; "
+              f"description: {element["description"]}; "
+              f"role_in_topic: {element["role_in_topic"]}"
+            )
+            for element in disc_topic.get('visual_elements', [])
           ])
+          if subsection['subsection_name'] not in visual_elements_to_retrive:
+            visual_elements_to_retrive[subsection['subsection_name']] = ""
+      
+          visual_elements_to_retrive[subsection['subsection_name']] += visual_elements_to_contextualize + "\n"
           numerical_results_to_include = "\n".join([
-            f'- {result}' for result in disc_topic.get('numerical_results_to_include', [])
+            (
+               f'- value: {result['verbatim_value']}; '
+               f'context: {result["context_description"]}; '
+               f'associated visual: {result["associated_visual"]}'
+            ) 
+            for result in disc_topic.get('numerical_results', [])
           ])
-          
           async_tasks_to_exec.append(
             asyncio.create_task(
-              acall_research_crew(
-                  subsection['section_title'], 
+              acall_write_topic_crew(
+                  subsection['subsection_name'], 
                   disc_topic['topic'], 
                   visual_elements_to_contextualize, 
-                  numerical_results_to_include
+                  numerical_results_to_include,
+                  disc_topic['rhetorical_purpose'],
+                  disc_topic['narrative_guidance'],
+                  subsection['subsection_flow']
               )
             )
           )
-      research_outputs = await asyncio.gather(*async_tasks_to_exec)
-      topics_text_content = iter([research_output.json_dict for research_output in research_outputs])
-      assign_topics = lambda section: (section['section_title'], itertools.islice(topics_text_content, len(section['discussion_topics'])))
-      text_per_section = dict(map(assign_topics, self.state.results_discussion_outline['subsections']))
+        topic_w_outputs = await asyncio.gather(*async_tasks_to_exec)
+        section_and_topics[subsection['subsection_name']] = [
+          topic_w_output.json_dict for topic_w_output in topic_w_outputs
+        ]
+      async_tasks_to_exec = []
+      for section_title, discussion_topics in section_and_topics.items():
+        concatenated_text = '\n'.join([topic['text'] for topic in discussion_topics])
+        visual_elements_list = visual_elements_to_retrive[section_title]
+        async_tasks_to_exec.append(
+          asyncio.create_task(
+            acall_final_editing_crew(
+              section_title=section_title,
+              concatenated_text=concatenated_text,
+              visual_elements_list=visual_elements_list
+            )
+          )
+        )
+      final_edit_outputs = await asyncio.gather(*async_tasks_to_exec)
+      final_edit_outputs = [final_edit_output.json_dict for final_edit_output in final_edit_outputs]
       
-      print(topics_text_content)
+      print(final_edit_outputs)
 
 
 def kickoff():
