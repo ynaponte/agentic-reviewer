@@ -1,6 +1,7 @@
 from crewai import Agent, Crew, Process, Task
 from crewai.llm import LLM
-from crewai.project import CrewBase, agent, crew, task
+from crewai.project import CrewBase, agent, crew, task, before_kickoff
+from crewai.tasks.conditional_task import ConditionalTask
 from src.tools import QueryArticlesTool
 from pydantic import BaseModel, Field
 from typing import List
@@ -47,13 +48,6 @@ class RDResearchCrew():
 
     agents_config = 'config/agents.yaml'
     tasks_config = 'config/tasks.yaml'
-    manager_llm = LLM(
-        model="ollama/deepseek-r1:7b",
-        base_url="http://localhost:11434",
-        timeout=1800.0,
-        max_tokens=128000,
-        temperature=0.4
-    )
     researcher_llm = LLM(
         model="ollama/qwen2.5:3b-instruct-q6_K",
         base_url="http://localhost:11434",
@@ -62,12 +56,22 @@ class RDResearchCrew():
         temperature=0.4
     )
     writer_llm = LLM(
-        model="ollama/qwen2.5:7b-instruct",
+        model="ollama/qwen2.5:3b-instruct-q6_K",
         base_url="http://localhost:11434",
         timeout=1800.0,
-        max_tokens=128000,
+        max_tokens=32000,
         temperature=0.6
     )
+    _should_execute_ve_research = True
+    _should_execute_nr_research = True
+
+    @before_kickoff
+    def check_inpus(self, inputs: dict):
+        # Checa se existem elementos visuais e resultados numéricos a serem pesquisados.
+        # Caso não existão, previne a execução das respectivas tarefas
+        self._should_execute_ve_research = inputs.get('visual_elements_to_contextualize', '') != ''
+        self._should_execute_nr_research = inputs.get('numerical_results_to_include', '') != ''
+        return inputs
 
     @agent
     def topic_researcher(self) -> Agent:
@@ -91,24 +95,23 @@ class RDResearchCrew():
     def topic_research(self) -> Task:
         return Task(
             config=self.tasks_config['topic_research'],
-            #output_json=TopicResearchOutput,
             async_execution=False
         )
 
     @task
     def visual_elements_research(self) -> Task:
-        return Task(
+        return ConditionalTask(
             config=self.tasks_config['visual_elements_research'],
-            #output_json=VisualElementsResearchOutput,
-            async_execution=False
+            async_execution=False,
+            condition=lambda x: self._should_execute_ve_research  # Tem que ser 'callable'
         )
 
     @task
     def numerical_results_research(self) -> Task:
-        return Task(
+        return ConditionalTask(
             config=self.tasks_config['numerical_results_research'],
-            #output_json=NumericalResultsResearchOutput,
-            async_execution=False
+            async_execution=False,
+            condition=lambda x: self._should_execute_nr_research  # Tem que ser 'callable'
         )
 
     @task
@@ -121,7 +124,6 @@ class RDResearchCrew():
     @crew
     def crew(self) -> Crew:
         return Crew(
-            #manager_llm=self.manager_llm,
             agents=self.agents,
             tasks=self.tasks,
             process=Process.sequential,

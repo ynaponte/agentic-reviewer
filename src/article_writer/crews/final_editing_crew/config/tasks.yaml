@@ -46,3 +46,62 @@ merge_subsection:
       "merged_text": "Texto reestruturado, fluido e contínuo da subseção, escrito em português brasileiro acadêmico."
     }
   agent: subsection_merger
+
+visual_elements_extraction:
+  description: >
+    List of visual elements to extract:
+
+    {visual_elements_to_extract}
+
+    You must locate and retrieve each item listed above, if any, for later inclusion in the final version of a scientific chapter. 
+    These elements have been marked in the outline as necessary visual resources. You are not responsible for writing or inserting them, 
+    only for extracting the exact content from existing draft documents. Use the `QueryArticlesTool` to perform each individual search.
+
+    **Required steps for this task:**
+
+    1. Create an execution plan:
+      - List all items from the input;
+      - Indicate that each item will be searched independently;
+      - Confirm that only documents of type ['draft'] will be used.
+
+    2. Execute the plan step by step:
+      - For each item:
+        - Use its name or description as the 'search_query' parameter;
+        - Set 'doc_type' to ['draft'];
+        - Set 'top_k' to 2 initially;
+        - Call the `QueryArticlesTool`.
+
+    3. If the result is insufficient:
+      - Gradually increase the 'top_k' value and repeat the search.
+
+    4. For each item:
+      - Locate LaTeX blocks representing:
+        - Figures or diagrams;
+        - Tables;
+        - Mathematical equations;
+        - Code snippets;
+      - Extract the full and exact LaTeX code;
+      - Provide a caption if available (or infer one from nearby context);
+      - Include the title of the source document from which the content was retrieved.
+
+    **Constraints:**
+      - Only proceed if the input list of visual elements is not empty;
+      - Search exclusively in documents of type 'draft';
+      - Do not rewrite, paraphrase, or analyze any content. Focus strictly on technical extraction.
+
+    **Success criteria:**
+      - The tool was called once per item in the list (if any);
+      - Each visual element yielded a valid LaTeX extraction;
+      - All elements are properly classified by type;
+      - The output matches the source document content with technical fidelity.
+
+  expected_output: >
+    A JSON object with the key "visual_elements". The value must be:
+      - A list of objects (one per extracted visual item), each containing:
+          - "item_name": the exact name of the visual item searched;
+          - "type": the type of the element (Figure | Table | Equation | Code Block);
+          - "latex": the full LaTeX code for the item;
+          - "caption": a short caption or description, if available or inferred;
+          - "source_title": the title of the document where the item was found;
+      - Or an empty list, if no items were located.
+  agent: visual_elements_retriever
