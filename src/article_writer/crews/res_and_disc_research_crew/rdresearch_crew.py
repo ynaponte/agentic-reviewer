@@ -56,10 +56,10 @@ class RDResearchCrew():
         temperature=0.4
     )
     writer_llm = LLM(
-        model="ollama/qwen2.5:3b-instruct-q6_K",
+        model="ollama/qwen2.5:7b-instruct",
         base_url="http://localhost:11434",
         timeout=1800.0,
-        max_tokens=32000,
+        max_tokens=128000,
         temperature=0.6
     )
     _should_execute_ve_research = True

@@ -19,7 +19,7 @@ topic_research:
          - Run `QueryArticlesTool` with the `search_query`.  
          - If results are insufficient (<3 relevant articles), increase `top_k` by 5, up to 20, and retry.  
       4. **Synthesize Insights**:  
-         - Write a 500+ word text in Brazilian Portuguese, ensuring:  
+         - Write a 300-600 word text in Brazilian Portuguese, ensuring:  
            - Alignment with the topic's rhetorical purpose: {rhetorical_purpose}.  
            - Consistency with section title, "{section_title}", tone: objective for Results (focus on evidence, methodology), analytical for 
              Discussion (include literature comparisons, implications).  
@@ -38,13 +38,13 @@ topic_research:
 
       **Success Criteria**:  
       - `QueryArticlesTool` returns results aligned with `{discussion_topic}` and `{rhetorical_purpose}`.  
-      - Output is a 500+ word text in Brazilian Portuguese, providing targeted insights for `technical_writer`.  
+      - Output is a 300-600 word text in Brazilian Portuguese, providing targeted insights for `technical_writer`.  
       - Discrepancies are noted for `technical_writer`
   expected_output: >
     A JSON with the following structure:  
       {  
         "topic": "{discussion_topic}",  
-        "research_results": "Structured, evidence-based text, 500+ words, in Brazilian Portuguese, aligned with rhetorical purpose, providing broader 
+        "research_results": "Structured, evidence-based text, 300-600 words, in Brazilian Portuguese, aligned with rhetorical purpose, providing broader 
                              context for '{discussion_topic}'.",  
         "discrepancies": "Any issues with data or sources (e.g., 'Insufficient literature for [topic]')."    
       }  
@@ -77,10 +77,11 @@ visual_elements_research:
         - 'doc_type' as ['report', 'draft'];
         - 'top_k' as 5 initially;
       - If results are insufficient (e.g., <2 relevant documents), increase `top_k` by 5, up to 15, and retry.
-      - Synthesize a 300-500 word insight (Brazilian Portuguese) explaining the visual's contribution to the topic "{discussion_topic}", using `description` 
-      and `role_in_topic` to frame its significance (e.g., how it supports findings in Results or comparisons in Discussion).
+      - If results are still insufficient, clearly state that no viable results were found and no insights can be provided for the item
+      - If research results are good, synthesize a 300-600 word insight (Brazilian Portuguese) explaining the visual's contribution to the topic "{discussion_topic}", using `description` 
+        and `role_in_topic` to frame its significance (e.g., how it supports findings in Results or comparisons in Discussion).
 
-    3. Return insights for all visual elements, using `name` as the identifier and repeting the `role_in_topic`.
+    3. Return your results for all visual elements, using `name` as the identifier and repeting the `role_in_topic`.
 
     **Restrictions:**
       - search only in `doc_type`: ['report', 'draft'].
@@ -89,7 +90,7 @@ visual_elements_research:
 
     **Success criteria:**
       - `QueryArticlesTool` executed for each visual, returning relevant results.
-      - Each insight is 300-500 words in Brazilian Portuguese, explaining the visual's contribution to the topic "{discussion_topic}".
+      - Each insight is 300-600 words in Brazilian Portuguese, explaining the visual's contribution to the topic "{discussion_topic}".
 
   expected_output: >
     A JSON object with the following structure, presenting the insights for each visual element on a list in the key "about_the_visual_elements",
@@ -100,7 +101,7 @@ visual_elements_research:
         {
           "item_name": "visual element name",
           "role_in_topic": "original role in topic of the visual element",
-          "research_results": "300-500 word insight in Brazilian Portuguese explaining the visual's contribution to '{discussion_topic}'.",
+          "research_results": "300-600 word insight in Brazilian Portuguese explaining the visual's contribution to '{discussion_topic}'.",
         }
       ]
     }
@@ -114,7 +115,7 @@ numerical_results_research:
 
     Research each numerical result in the above list to contextualize its significance for the discussion topic "{discussion_topic}" in the subsection 
     "{section_title}" of the "Results and Discussion" section of a scientific paper. Use the `QueryArticlesTool` to generate evidence-based insights 
-    (400-700 words per result, in Brazilian Portuguese) that {rhetorical_purpose} the numerical result for the topic, aligning with its context 
+    (300-600 words per result, in Brazilian Portuguese) that {rhetorical_purpose} the numerical result for the topic, aligning with its context 
     (e.g., statistical significance, experimental outcome).
 
     **Execution Steps**:
@@ -125,10 +126,10 @@ numerical_results_research:
           (e.g., "p < 0.05 Statistical significance for {discussion_topic}").
         - Execute `QueryArticlesTool` with:
           - `search_query`: Constructed query.
-          - `doc_type`: ["draftt"].
+          - `doc_type`: ["draft"].
           - `top_k`: 5 initially.
         - If results are insufficient (e.g., fewer than 2 relevant documents), increase `top_k` by 5, up to 15, and retry.
-        - Synthesize a 400-700 word insight (Brazilian Portuguese) explaining how the result contributes to "{discussion_topic}", based on its context.
+        - Synthesize a 300-600 word insight (Brazilian Portuguese) explaining how the result contributes to "{discussion_topic}", based on its context.
     3. Return insights for all numerical results, using `value` as the identifier for "item_name" and including the associated visual.
 
     **Restrictions**:
@@ -137,7 +138,7 @@ numerical_results_research:
 
     **Success Criteria**:
     - `QueryArticlesTool` executed for each numerical result, returning relevant results.
-    - Each insight is 400-700 words in Brazilian Portuguese, explaining the result's significance for the topic "{discussion_topic}".
+    - Each insight is 300-600 words in Brazilian Portuguese, explaining the result's significance for the topic "{discussion_topic}".
 
   expected_output: >
     A JSON object with the following structure, presenting the insights for each numerical result on a list in the key "about_the_numerical_results",
@@ -148,7 +149,7 @@ numerical_results_research:
         {
           "item_name": "value",
           "associated_visual": "associated_visual",
-          "research_results": "400-700 word insight in Brazilian Portuguese explaining the numerical result's significance for '{discussion_topic}'.",
+          "research_results": "300-600 word insight in Brazilian Portuguese explaining the numerical result's significance for '{discussion_topic}'.",
         }
       ]
     }
@@ -194,12 +195,12 @@ write_topic_text:
         in Photonic Systems -> Error Rates"). Sourced from the `subsection_flow` field of `generate_results_outline` or `generate_discussion_outline`. 
         Indicates the topic's position in the subsection's narrative arc, guiding contextual references to prior or subsequent topics.
     - **Research Inputs**:
-      - `topic_research`: A JSON object with insights (500+ words) on the topic's context, significance, and argumentative foundation (e.g., background, 
+      - `topic_research`: A JSON object with insights on the topic's context, significance, and argumentative foundation (e.g., background, 
         relevance). Provides the primary basis for the text's argument.
-      - `visual_elements_research`: A JSON object with insights (300-500 words each) detailing the contributions of visual elements (e.g., figures, 
+      - `visual_elements_research`: A JSON object with insights detailing the contributions of visual elements (e.g., figures, 
         tables) to the topic, if provided in the outline's `visual_elements` field. May be an empty string if no `visual_elements` are specified for the 
         topic (e.g., for a Discussion topic like "Limitations"). Used for contextual support without describing visuals.
-      - `numerical_results_research`: A JSON object with insights (400-700 words each) and verbatim numerical results in the `item_name` key (e.g., 
+      - `numerical_results_research`: A JSON object with insights and verbatim numerical results in the `item_name` key (e.g., 
         "R² = 0.92"), if provided in the outline's `numerical_results` field. May be an empty string if no `numerical_results` are specified for the topic 
         (e.g., for a Discussion topic like "Future Directions"). Provides verbatim evidence for the argument.
 
@@ -212,7 +213,7 @@ write_topic_text:
          use visual/result).
       5. Use `subsection_flow` to determine the topic's position (e.g., follows "Performance" or precedes "Summary") and plan contextual references (e.g., 
          "Following the correlation analysis, this section addresses throughput").
-      6. Compose a 1000+ word text in Brazilian Portuguese, following these steps:
+      6. Compose a 800+ word text in Brazilian Portuguese, following these steps:
          - Structure paragraphs according to `narrative_guidance` (e.g., lead with finding, then contextualize).
          - Base the argument on `topic_research`, using `visual_elements_research` to contextualize contributions (without describing visuals) and 
            `numerical_results_research` for verbatim evidence.
@@ -237,7 +238,7 @@ write_topic_text:
 
     **Constraints:**
       - Do not perform new research or invent information; use only provided insights.
-      - The generated text must have 1000+ words.
+      - The generated text must have 800+ words.
       - The topic must be identified exactly as "{discussion_topic}" in the output.
       - Write exclusively in Brazilian Portuguese.
       - Do not introduce critiques, judgments or opinions.
@@ -250,11 +251,11 @@ write_topic_text:
       - The writing must be argumentative, coherent, and flowing without lists.
       - The generated text theme and discussion topic are "{discussion_topic}"
   expected_output: >
-    Full multi-paragraph scientific text about the topic, with 1000+ words, written in brazilian portuguese, organized in a JSON 
+    Full multi-paragraph scientific text about the topic, with 800+ words, written in brazilian portuguese, organized in a JSON 
     object with the following structure:
     {
       "topic": "{discussion_topic}",
-      "text": 'Fully multi-paragraphed scientific text, with 1000+ words, in Brazilian Portuguese'.
+      "text": 'Fully multi-paragraphed scientific text, with 800+ words, in Brazilian Portuguese'.
     }
   agent: technical_writer
   context: [topic_research, visual_elements_research, numerical_results_research]

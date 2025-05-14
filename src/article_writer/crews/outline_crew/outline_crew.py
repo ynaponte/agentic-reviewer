@@ -24,7 +24,7 @@ class OutlineCrew:
     def teste(self, result):
         res_and_disc_outlines = [
             task_output.json_dict for task_output in result.tasks_output 
-            if task_output.name in ['generate_results_outline', 'generate_discussion_outline']
+            if task_output.name in ['structure_results_outline', 'structure_discussion_outline']
         ]
         return res_and_disc_outlines
         
@@ -37,19 +37,19 @@ class OutlineCrew:
         )
 
     @agent
-    def results_discussion_outliner(self) -> Agent:
+    def results_outliner(self) -> Agent:
         return Agent(
-            config=self.agents_config['results_discussion_outliner'],
+            config=self.agents_config['results_outliner'],
             llm=self.std_llm,
         )
     
     @agent
-    def conclusion_outliner(self) -> Agent:
+    def discussion_outliner(self) -> Agent:
         return Agent(
-            config=self.agents_config['conclusion_outliner'],
+            config=self.agents_config['discussion_outliner'],
             llm=self.std_llm,
         )
-
+    
     @task
     def analyze_report_for_results(self) -> Task:
         return Task(
@@ -57,9 +57,9 @@ class OutlineCrew:
         )
     
     @task
-    def generate_results_outline(self) -> Task:
+    def structure_results_outline(self) -> Task:
         return Task(
-            config=self.tasks_config['generate_results_outline'],
+            config=self.tasks_config['structure_results_outline'],
             output_json=RDSubSectionOutline
         )
 
@@ -70,9 +70,9 @@ class OutlineCrew:
         )
     
     @task
-    def generate_discussion_outline(self) -> Task:
+    def structure_discussion_outline(self) -> Task:
         return Task(
-            config=self.tasks_config['generate_discussion_outline'],
+            config=self.tasks_config['structure_discussion_outline'],
             output_json=RDSubSectionOutline
         )
 

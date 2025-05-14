@@ -1,107 +1,81 @@
 merge_subsection:
   description: >
-    Raw Text:
+    **Topics Text JSON**:
 
-    {concatenated_text}
+    {topics_text_json}
 
-    You are provided with a raw text composed by the concatenation of several parts written for different discussion topics of the subsection 
-    "{section_title}" from the "Results and Discussion" section of a scientific article. The Raw Text may contain abrupt breaks, unnecessary 
-    repetitions, or uneven transitions between ideas. Your task is to transform this material into a continuous, coherent and fluid text, as 
-    if it was written continuously from the start.
+    **Subsection outline**:
 
-    **Your main objectives are:**
-      - Improve the fluidity and continuity of the text;
-      - Correct or eliminate artificial transitions;
-      - Adjust connectors and initial/final sentences to maintain the natural flow;
-      - Eliminate repetitions without losing important information;
-      - Maintain the original technical content without adding new information;
-      - Preserve the technical precision and formality of the text.
+    {subsection_outline}
 
-    **STEPS OF EXECUTION:**:
-    1. Read the entire text carefully and:
-      - Understand the thematic flow;
-      - Identify points where connections between paragraphs can be improved;
-      - Identify where there are unnecessary repetitions, abrupt breaks and or uneven transitions between ideas;
-    2. Remove unnecessary repetitions;
-    3. Adjust sentence structures or add connecting phrases as minimally as possible to ensure logical continuity, no abrupt breaks and even transitions
-       between ideas;
-    4. Review the final text to ensure grammatical accuracy, formal tone, and information preservation.
+    You are provided with individual texts for each topic of the {subsection_title} subsection, along with the subsection's outline that defines the 
+    intended order and content of these topics. Your task is to assemble these topic's texts into a single, continuous, and fluid subsection text, 
+    refining each topic's text as needed and creating natural transitions between them, while ensuring all content specified in the outline is 
+    preserved.
 
-    **Constrains:**
-      - Preserve all main original information, without any changes
-      - Do not introduce new information, interpretations, or remove content.
-      - Maintain the scientific tone throughout the entire text.
-      - Language must be formal, precise, and suitable for academic publication
+    **Inputs**:
+    - **Topics Text JSON**: A JSON object containing the raw text content for each topic of the subsection, structured as follows:
+      - `topics`: A list of topic entries, each representing a segment of the subsection's content to be refined and integrated into the final text.
+        - `topic`: The title of the topic (e.g., "Comparison with Previous Studies"), which corresponds to a topic in the **Subsection Outline**'s 
+          `discussion_topics`, defining its role in the subsection.
+        - `text`: The raw text content for the topic, containing the technical details, visual references (e.g., "Tabela 2", "Figura 3"), and 
+          contextual information to be preserved and refined for clarity and coherence.
+    - **Subsection Outline**: A JSON object containing the subsection's full structure, with all topics to be presented, their visual elements and 
+      numerical results that have to be included in the topic's text. This JSON is structured as follow:
+      - `subsection_name`: The subsection title (e.g., "Results", "Discussion").
+      - `subsection_flow`: A string of topic titles in order (e.g., "Topic1 -> Topic2").
+      - `discussion_topics`: A list of topics, each with:
+        - `topic`: The title of the topic, matching a topic in the `topic_texts_json`.
+        - `rhetorical_purpose`: The intended purpose of the topic (e.g., "To contextualize results").
+        - `topic_description`: A description of the topic's content and focus.
+        - `visual_elements`: A list of tables, figures, or other visuals associated with the topic (e.g., "Tabela 2: Performance under turbulence").
+        - `numerical_results`: A list of quantitative results to be included (e.g., "95% accuracy").
+        - `narrative_guidance`: Instructions for the narrative style or emphasis (e.g., "Highlight superior precision").
+
+    **Main Objectives:**
+      - Assemble the final subsection text by integrating the individual topic texts in the order specified by the outline's `subsection_flow`.
+      - Refine each topic's text for clarity, conciseness, and coherence, preserving all original technical details, including numerical results, visual references, and contextual connections, as specified in the topic texts and outline.
+      - Create smooth, logical transitions between topics to ensure the text reads as a unified narrative.
+      - Eliminate unnecessary repetitions while retaining intentional references to visual elements (e.g., re-referencing a table for comparison).
+      - Maintain a formal, academic tone in Brazilian Portuguese.
+
+    **Execution Steps:**
+    1. Review the subsection outline to:
+      - Understand the intended order of topics (`subsection_flow`).
+      - Identify the key content for each topic, including numerical results, visual elements, and narrative guidance (`discussion_topics`).
+    2. For each topic in the outline's `subsection_flow`:
+      - Locate the corresponding entry in the `topic_texts_json` using the topic title.
+      - Refine the topic's `text` to ensure clarity, conciseness, and alignment with its `rhetorical_purpose` and `narrative_guidance` from the outline, following the subsection-specific directives.
+      - Preserve all specific details, such as study titles, numerical results, and references to visual elements (e.g., "Tabela 2", "Figura 3"), as listed in the outline’s `visual_elements` and `numerical_results` fields.
+    3. Assemble the refined topic texts in the order specified by `subsection_flow`, adding minimal connectors or transitional phrases to:
+      - Ensure a smooth flow from one topic to the next.
+      - Maintain logical progression and thematic continuity.
+    4. Manage repetitions:
+      - Eliminate unnecessary reiterations of information that do not add new insight, as identified across topic texts.
+      - Retain intentional references to visual elements (e.g., re-referencing a figure for analysis or comparison) and ensure they are clear and contextually appropriate, per the outline’s `visual_elements` field.
+    5. Review the final assembled text to ensure:
+      - All topics from the outline and topic texts are fully represented, with no omissions.
+      - The text is free of unnecessary repetitions and flows naturally.
+      - All numerical results, visual references, and contextual connections are preserved, as specified in both inputs.
+      - The tone is formal, precise, and suitable for academic publication.
+      - The text is in Brazilian Portuguese.
+
+    **Constraints:**
+      - Preserve all original technical information from both the topic texts and the outline without alteration or omission.
+      - Do not introduce new information, interpretations, or remove critical content.
+      - Maintain a scientific tone and academic formality.
+      - Ensure the final text is in Brazilian Portuguese.
 
     **Success Criteria:**
-      - The final text must read as if it was written continuously, not as separate parts stitched together.
-      - Information must remain factually accurate and untouched.
-      - Language must be formal and academic.
-      - Transitions between topics must feel natural and logical.
-      - The final text is in Brazilian Portuguese.
+      - The final text functions as a continuous, unified subsection with natural transitions between topics.
+      - All original technical content from the outline and topic texts, including comparisons, limitations, contributions, future directions, numerical results, and visual references, is preserved.
+      - Unnecessary repetitions are eliminated, while intentional references to visual elements are retained and clear.
+      - Contextual connections are maintained, and the language is formal, precise, and suitable for academic publication.
+
   expected_output: >
     Um JSON com a seguinte estrutura:
     {
-      "subsection_title": "{section_title}",
+      "subsection_title": "{subsection_title}",
       "merged_text": "Texto reestruturado, fluido e contínuo da subseção, escrito em português brasileiro acadêmico."
     }
   agent: subsection_merger
-
-visual_elements_extraction:
-  description: >
-    List of visual elements to extract:
-
-    {visual_elements_to_extract}
-
-    You must locate and retrieve each item listed above, if any, for later inclusion in the final version of a scientific chapter. 
-    These elements have been marked in the outline as necessary visual resources. You are not responsible for writing or inserting them, 
-    only for extracting the exact content from existing draft documents. Use the `QueryArticlesTool` to perform each individual search.
-
-    **Required steps for this task:**
-
-    1. Create an execution plan:
-      - List all items from the input;
-      - Indicate that each item will be searched independently;
-      - Confirm that only documents of type ['draft'] will be used.
-
-    2. Execute the plan step by step:
-      - For each item:
-        - Use its name or description as the 'search_query' parameter;
-        - Set 'doc_type' to ['draft'];
-        - Set 'top_k' to 2 initially;
-        - Call the `QueryArticlesTool`.
-
-    3. If the result is insufficient:
-      - Gradually increase the 'top_k' value and repeat the search.
-
-    4. For each item:
-      - Locate LaTeX blocks representing:
-        - Figures or diagrams;
-        - Tables;
-        - Mathematical equations;
-        - Code snippets;
-      - Extract the full and exact LaTeX code;
-      - Provide a caption if available (or infer one from nearby context);
-      - Include the title of the source document from which the content was retrieved.
-
-    **Constraints:**
-      - Only proceed if the input list of visual elements is not empty;
-      - Search exclusively in documents of type 'draft';
-      - Do not rewrite, paraphrase, or analyze any content. Focus strictly on technical extraction.
-
-    **Success criteria:**
-      - The tool was called once per item in the list (if any);
-      - Each visual element yielded a valid LaTeX extraction;
-      - All elements are properly classified by type;
-      - The output matches the source document content with technical fidelity.
-
-  expected_output: >
-    A JSON object with the key "visual_elements". The value must be:
-      - A list of objects (one per extracted visual item), each containing:
-          - "item_name": the exact name of the visual item searched;
-          - "type": the type of the element (Figure | Table | Equation | Code Block);
-          - "latex": the full LaTeX code for the item;
-          - "caption": a short caption or description, if available or inferred;
-          - "source_title": the title of the document where the item was found;
-      - Or an empty list, if no items were located.
-  agent: visual_elements_retriever
