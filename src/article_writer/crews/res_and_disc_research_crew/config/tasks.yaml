@@ -1,17 +1,13 @@
 topic_research:
   description: >
-    Dicussion Topic:
-
-    {discussion_topic}
-
-    Research the above discussion topic for the subsection "{section_title}" of the "Results and Discussion" section of a scientific paper. 
-    To do so, use your tool QueryArticlesTool to generate insights aligned with the discussion topic's rhetorical purpose: 
-    {rhetorical_purpose};
+    Do research about "{discussion_topic}" which is a discussion topic for the subsection "{section_title}" of the "Results and Discussion" section 
+    of a scientific paper. This topic has the role of {topic_description}. 
+    To do so, use your tool QueryArticlesTool to generate insights aligned with the discussion topic's rhetorical purpose: {rhetorical_purpose};
     thus providing rich, evidence-based context for writing.
 
     **Execution Steps**:  
       1. **Construct Search Query**:  
-         - Use "{discussion_topic}" as the `search_query`.  
+         - Use "{discussion_topic}" and "{topic_description}" to generate a search query aligned with the discussion topic's rhetorical purpose.  
       2. **Configure `QueryArticlesTool`**:  
          - Set `doc_type` to ['draft', 'reference', 'report'].  
          - Set `top_k` to 5 initially.  
@@ -19,14 +15,14 @@ topic_research:
          - Run `QueryArticlesTool` with the `search_query`.  
          - If results are insufficient (<3 relevant articles), increase `top_k` by 5, up to 20, and retry.  
       4. **Synthesize Insights**:  
-         - Write a 300-600 word text in Brazilian Portuguese, ensuring:  
+         - Write a 150-300 word text in Brazilian Portuguese, ensuring:  
            - Alignment with the topic's rhetorical purpose: {rhetorical_purpose}.  
            - Consistency with section title, "{section_title}", tone: objective for Results (focus on evidence, methodology), analytical for 
              Discussion (include literature comparisons, implications).  
            - Highlight evidence, methodological comparisons, or applications relevant to the discussion topic.  
 
      **Guidelines for**:  
-      - **Insights**: Focus on broader context;  
+      - **Insights**: Focus on broader context that aids in understading the topic and it's role;  
       - **Subsection Tone**: For Results, emphasize objective evidence and methodology; for Discussion, include literature comparisons and implications.  
       - **Evidence-Based**: Use only `QueryArticlesTool` results, highlighting relevant data or studies.  
 
@@ -38,16 +34,10 @@ topic_research:
 
       **Success Criteria**:  
       - `QueryArticlesTool` returns results aligned with `{discussion_topic}` and `{rhetorical_purpose}`.  
-      - Output is a 300-600 word text in Brazilian Portuguese, providing targeted insights for `technical_writer`.  
-      - Discrepancies are noted for `technical_writer`
+      - Output is a 150-300 word text in Brazilian Portuguese, providing key insights for writting about the topic.  
   expected_output: >
-    A JSON with the following structure:  
-      {  
-        "topic": "{discussion_topic}",  
-        "research_results": "Structured, evidence-based text, 300-600 words, in Brazilian Portuguese, aligned with rhetorical purpose, providing broader 
-                             context for '{discussion_topic}'.",  
-        "discrepancies": "Any issues with data or sources (e.g., 'Insufficient literature for [topic]')."    
-      }  
+    A Structured, evidence-based text, of 150-300 words in length, in Brazilian Portuguese, aligned with rhetorical purpose, providing key Insights
+    for writting about "{discussion_topic}", formatted in markdown, without ```.
 
   agent: topic_researcher
 
@@ -57,17 +47,17 @@ visual_elements_research:
 
     {visual_elements_to_contextualize}
 
-    Research each visual element of the above list, to contextualize their contribution to the discussion topic "{discussion_topic}" in the 
-    subsection "{section_title}" of the "Results and Discussion" section of a scientific paper. Use the tool `QueryArticlesTool` to generate 
-    evidence-based insights (300-500 words per visual, in Brazilian Portuguese) that explain how each visual supports or illustrates the topic, 
-    aligning with its role (e.g., summarizing data, illustrating trends).
+    Research each visual element of the above list, to contextualize and describe their contribution to the discussion topic "{discussion_topic}" in the 
+    subsection "{section_title}" of the "Results and Discussion" section of a scientific paper, that has the role of "{topic_description}". 
+    Use the tool `QueryArticlesTool` to generate evidence-based insights (100-250 words per visual, in Brazilian Portuguese) that explain how each visual 
+    supports or illustrates the topic, and achives its role in the topic (e.g., summarizing data, illustrating trends).
 
     **Execution Steps:**
 
     1. Assemble a plan of action:
     - For each item in the list of visual elements:
       - Parse item's string in other to extract the visual element's `name` and `role_in_topic`;
-      - Construct a search query for the item with the `name` field
+      - Construct a search query for the item with the `name` field and {discussion_topic}
       - Clearly state that the 'doc_type' while querying the item shall be ['report', 'draft']
     - Indicate that every item shall be researched separately;
 
@@ -76,12 +66,12 @@ visual_elements_research:
         - 'search_query' parameter as the constructed search query
         - 'doc_type' as ['report', 'draft'];
         - 'top_k' as 5 initially;
-      - If results are insufficient (e.g., <2 relevant documents), increase `top_k` by 5, up to 15, and retry.
-      - If results are still insufficient, clearly state that no viable results were found and no insights can be provided for the item
-      - If research results are good, synthesize a 300-600 word insight (Brazilian Portuguese) explaining the visual's contribution to the topic "{discussion_topic}", using `description` 
-        and `role_in_topic` to frame its significance (e.g., how it supports findings in Results or comparisons in Discussion).
+      - If results are insufficient, clearly state that no viable results were found and no insights can be provided for the item
+      - Else, synthesize a 100-250 word text with insights explaining the visual's contribution to the topic 
+        "{discussion_topic}", using `role_in_topic` to frame its significance (e.g., how it supports findings in Results or comparisons in Discussion).
 
-    3. Return your results for all visual elements, using `name` as the identifier and repeting the `role_in_topic`.
+    3. Return your results for all visual elements, formated in JSON, with an object per visual element, with the keys: `name` repeating the element's 
+    name, in order ot identify it, and a new `insights` key with the insights gathered in your research.
 
     **Restrictions:**
       - search only in `doc_type`: ['report', 'draft'].
@@ -90,18 +80,17 @@ visual_elements_research:
 
     **Success criteria:**
       - `QueryArticlesTool` executed for each visual, returning relevant results.
-      - Each insight is 300-600 words in Brazilian Portuguese, explaining the visual's contribution to the topic "{discussion_topic}".
+      - Each insight is 100-250 words in length, explaining the visual's contribution to the topic "{discussion_topic}", aligned with its `role_in_topic`.
 
   expected_output: >
     A JSON object with the following structure, presenting the insights for each visual element on a list in the key "about_the_visual_elements",
-    where every element of the list itself an object, with the keys "item_name" and "research_results", identifing the visual element and presenting the 
+    where every element of the list itself an object, with the keys "name" and "insights", identifing the visual element and presenting the 
     insights, respectivaly:
     {
       "about_the_visual_elements": [
         {
-          "item_name": "visual element name",
-          "role_in_topic": "original role in topic of the visual element",
-          "research_results": "300-600 word insight in Brazilian Portuguese explaining the visual's contribution to '{discussion_topic}'.",
+          "name": "visual element name",
+          "insights": "100-250 word insight in Brazilian Portuguese explaining the visual's contribution to '{discussion_topic}'.",
         }
       ]
     }
@@ -115,7 +104,7 @@ numerical_results_research:
 
     Research each numerical result in the above list to contextualize its significance for the discussion topic "{discussion_topic}" in the subsection 
     "{section_title}" of the "Results and Discussion" section of a scientific paper. Use the `QueryArticlesTool` to generate evidence-based insights 
-    (300-600 words per result, in Brazilian Portuguese) that {rhetorical_purpose} the numerical result for the topic, aligning with its context 
+    (100-250 words per result, in Brazilian Portuguese) that {rhetorical_purpose} the numerical result for the topic, aligning with its context 
     (e.g., statistical significance, experimental outcome).
 
     **Execution Steps**:
@@ -126,11 +115,14 @@ numerical_results_research:
           (e.g., "p < 0.05 Statistical significance for {discussion_topic}").
         - Execute `QueryArticlesTool` with:
           - `search_query`: Constructed query.
-          - `doc_type`: ["draft"].
+          - `doc_type`: ["report"].
           - `top_k`: 5 initially.
         - If results are insufficient (e.g., fewer than 2 relevant documents), increase `top_k` by 5, up to 15, and retry.
-        - Synthesize a 300-600 word insight (Brazilian Portuguese) explaining how the result contributes to "{discussion_topic}", based on its context.
-    3. Return insights for all numerical results, using `value` as the identifier for "item_name" and including the associated visual.
+    2. Synthesize a 100-250 word insight (Brazilian Portuguese) explaining the result's significance to "{discussion_topic}", based on the gathered 
+       context.
+    3. Return insights for all numerical results, formated in JSON, with an object per item in the List of numerical results, with the keys: 
+       `verbatim_value` repeating the item's numerical value, pulled from the List of numerical results, and `insights` with the insights gathered in 
+       your research.
 
     **Restrictions**:
     - Search only in `doc_type`: ["report"].
@@ -138,18 +130,17 @@ numerical_results_research:
 
     **Success Criteria**:
     - `QueryArticlesTool` executed for each numerical result, returning relevant results.
-    - Each insight is 300-600 words in Brazilian Portuguese, explaining the result's significance for the topic "{discussion_topic}".
+    - Each insight is 100-250 words in Brazilian Portuguese, explaining the result's significance for the topic "{discussion_topic}".
 
   expected_output: >
     A JSON object with the following structure, presenting the insights for each numerical result on a list in the key "about_the_numerical_results",
-    where every element of the list itself an object, with the keys "item_name", "associated_visual" and "research_results", identifing the numerical 
-    result, the associated visual element and presenting the insights, respectivaly:
+    where every element of the list itself an object, with the keys "verbatim_value" and "insights", identifing the numerical result, and presenting 
+    the insights, respectivaly:
     {
       "about_the_numerical_results": [
         {
-          "item_name": "value",
-          "associated_visual": "associated_visual",
-          "research_results": "300-600 word insight in Brazilian Portuguese explaining the numerical result's significance for '{discussion_topic}'.",
+          "verbatim_value": "value",
+          "insights": "100-250 word insight in Brazilian Portuguese explaining the numerical result's significance for '{discussion_topic}'.",
         }
       ]
     }
@@ -158,104 +149,89 @@ numerical_results_research:
 
 write_topic_text:
   description: >
-    **Inputs**:
-      `rhetorical_purpose`:
+    Write a detailed, argumentative, multi-paragraph text, in formal, precise, and academic Brazilian Portuguese, about the topic "{discussion_topic}" for 
+    the subsection "{section_title}" of the "Results and Discussion" section of a scientific paper, with the rhetorical purpose of {rhetorical_purpose}. 
+    Base the text on insights from `topic_research`. You must also seamlessly integrate the visual elements and numerical results listed bellow, in order 
+    to fulfill the rethorical purpose.
 
-      {rhetorical_purpose}
+    List of Numerical elements to include:
 
-      `narrative_guidance`:
+    {numerical_results_to_include}
 
-      {narrative_guidance}
+    List of Visual elements to include:
 
-      `subsection_flow`:
+    {visual_elements_to_contextualize}
 
-      {subsection_flow}
-
-    Write a detailed, argumentative, multi-paragraph text, in formal, precise, and academic Brazilian Portuguese, for the topic "{discussion_topic}" in 
-    the subsection "{section_title}" of the "Results and Discussion" section of a scientific paper. Base the text on insights from `topic_research`, 
-    seamlessly integrate contextualization of visual elements from `visual_elements_research`, and incorporate all numerical results from 
-    `numerical_results_research` exactly as provided. Structure the text according to `narrative_guidance`, set the overall tone based on subsection title 
-    ({section_title}) (descriptive for Results, interpretive for Discussion), and shape the argument according to `rhetorical_purpose` (e.g., presenting 
-    a finding, comparing to literature), and ensure coherence with `subsection_flow` by contextualizing the topic's position in the subsection's narrative 
-    arc.
+    In order to aid the integration of this elements, futher context on the numerical results and the visual elements are provided from the 
+    `visual_elements_research` and `numerical_results_research` tasks. Structure the text by {narrative_guidance}, set the overall tone based on 
+    subsection title ({section_title}) (descriptive for Results, interpretive for Discussion), and shape the argument according to `rhetorical_purpose` 
+    (e.g., presenting a finding, comparing to literature).
 
     The text must be scientifically robust, coherent, and well-argued, enabling readers to understand, contextualize, and critically assess the research 
     findings.
 
-    **Context**:
-    - **Input**:
-      - `rhetorical_purpose`: A string defining the argumentative intent of the topic (e.g., "Inform" for presenting findings in Results, "Compare 
-        findings" for literature connections in Discussion). Sourced from the `rhetorical_purpose` field of the topic's JSON in 
-        `generate_results_outline` or `generate_discussion_outline`. Guides the tone and purpose of the text.
-      - `narrative_guidance`: A string providing instructions for structuring the topic's narrative (e.g., "Begin by presenting the 35% throughput 
-        increase, then detail its statistical significance, using Table 1"). Sourced from the `narrative_guidance` field of the topic's JSON in 
-        `generate_results_outline` or `generate_discussion_outline`. Specifies the sequence, emphasis, and references (e.g., visuals, numerical results) 
-        for the text's argument.
-      - `subsection_flow`: A string listing the subsection's topic names in order, separated by " -> " (e.g., "Development and Performance -> Throughput 
-        in Photonic Systems -> Error Rates"). Sourced from the `subsection_flow` field of `generate_results_outline` or `generate_discussion_outline`. 
-        Indicates the topic's position in the subsection's narrative arc, guiding contextual references to prior or subsequent topics.
+    **Context on the insights**:
     - **Research Inputs**:
-      - `topic_research`: A JSON object with insights on the topic's context, significance, and argumentative foundation (e.g., background, 
-        relevance). Provides the primary basis for the text's argument.
-      - `visual_elements_research`: A JSON object with insights detailing the contributions of visual elements (e.g., figures, 
-        tables) to the topic, if provided in the outline's `visual_elements` field. May be an empty string if no `visual_elements` are specified for the 
-        topic (e.g., for a Discussion topic like "Limitations"). Used for contextual support without describing visuals.
-      - `numerical_results_research`: A JSON object with insights and verbatim numerical results in the `item_name` key (e.g., 
-        "R² = 0.92"), if provided in the outline's `numerical_results` field. May be an empty string if no `numerical_results` are specified for the topic 
-        (e.g., for a Discussion topic like "Future Directions"). Provides verbatim evidence for the argument.
+      - `topic_research`: Insights on the topic's context, significance, and argumentative foundation (e.g., background, relevance). Provides the primary 
+        basis for the text's argument.
+      - `visual_elements_research`: A JSON object with insights detailing the contributions of visual elements (e.g., figures, tables) to the topic, if 
+        assigned in the outline. All insights are part of the list in the key `about_the_visual_elements`. May be an empty list if no `visual_elements` 
+        were specified for the topic (e.g., for a Discussion topic like "Limitations"). Each element of the list is an object with two keys, these being 
+        `name`, identifying the visual element by name, and `insights` with the gathered insights about it. Each element of the list corresponds to an 
+        item from List of Visual elements to include.
+      - `numerical_results_research`: A JSON object with insights for each numerical result in List of numerical results to include, these being presented 
+        in the list from the `about_the_numerical_results` key. Each element of said list is an object with two keys, these being `verbatim_value`, 
+        with the numerical result's verbatim numerical value, as a way to cross reference it in the List of numerical results to include, and `insights`, 
+        with the gathered insights about the result, explaining it's significance to the topic. May be an empty list if no `numerical_results` were 
+        specified for the topic (e.g., for a Discussion topic like "Future Directions").
 
     **Execution steps:**
-     1. Review `topic_research` to understand the topic's context, significance, and argumentative foundation.
-      2. Review `visual_elements_research`, if provided, to extract contextual contributions of visuals, noting any discrepancies (e.g., missing legends).
-      3. Review `numerical_results_research`, if provided, to extract verbatim numerical results and their significance, noting any discrepancies (e.g., 
-         insufficient data).
-      4. Analyze `narrative_guidance` to identify the instructed structure (e.g., sequence: start with finding; emphasis: discuss significance; references: 
-         use visual/result).
-      5. Use `subsection_flow` to determine the topic's position (e.g., follows "Performance" or precedes "Summary") and plan contextual references (e.g., 
-         "Following the correlation analysis, this section addresses throughput").
-      6. Compose a 800+ word text in Brazilian Portuguese, following these steps:
-         - Structure paragraphs according to `narrative_guidance` (e.g., lead with finding, then contextualize).
-         - Base the argument on `topic_research`, using `visual_elements_research` to contextualize contributions (without describing visuals) and 
-           `numerical_results_research` for verbatim evidence.
-         - Align tone with `{section_title}`: descriptive and objective for Results (present findings), interpretive and analytical for Discussion 
-           (compare, imply).
-         - Reference `subsection_flow` to position the topic (e.g., "Building on the previous analysis of…") for narrative continuity.
-         - Address discrepancies cautiously (e.g., "Due to limited data, the visual's contribution is noted conservatively"), without critique.
-      7. Ensure the text is continuous, with no lists or bullet points, and maintains a formal, academic tone.
+    1. Review `topic_research` to understand the topic's context, significance, and argumentative foundation.
+    2. Review `visual_elements_research`, if provided, to extract contextual contributions of visuals.
+    3. Review `numerical_results_research`, if provided, to extract the numerical results' significance.
+    4. Use all the provided context to compose a 500+ word text in Brazilian Portuguese about {discussion_topic}, following these steps:
+        - Structure paragraphs according to the narrative guidance: {narrative_guidance}.
+        - Base the main argument on `topic_research`.
+        - Make sure to include all items from the List of Visual elements and all items from the List of Numerical elements, fluidly, aiding the main 
+          argument. Use the insights from `visual_elements_research` and `numerical_results_research` to contextualize contributions and significance.
+        - Align tone with: descriptive and objective for Results (present findings), interpretive and analytical for Discussion 
+          (compare, imply).
+    5. Ensure the text is continuous, coherent, consistent and maintains a formal, academic tone.
+    6. Format your response in a JSON with the keys "topic" with the discussion topic "{discussion_topic}" as it's value, and "text" with the generated 
+       text as it's value.
 
     **Writing Directives**:
       - Write in formal, academic Brazilian Portuguese.
-      - Structure the text according to `narrative_guidance`, following its sequence, emphasis, and references (e.g., visuals, numerical results).
-      - Use `rhetorical_purpose` to guide the argumentative intent (e.g., "Inform" for presenting findings, "Compare findings" for literature connections).
-      - Contextualize the topic's position using `subsection_flow` (e.g., reference prior or subsequent topics to ensure narrative flow).
-      - Integrate `topic_research` insights as the primary argument, `visual_elements_research` for contextual support (e.g., "The contribution of this 
-        finding is supported by visual evidence"), and `numerical_results_research` for verbatim evidence (e.g., "R² = 0.92").
-      - Preserve all numerical results exactly as provided in `numerical_results_research`.
-      - Refer to visual elements contextually (e.g., "As supported by the visual analysis"), without describing their appearance.
+      - Structure the text according to the narrative guidance, following its sequence, emphasis, and references (e.g., visuals, numerical results).
+      - Use the rhetorical purpose to guide the argumentative intent (e.g., "Inform" for presenting findings, "Compare findings" for literature connections).
+      - Integrate `topic_research` insights as the primary argument.
+      - Use the insights from `visual_elements_research` and `numerical_results_research` for contextual support. 
+      - Preserve all numerical results' verbatim values exactly as provided in List of Numerical results to include.
+      - Refer to visual elements contextually (e.g., "As supported by the visual analysis").
       - Maintain a descriptive tone for Results (objective, evidence-based) or interpretive tone for Discussion (analytical, literature-connected), per 
-        Subsection title ({section_title}) and `rhetorical_purpose`.
+        Subsection title ({section_title}) and rhetorical purpose.
       - Ensure continuous paragraphs, avoiding lists, bullet points, or enumerated structures.
 
     **Constraints:**
       - Do not perform new research or invent information; use only provided insights.
-      - The generated text must have 800+ words.
+      - The generated text must have 500+ words.
       - The topic must be identified exactly as "{discussion_topic}" in the output.
       - Write exclusively in Brazilian Portuguese.
       - Do not introduce critiques, judgments or opinions.
-      - Your answer must be written in Brazilian Portuguese.
 
     **Success criteria:**
       - The text must be fully based on the provided insights.
-      - The topic must match exactly "{discussion_topic}".
-      - The language must be Brazilian Portuguese.
-      - The writing must be argumentative, coherent, and flowing without lists.
-      - The generated text theme and discussion topic are "{discussion_topic}"
+      - The text is about "{discussion_topic}".
+      - The final response JSON has "{discussion_topic}" for the key "topic" and the discussion topic's text for the key "text".
+      - The language is Brazilian Portuguese.
+      - The writing is argumentative, coherent, and flowing without lists.
+
   expected_output: >
-    Full multi-paragraph scientific text about the topic, with 800+ words, written in brazilian portuguese, organized in a JSON 
+    Full multi-paragraph scientific text about the topic, with 500+ words, written in brazilian portuguese, organized in a JSON 
     object with the following structure:
     {
       "topic": "{discussion_topic}",
-      "text": 'Fully multi-paragraphed scientific text, with 800+ words, in Brazilian Portuguese'.
+      "text": 'Fully multi-paragraphed scientific text, with 500+ words, in Brazilian Portuguese'.
     }
   agent: technical_writer
   context: [topic_research, visual_elements_research, numerical_results_research]

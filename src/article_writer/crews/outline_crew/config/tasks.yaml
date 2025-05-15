@@ -65,7 +65,8 @@ analyze_report_for_results:
 
 structure_results_outline:
   description: >
-    Convert the structured analysis summary into a complete and coherent outline for the "Results" subsection of a scientific paper. This task combines the
+    Convert the provided structured analysis summary into a complete and coherent JSON outline specifically for the "Results" subsection of a 
+    scientific paper. Your output must be a structured outline that guides a writing agent in producing the final text. This task combines the
     extraction of key discussion topics with the construction of detailed topic entries, including visual elements, numerical results, and narrative 
     guidance, to assist a Writer Agent in producing an objective, well-structured narrative.
 
@@ -81,11 +82,10 @@ structure_results_outline:
     3. For each discussion topic:
        - Create a concise, descriptive title (e.g., "Throughput Performance of Optical Gate").
        - Set the rhetorical purpose to "Present findings".
-       - Write a topic description summarizing the key finding in context.
-       - Include 0-1 relevant visual elements, each with metadata: `identifier`, `name`, `role_in_topic`.
-       - Include 0-1 relevant `numerical_results`, each with metadata: `verbatim_value`, `context_description`, `associated_visual`.
+       - Write a topic description with a summary of the topic's focus and key points.
+       - Include 0-1 relevant visual elements, each with metadata: `name`, `role_in_topic`, identifying it's name and role in the topic.
+       - Include 0-1 relevant `numerical_results`, each with metadata: `verbatim_value`, `role_in_topic` and, if applicable, `associated_visual`.
        - Write a narrative guidance with clear, actionable instructions (e.g., "Start by presenting X, then describe Y using Figure 1").
-    4. After all topics are created, define the subsection's flow, listing the topic titles in logical order, separated by " -> ".
 
     **Guidelines**:
     - Maintain an objective and descriptive tone.
@@ -97,6 +97,7 @@ structure_results_outline:
     **Restrictions**:
     - Do not alter topic titles or their rhetorical purpose once created.
     - Do not infer meaning beyond the provided summary.
+    - Do not invent new data. Every element included in the outline must be traceble to the original research.
 
     **Success Criteria**:
     - Produces a full outline with clearly defined topics under the "Results" subsection.
@@ -106,7 +107,6 @@ structure_results_outline:
   expected_output: >
     A structured outline for the "Results" subsection to guide the Writer Agent in producing a detailed, objective narrative. The output must include:
     - `subsection_name`: Set to "Results"
-    - `subsection_flow`: A string listing the ordered `topic` titles, separated by " -> "
     - `discussion_topics`: A list of 3-5 items, each containing:
       - `topic`: Concise title of the finding
       - `rhetorical_purpose`: Always "Present findings"
@@ -218,14 +218,13 @@ structure_discussion_outline:
       3. For each topic:
         - Create `topic`: concise title (e.g., "Comparison with Previous Studies").
         - Define `rhetorical_purpose` (e.g., "Compare findings", "Discuss implications").
-        - Write `topic_description`: summary of focus and key points.
+        - Write `topic_description`: summary of the topic's focus and key points.
         - Include up to 1 `visual_element` from summary with metadata:
           `identifier`, `name`, `description`, `source`, `role_in_topic`.
         - Include up to 1 `numerical_result` with metadata:
           `verbatim_value`, `context_description`, `associated_visual`.
         - Write `narrative_guidance`: clear, actionable instruction
           (e.g., "Start by restating finding, then compare to Smith et al. using Figure 1").
-      4. Build `subsection_flow`: string with topic titles in order, separated by " -> ".
 
     guidelines:
       - Use present tense for interpretive verbs, past tense for results.
@@ -237,6 +236,7 @@ structure_discussion_outline:
       - Do not modify extracted topic titles or rhetorical purposes.
       - Do not assume a Methods section or invent new data.
       - Do not include long narrative; guidance only.
+      - Do not invent new data. Every element included in the outline must be traceble to the original research.
 
     success_criteria:
       - Returns a JSON with:
@@ -254,7 +254,6 @@ structure_discussion_outline:
     ```json
     {
       "subsection_name": "Discussion",
-      "subsection_flow": "Topic1 -> Topic2 -> Topic3",
       "discussion_topics": [
         {
           "topic": "Topic1",

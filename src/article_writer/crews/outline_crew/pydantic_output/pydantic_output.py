@@ -19,26 +19,24 @@ class SubSectionTitle(str, Enum):
 
 class NumericalResult(BaseModel):
     verbatim_value: str = Field(description="Exact numerical result to be included verbatim (e.g., 'p < 0.05')")
-    context_description: str = Field(description="Explanation of the result's significance or context")
+    role_in_topic: str = Field(description="Explanation of the result's significance or context")
     associated_visual: str = Field(
         default="None",
         description="Identifier of the associated visual (e.g., 'Figure 1')"
     )
 
 class VisualElement(BaseModel):
-    identifier: str = Field(description="Unique identifier (e.g., 'Figure 1', 'Table 2')")
-    name: str = Field(description="Short name or title of the visual")
-    description: str = Field(description="Detailed explanation of the visual's content and context")
-    source: Optional[str] = Field(default=None, description="Source (e.g., 'Author, 2023')")
+    name: str = Field(description="Full  name or title of the visual, including identifier")
     role_in_topic: str = Field(
         description="Role of the visual in the topic (e.g., 'summarizes data', 'illustrates trend')"
     )
 
 class DiscussionTopic(BaseModel):
+    topic: str = Field(description="Description of the topic to be discussed")
     rhetorical_purpose: RhetoricalPurpose = Field(
         description="Rhetorical purpose of the topic (e.g., 'present_finding' for Results)"
     )
-    topic: str = Field(description="Description of the topic to be discussed")
+    topic_description: str = Field(description="summary of the topic's focus and key points.")
     visual_elements: List[VisualElement] = Field(
         default=[],
         description="Visual elements relevant to the topic"

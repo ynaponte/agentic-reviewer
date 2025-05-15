@@ -56,10 +56,10 @@ class RDResearchCrew():
         temperature=0.4
     )
     writer_llm = LLM(
-        model="ollama/qwen2.5:7b-instruct",
+        model="ollama/qwen2.5:3b-instruct-q6_K",
         base_url="http://localhost:11434",
         timeout=1800.0,
-        max_tokens=128000,
+        max_tokens=32000,
         temperature=0.6
     )
     _should_execute_ve_research = True
@@ -82,7 +82,15 @@ class RDResearchCrew():
             verbose=True,
             memory=True
         )
-    
+
+    @agent
+    def scientific_data_structurer(self) -> Agent:
+        return Agent(
+            config=self.agents_config['scientific_data_structurer'],
+            llm=self.researcher_llm,
+            verbose=True,
+        )
+
     @agent
     def technical_writer(self) -> Agent:
         return Agent(

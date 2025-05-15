@@ -129,7 +129,6 @@ class ArticleWriterFlow(Flow[ArticleWriterState]):
 
     @listen(start_flow)
     def generate_res_and_disc_outlines(self):
-      return
       draft_report = self.articles_db.search_doc_by_meta(
           source='Relatorio.pdf', metadata_only=False)
       outcrew_output = OutlineCrew().crew().kickoff(
@@ -139,7 +138,7 @@ class ArticleWriterFlow(Flow[ArticleWriterState]):
       )
       self.state.results_discussion_outline = outcrew_output
 
-    @listen(generate_res_and_disc_outlines)
+
     def dev_final_editing(self):
       section_and_topics = {
          'Results': [
@@ -230,12 +229,13 @@ class ArticleWriterFlow(Flow[ArticleWriterState]):
       
       print(final_edit_outputs)
 
-    
+    @listen(generate_res_and_disc_outlines)
     async def res_and_disc_chapter_generation(self):
       # Função para chamada assincrona da crew de escrita dos tópicos
       async def acall_write_topic_crew(
         section_title, 
         topic, 
+        topic_description,
         visual_elements_to_contextualize, 
         numerical_results_to_include,
         rhetorical_purpose,
@@ -246,6 +246,7 @@ class ArticleWriterFlow(Flow[ArticleWriterState]):
           inputs={
             "section_title": section_title,
             "discussion_topic": topic,
+            "topic_description": topic_description,
             "visual_elements_to_contextualize": visual_elements_to_contextualize,
             "numerical_results_to_include": numerical_results_to_include,
             "rhetorical_purpose": rhetorical_purpose,
@@ -278,9 +279,7 @@ class ArticleWriterFlow(Flow[ArticleWriterState]):
         for disc_topic in subsection['discussion_topics']:
           visual_elements_to_contextualize = "\n".join([
             (
-              f"- name: {element['identifier']} {element['name']}; "
-              f"description: {element['description']}; "
-              f"role_in_topic: {element['role_in_topic']}"
+              f"- name: {element['name']}; role_in_topic: {element['role_in_topic']}"
             )
             for element in disc_topic.get('visual_elements', [])
           ])
@@ -290,8 +289,8 @@ class ArticleWriterFlow(Flow[ArticleWriterState]):
           visual_elements_to_retrive[subsection['subsection_name']] += visual_elements_to_contextualize + "\n"
           numerical_results_to_include = "\n".join([
             (
-               f'- value: {result['verbatim_value']}; '
-               f'context: {result["context_description"]}; '
+               f'- verbatim value: {result['verbatim_value']}; '
+               f'role_in_topic: {result["role_in_topic"]}; '
                f'associated visual: {result["associated_visual"]}'
             ) 
             for result in disc_topic.get('numerical_results', [])
@@ -300,7 +299,8 @@ class ArticleWriterFlow(Flow[ArticleWriterState]):
             asyncio.create_task(
               acall_write_topic_crew(
                   subsection['subsection_name'], 
-                  disc_topic['topic'], 
+                  disc_topic['topic'],
+                  disc_topic['topic_description'],
                   visual_elements_to_contextualize, 
                   numerical_results_to_include,
                   disc_topic['rhetorical_purpose'],
