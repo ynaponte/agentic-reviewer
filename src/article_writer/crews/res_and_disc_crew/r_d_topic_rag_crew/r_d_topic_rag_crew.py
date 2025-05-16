@@ -44,7 +44,7 @@ class TopicResearchOutput(BaseModel):
 
 
 @CrewBase
-class RDResearchCrew():
+class RDTopicRagCrew():
 
     agents_config = 'config/agents.yaml'
     tasks_config = 'config/tasks.yaml'

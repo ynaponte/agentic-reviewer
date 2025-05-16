@@ -2,8 +2,9 @@ from pydantic import BaseModel
 from crewai.flow import Flow, listen, start
 from .crews.doc_chunk_review_crew import ChunkReviewCrew
 from .crews.report_writer_crew.report_writer_crew import ReportWriterCrew
-from .crews.outline_crew.outline_crew import OutlineCrew
-from .crews.res_and_disc_research_crew.rdresearch_crew import RDResearchCrew
+from .crews.res_and_disc_crew.r_d_outline_crew.r_d_outline_crew import RDOutlineCrew
+from .crews.res_and_disc_crew.r_d_topic_rag_crew.r_d_topic_rag_crew import RDTopicRagCrew
+from .crews.conclusion_crew.c_outline_crew.c_outline_crew import COutlineCrew
 from .crews.final_editing_crew.final_editing_crew import FinalEditingCrew
 from pydantic import BaseModel  
 from ..tools import QueryArticlesTool
@@ -26,6 +27,7 @@ class ChunkReview(BaseModel):
 
 class ArticleWriterState(BaseModel):
     drafts_documents: List[str] = ['Resultado1.pdf']
+    draft_report: str = ""
     full_analysis: str = ""
     technical_elements: str = ""
     results_discussion_outline: dict = {}
@@ -46,6 +48,9 @@ class ArticleWriterFlow(Flow[ArticleWriterState]):
         self.articles_db.initialize_db(
             persist_directory="article_vectorstore",
             collection_name="flow_test_collection"
+        )
+        self.state.draft_report = self.articles_db.search_doc_by_meta(
+          source='Relatorio.pdf', metadata_only=False
         )
         results_discussion_outline = """
 {
@@ -128,16 +133,26 @@ class ArticleWriterFlow(Flow[ArticleWriterState]):
         """
 
     @listen(start_flow)
-    def generate_res_and_disc_outlines(self):
-      draft_report = self.articles_db.search_doc_by_meta(
-          source='Relatorio.pdf', metadata_only=False)
-      outcrew_output = OutlineCrew().crew().kickoff(
+    def generate_res_and_disc_outlines(self): 
+      rd_outcrew_output = RDOutlineCrew().crew().kickoff(
           inputs={
-              "report": draft_report['Relatorio.pdf']['text_content'],
+            "report": self.state.draft_report['Relatorio.pdf']['text_content'],
           }
       )
-      self.state.results_discussion_outline = outcrew_output
+      self.state.results_discussion_outline = rd_outcrew_output
 
+    @listen(generate_res_and_disc_outlines)
+    def generate_conclusion_outline(self):
+      c_outcrew_output = COutlineCrew().crew().kickoff(
+          inputs={
+            "report": self.state.draft_report['Relatorio.pdf']['text_content'],
+            "results_outline": next((
+              outline for outline in self.state.results_discussion_outline 
+              if outline['subsection_name'] == 'Results'
+            ), None)
+          }
+      )
+      self.state.conclusion_outline = c_outcrew_output
 
     def dev_final_editing(self):
       section_and_topics = {
@@ -242,7 +257,7 @@ class ArticleWriterFlow(Flow[ArticleWriterState]):
         narrative_guidance,
         subsection_flow
       ):
-        reasearch_crew_output = await RDResearchCrew().crew().kickoff_async(
+        reasearch_crew_output = await RDTopicRagCrew().crew().kickoff_async(
           inputs={
             "section_title": section_title,
             "discussion_topic": topic,

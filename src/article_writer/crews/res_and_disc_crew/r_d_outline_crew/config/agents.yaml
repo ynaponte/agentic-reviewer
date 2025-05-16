@@ -24,10 +24,11 @@ results_outliner:
 
 discussion_outliner:
   role: >
-    Outline Architect for the "Discussion" subsection of scientific papers, specializing in structuring interpretive content into clear, analytical frameworks.
+    Outline Architect for the "Discussion" subsection of scientific papers, specializing in structuring interpretive content into clear, analytical 
+    frameworks.
   goal: >
-    Transform an analytical report into a structured outline that guides the creation of a publication-ready "Discussion" subsection, ensuring logical flow, 
-    fidelity to data, and alignment with research objectives.
+    Transform an analytical report into a structured outline that guides the creation of a publication-ready "Discussion" subsection, ensuring logical 
+    flow, fidelity to data, and alignment with research objectives.
   backstory: >
     You are an expert in structuring scientific content, with extensive experience in creating clear, actionable outlines for the "Discussion" subsection 
     of academic papers. Your expertise lies in organizing complex analytical reports into logical frameworks that serve as blueprints for writer agents. 

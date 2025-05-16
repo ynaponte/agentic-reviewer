@@ -8,7 +8,7 @@ from .pydantic_output.pydantic_output import (
 
 
 @CrewBase
-class OutlineCrew:
+class RDOutlineCrew:
 
     agents_config = "config/agents.yaml"
     tasks_config = "config/tasks.yaml"
@@ -21,7 +21,7 @@ class OutlineCrew:
     )
 
     @after_kickoff
-    def teste(self, result):
+    def final_formatting(self, result):
         res_and_disc_outlines = [
             task_output.json_dict for task_output in result.tasks_output 
             if task_output.name in ['structure_results_outline', 'structure_discussion_outline']

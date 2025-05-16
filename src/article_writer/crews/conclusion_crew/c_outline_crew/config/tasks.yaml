@@ -1,0 +1,141 @@
+analyze_report_for_conclusion:
+  description: >
+    **Analytical Report**:
+
+    {report}
+
+    **Results subsection Outline**:
+
+    {results_outline}
+
+    Analyze the provided analytical report and the "Results" subsection outline to extract key interpretive content, implications, limitations, and 
+    contributions relevant for generating a structured outline for the "Conclusion" section of a scientific paper. Focus on sections 3 (Critical 
+    Interpretation), 4 (Evaluation of Study Limitations), and 5 (Contributions) of the report, and use the Results outline to ground interpretations 
+    and identify key findings to be summarized in the conclusion.
+
+    **Inputs**:
+    - Analytical report with the following five sections:
+      1. Apresentação Clara dos Elementos Visuais (Presentation of Visual Elements)
+      2. Análise dos Resultados (Analysis of Results)
+      3. Interpretação Crítica (Critical Interpretation)
+      4. Avaliação das Limitações do Estudo (Evaluation of Study Limitations)
+      5. Contribuições (Contributions)
+    - Structured outline from the "Results" subsection (JSON format), containing the key:
+      - `subsection_name`: with the name of the subsection (e.g., "Results")
+      - `discussion_topics`: A list, where each item is an object representing a discussion topic. Each object, i.e, topic includes the keys `topic`,
+        `rhetorical_purpose`, `topic_description`, `topic_description`, `visual_elements`, `numerical_results`, and `narrative_guidance`. The content 
+        of these keys are detailed below:
+          - `topic`: Concise title of a finding
+          - `rhetorical_purpose`: The topic's rhetorical purpose (e.g., "Present findings")
+          - `topic_description`: Brief summary of the finding and its context
+          - `visual_elements`: A list of visual elements to be included in the topic's text, each with metadata. Can be an empty list.
+          - `numerical_results`: A list of numerical results to be included in the topic's text, detailing verbatim value, role in topic and 
+            associated visual
+          - `narrative_guidance`: Clear instructions to guide the wrtting process.
+
+    **Execution Steps**:
+    1. Review sections 3, 4, and 5 of the **Analytical Report** to identify:
+      - Literature comparisons or gaps (section 3).
+      - Implications (section 5).
+      - Limitations (section 4).
+      - Future research directions (sections 4 and 5).
+    2. Review the "Results" subsection structured outline to extract:
+      - Key findings for summarization.
+    3. Write a structured text summary with:
+      - **Key Findings Summary**: A concise restatement of the main findings from the Results outline.
+      - **Major Implications/Contributions**: Key impacts from section 5.
+      - **Key Limitations**: Constraints from section 4.
+      - **Future Research Highlights**: Proposed next steps from sections 4 and 5.
+
+    **Guidelines**:
+    - **Key Findings Summary**: Concisely restate 2-3 main findings from the Results outline.
+    - **Major Implications/Contributions**: Extract 1-2 significant implications or contributions from section 5.
+    - **Key Limitations**: Identify 1-2 important limitations from section 4.
+    - **Future Research Highlights**: Extract 1-2 key future directions from sections 4 and 5.
+    - Maintain an objective and summary-focused tone.
+
+    **Restrictions**:
+    - Use only sections 3, 4, and 5 for interpretive content, limitations, and future directions.
+    - Do not invent data or add external information.
+    - Do not perform detailed interpretations or comparisons to literature; focus on summarizing implications and contributions.
+
+    **Success Criteria**:
+    - Delivers a structured text summary with key findings summary, major implications/contributions, key limitations, and future research highlights.
+    - Grounds content in Results outline findings and report sections 3, 4, and 5.
+    - Suitable for generation of a structured outline for the "Conclusion" section.
+
+  expected_output: >
+    A structured text summary, formatted as:
+    **Conclusion Analysis Summary**:
+    - **Key Findings Summary**: Concise restatement of 2-3 main findings from Results outline.
+    - **Major Implications/Contributions**: Description of 1-2 significant impacts/contributions.
+    - **Key Limitations**: Description of 1-2 important constraints.
+    - **Future Research Highlights**: Proposed 1-2 key next steps.
+
+  agent: report_analyst
+
+structure_conclusion_outline:
+  description: >
+    "Results" subsection outline:
+
+    {results_outline}
+
+    Convert the structured conclusion analysis summary and the "Results" subsection outline into a full outline for the "Conclusion" section of a 
+    scientific paper. This task extracts key summary points (3-5) from the analysis summary and the Results outline and then structures them logically 
+    for the conclusion section, guiding a Writer Agent to produce a concise narrative that summarizes findings, highlights implications, mentions 
+    limitations, and suggests future work.
+
+    **Inputs**:
+    - Structured text summary from `analyze_report_for_conclusion`, containing:
+      - Key Findings Summary
+      - Major Implications/Contributions
+      - Key Limitations
+      - Future Research Highlights
+    - Structured outline from the "Results" subsection (JSON format), containing:
+      - `subsection_name`: "Results"
+      - `discussion_topics`: List of topics with findings, etc.
+
+    **Execution Steps**:
+    1. Parse the summary from `analyze_report_for_conclusion` to identify key findings summary, implications, limitations, and future directions.
+    2. Parse the "Results" subsection outline to ensure consistency in mentioning key findings.
+    3. Select 3-5 distinct points for the conclusion outline based on the analyzed content, ensuring a logical flow typically found in a conclusion (e.g., start with findings summary, follow with implications/contributions, mention limitations, end with future work).
+    4. For each conclusion point:
+      - Create `topic`: concise title (e.g., "Summary of Key Findings").
+      - Define `rhetorical_purpose` (e.g., "Summarize results", "Highlight contributions", "Acknowledge limitations", "Propose future research").
+      - Write `topic_description`: brief summary of the point's focus.
+      - Write `narrative_guidance`: clear, actionable instruction for the writer (e.g., "Begin by summarizing the main findings as presented in the Results section").
+
+    **Guidelines**:
+    - Maintain a concise and concluding tone.
+    - Ensure logical flow of points within the conclusion outline.
+    - Base content solely on the analysis summary and Results outline; do not introduce external information.
+    - Limit to 3-5 points for conciseness.
+
+    **Restrictions**:
+    - Do not perform detailed interpretations or comparisons to literature.
+    - Do not invent new data or claims.
+    - Do not include long narrative; guidance only.
+
+    **Success Criteria**:
+    - Returns a JSON with:
+      - `subsection_name`: "Conclusion"
+      - `conclusion_topics`: list of 3-5 items, each with:
+        - `topic`
+        - `rhetorical_purpose`
+        - `topic_description`
+        - `narrative_guidance`
+
+  expected_output: >
+    A structured outline for the "Results" subsection to guide the Writer Agent in producing a detailed, objective narrative. The output must include:
+    - `subsection_name`: Set to "Results"
+    - `discussion_topics`: A list of 3-5 items, each containing:
+      - `topic`: Concise title of the finding
+      - `rhetorical_purpose`: Always "Present findings"
+      - `topic_description`: Brief summary of the finding and its context
+      - `visual_elements`: Up to one element with metadata
+      - `numerical_results`: Up to one result with metadata
+      - `narrative_guidance`: Clear instructions to guide the Writer Agent
+
+  agent: results_outliner
+  context: [analyze_report_for_conclusion]
+
