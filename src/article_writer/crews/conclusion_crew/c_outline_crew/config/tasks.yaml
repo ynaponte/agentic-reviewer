@@ -136,6 +136,6 @@ structure_conclusion_outline:
       - `numerical_results`: Up to one result with metadata
       - `narrative_guidance`: Clear instructions to guide the Writer Agent
 
-  agent: results_outliner
+  agent: conclusion_outliner
   context: [analyze_report_for_conclusion]
 
