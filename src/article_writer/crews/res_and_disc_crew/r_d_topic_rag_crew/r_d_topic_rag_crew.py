@@ -16,7 +16,7 @@ class TopicTextContent(BaseModel):
     topic: str = Field(description="Exact name of the topic that writing was requested upon")
     text: str = Field(
         description=(
-            "Full multi-paragraph scientific text about the topic, with 1000+ words, "
+            "Full multi-paragraph scientific text about the topic, with 500+ words, "
             "written in brazilian portuguese"
         )
     )
@@ -82,15 +82,7 @@ class RDTopicRagCrew():
             verbose=True,
             memory=True
         )
-
-    @agent
-    def scientific_data_structurer(self) -> Agent:
-        return Agent(
-            config=self.agents_config['scientific_data_structurer'],
-            llm=self.researcher_llm,
-            verbose=True,
-        )
-
+    
     @agent
     def technical_writer(self) -> Agent:
         return Agent(

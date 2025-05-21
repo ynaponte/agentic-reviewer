@@ -1,10 +1,7 @@
 from crewai import Agent, Crew, Task, Process
 from crewai.project import CrewBase, agent, crew, task, after_kickoff
 from crewai.llm import LLM
-from .pydantic_output.pydantic_output import (
-    RDSubSectionOutline,
-    ConclusionSectionOutline
-)
+from .pydantic_output.pydantic_output import RDSubSectionOutline
 
 
 @CrewBase
