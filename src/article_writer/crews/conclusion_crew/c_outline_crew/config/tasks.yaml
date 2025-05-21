@@ -4,14 +4,10 @@ analyze_report_for_conclusion:
 
     {report}
 
-    **Results subsection Outline**:
-
-    {results_outline}
-
-    Analyze the provided analytical report and the "Results" subsection outline to extract key interpretive content, implications, limitations, and 
-    contributions relevant for generating a structured outline for the "Conclusion" section of a scientific paper. Focus on sections 3 (Critical 
-    Interpretation), 4 (Evaluation of Study Limitations), and 5 (Contributions) of the report, and use the Results outline to ground interpretations 
-    and identify key findings to be summarized in the conclusion.
+    Analyze the provided analytical report to extract key interpretive content, implications, limitations, and
+    contributions relevant for generating a structured outline for the "Conclusion" section of a scientific paper.
+    Focus exclusively on sections 3 (Critical Interpretation), 4 (Evaluation of Study Limitations), and 5 (Contributions)
+    of the report to identify insights directly supporting the study's final statements.
 
     **Inputs**:
     - Analytical report with the following five sections:
@@ -20,101 +16,143 @@ analyze_report_for_conclusion:
       3. Interpretação Crítica (Critical Interpretation)
       4. Avaliação das Limitações do Estudo (Evaluation of Study Limitations)
       5. Contribuições (Contributions)
-    - Structured outline from the "Results" subsection (JSON format), containing the key:
-      - `subsection_name`: with the name of the subsection (e.g., "Results")
-      - `discussion_topics`: A list, where each item is an object representing a discussion topic. Each object, i.e, topic includes the keys `topic`,
-        `rhetorical_purpose`, `topic_description`, `topic_description`, `visual_elements`, `numerical_results`, and `narrative_guidance`. The content 
-        of these keys are detailed below:
-          - `topic`: Concise title of a finding
-          - `rhetorical_purpose`: The topic's rhetorical purpose (e.g., "Present findings")
-          - `topic_description`: Brief summary of the finding and its context
-          - `visual_elements`: A list of visual elements to be included in the topic's text, each with metadata. Can be an empty list.
-          - `numerical_results`: A list of numerical results to be included in the topic's text, detailing verbatim value, role in topic and 
-            associated visual
-          - `narrative_guidance`: Clear instructions to guide the wrtting process.
 
     **Execution Steps**:
     1. Review sections 3, 4, and 5 of the **Analytical Report** to identify:
-      - Literature comparisons or gaps (section 3).
-      - Implications (section 5).
-      - Limitations (section 4).
+      - Interpretations and literature comparisons or gaps (section 3) that inform the study's implications.
+      - Major implications and contributions (section 5).
+      - Key limitations (section 4).
       - Future research directions (sections 4 and 5).
-    2. Review the "Results" subsection structured outline to extract:
-      - Key findings for summarization.
-    3. Write a structured text summary with:
-      - **Key Findings Summary**: A concise restatement of the main findings from the Results outline.
-      - **Major Implications/Contributions**: Key impacts from section 5.
-      - **Key Limitations**: Constraints from section 4.
-      - **Future Research Highlights**: Proposed next steps from sections 4 and 5.
+    2. Write a structured text summary in Markdown with:
+      - **Major Implications/Contributions**: A concise description of 1-2 significant impacts or contributions identified in section 5.
+      - **Key Limitations**: A concise description of 1-2 important constraints identified in section 4.
+      - **Future Research Highlights**: Proposed 1-2 key next steps or directions for research identified in sections 4 and 5.
+      - **Interpretive Insights for Conclusion**: Summarize key interpretive points from section 3 that provide overarching context for the study's conclusions, ensuring it complements the contributions.
 
     **Guidelines**:
-    - **Key Findings Summary**: Concisely restate 2-3 main findings from the Results outline.
-    - **Major Implications/Contributions**: Extract 1-2 significant implications or contributions from section 5.
-    - **Key Limitations**: Identify 1-2 important limitations from section 4.
-    - **Future Research Highlights**: Extract 1-2 key future directions from sections 4 and 5.
-    - Maintain an objective and summary-focused tone.
+    - **Focus**: Exclusively on content from sections 3, 4, and 5 of the analytical report.
+    - **Conciseness**: Summarize points effectively for a conclusion.
+    - **Objectivity**: Maintain an objective and summary-focused tone.
+    - **Traceability**: All extracted content must be directly verifiable within the specified sections of the analytical report.
 
     **Restrictions**:
-    - Use only sections 3, 4, and 5 for interpretive content, limitations, and future directions.
     - Do not invent data or add external information.
-    - Do not perform detailed interpretations or comparisons to literature; focus on summarizing implications and contributions.
+    - Do not perform detailed interpretations or comparisons to literature; focus on summarizing implications, contributions, limitations, and future directions as stated in the report.
+    - Do not include content from "Results" outline or any other generated sections.
 
     **Success Criteria**:
-    - Delivers a structured text summary with key findings summary, major implications/contributions, key limitations, and future research highlights.
-    - Grounds content in Results outline findings and report sections 3, 4, and 5.
+    - Delivers a structured text summary in Markdown format with major implications/contributions, key limitations, future research highlights, and interpretive insights for conclusion.
+    - Grounds content solely in report sections 3, 4, and 5.
     - Suitable for generation of a structured outline for the "Conclusion" section.
-
   expected_output: >
-    A structured text summary, formatted as:
-    **Conclusion Analysis Summary**:
-    - **Key Findings Summary**: Concise restatement of 2-3 main findings from Results outline.
-    - **Major Implications/Contributions**: Description of 1-2 significant impacts/contributions.
-    - **Key Limitations**: Description of 1-2 important constraints.
-    - **Future Research Highlights**: Proposed 1-2 key next steps.
+    ```markdown
+    **Conclusion Analysis Summary from Report**:
 
+    - **Major Implications/Contributions**: Descrição concisa de 1-2 impactos/contribuições significativas extraídas da seção 5 do relatório.
+    - **Key Limitations**: Descrição concisa de 1-2 limitações importantes extraídas da seção 4 do relatório.
+    - **Future Research Highlights**: Propostas concisas de 1-2 próximos passos ou direções de pesquisa extraídas das seções 4 e 5 do relatório.
+    - **Interpretive Insights for Conclusion**: Resumo conciso de pontos interpretativos chave da seção 3 do relatório que fornecem contexto geral para as conclusões do estudo.
+    ```
+  agent: report_analyst
+
+analyze_generated_sections_for_conclusion_context:
+  description: >
+    **Generated Section Contents:**
+    {generated_sections_content}
+
+    Analyze the provided content from previously generated sections (Results and Discussion) to extract and summarize
+    key interpretive content, implications, limitations, and contributions that are essential for shaping the
+    "Conclusion" section. The goal is to identify how specific findings were interpreted, discussed, or how their
+    implications were elaborated in relation to the study's overall message. This task ensures the conclusion
+    is consistent with the preceding detailed sections.
+
+    **Input Detailing**:
+    - **Generated Section Contents**: A JSON list containing objects for each previously generated section. Each object has:
+      - `section_name` (string): The name of the section (e.g., "Resultados e Discussão").
+      - `topics_content` (list of objects): A list of objects, each containing:
+        - `topic` (string): The name of the specific topic.
+        - `text_content` (string): The generated text content for that topic.
+
+    **Execution Steps**:
+      1. Iterate through each `section_name` and its `topics_content` in `generated_sections_content`.
+      2. For each `topic` and its `text_content` within the "Resultados e Discussão" section:
+         - Identify any elaborated interpretations of findings.
+         - Extract discussions of implications or significance of results.
+         - Note any limitations discussed in the context of specific findings.
+         - Identify any contributions or novel aspects highlighted within the discussion of results.
+         - Pay attention to how the findings presented in the "Results" part lead to the interpretations in the "Discussion" part of the combined section.
+      3. Synthesize the identified contextual information into a structured Markdown summary. Organize by section and then by topic,
+         highlighting the most relevant interpretive and conclusive insights derived from the detailed discussion.
+
+    **Guidelines**:
+      - **Contextual Focus**: Emphasize how findings were interpreted, what their implications are, and any limitations or contributions *as discussed in the generated text*.
+      - **Traceability**: All extracted information must be directly attributable to the `text_content` of the input sections.
+      - **No Redundancy**: Avoid simply re-summarizing factual findings already covered in the `analyze_report_for_conclusion` task; focus on their *interpretation and implications*.
+      - **Clarity**: Ensure the summary clearly outlines the interpretive context provided by the generated text.
+
+    **Restrictions**:
+      - Do not invent interpretations, implications, or limitations.
+      - Do not summarize the methods; this task is about the *meaning* derived from the findings.
+      - Do not generate prose or narrative beyond structuring the summary; output must be structured Markdown.
+      - Only consider content from "Resultados e Discussão".
+
+    **Success Criteria**:
+      - Returns a Markdown formatted text containing a comprehensive and structured summary of interpretive content, implications, limitations, and contributions derived from the generated "Resultados e Discussão" section.
+      - The summary is organized by section and topic, providing specific insights into how findings were interpreted and their significance.
+  expected_output: >
+    ```markdown
+    # Contexto Interpretativo das Seções Geradas para a Conclusão
+
+    ## Resultados e Discussão
+
+    ### Tópico: Interpretação dos Dados de Eficiência
+    - **Contexto para Conclusão**: A análise da eficiência do sistema (discutida em relação à Figura X e Tabela Y) revelou que a otimização via [Método de Otimização] resultou em uma melhoria de 15% na performance, o que implica uma aplicabilidade promissora em ambientes de baixa energia. Este ponto é crucial para a conclusão, pois valida a principal contribuição do estudo.
+
+    ### Tópico: Discussão das Implicações Ambientais
+    - **Contexto para Conclusão**: As discussões sobre o baixo impacto ambiental do material [Material Z], conforme detalhado neste tópico, indicam uma contribuição significativa para o desenvolvimento sustentável de novas tecnologias. Esta implicação deverá ser salientada na conclusão como um dos principais achados do estudo.
+
+    ### Tópico: Limitações na Escalabilidade do Protótipo
+    - **Contexto para Conclusão**: A dificuldade de replicar os resultados em larga escala devido às limitações do equipamento de laboratório [Nome do Equipamento] foi explicitamente abordada. Essa limitação é fundamental para a seção de Conclusão, pois molda as direções de pesquisa futura e tempera o escopo das aplicações imediatas.
+    ```
   agent: report_analyst
 
 structure_conclusion_outline:
   description: >
-    "Results" subsection outline:
-
-    {results_outline}
-
-    Convert the structured conclusion analysis summary and the "Results" subsection outline into a full outline for the "Conclusion" section of a 
-    scientific paper. This task extracts key summary points (3-5) from the analysis summary and the Results outline and then structures them logically 
-    for the conclusion section, guiding a Writer Agent to produce a concise narrative that summarizes findings, highlights implications, mentions 
-    limitations, and suggests future work.
+    "Convert the structured conclusion analysis summary from the analytical report and the methodological/interpretive context
+    derived from generated sections into a full outline for the "Conclusion" section of a scientific paper. This task extracts
+    key summary points (3-5) from the analyzed content and then structures them logically for the conclusion section, guiding a
+    Writer Agent to produce a concise narrative that summarizes findings, highlights implications, mentions limitations,
+    and suggests future work.
 
     **Inputs**:
-    - Structured text summary from `analyze_report_for_conclusion`, containing:
-      - Key Findings Summary
-      - Major Implications/Contributions
-      - Key Limitations
-      - Future Research Highlights
-    - Structured outline from the "Results" subsection (JSON format), containing:
-      - `subsection_name`: "Results"
-      - `discussion_topics`: List of topics with findings, etc.
+    - **Conclusion Analysis Summary from Report**: Structured text summary from `analyze_report_for_conclusion`.
+    - **Context from Generated Sections**: Markdown formatted text from `analyze_generated_sections_for_conclusion_context`.
 
     **Execution Steps**:
-    1. Parse the summary from `analyze_report_for_conclusion` to identify key findings summary, implications, limitations, and future directions.
-    2. Parse the "Results" subsection outline to ensure consistency in mentioning key findings.
-    3. Select 3-5 distinct points for the conclusion outline based on the analyzed content, ensuring a logical flow typically found in a conclusion (e.g., start with findings summary, follow with implications/contributions, mention limitations, end with future work).
+    1. Parse the summary from `analyze_report_for_conclusion` to identify key implications/contributions, limitations, future directions, and interpretive insights.
+    2. Parse the summary from `analyze_generated_sections_for_conclusion_context` to understand how the findings were discussed and interpreted, and how they relate to the overall message.
+    3. Synthesize the information from both inputs to identify 3-5 distinct points for the conclusion outline, ensuring a logical flow typical for a conclusion:
+        - Start with a concise synthesis of key findings (informed by the `analyze_generated_sections_for_conclusion_context`).
+        - Follow with major implications and contributions (from both inputs).
+        - Acknowledge key limitations (from both inputs).
+        - End with proposed future research (from both inputs).
     4. For each conclusion point:
-      - Create `topic`: concise title (e.g., "Summary of Key Findings").
-      - Define `rhetorical_purpose` (e.g., "Summarize results", "Highlight contributions", "Acknowledge limitations", "Propose future research").
-      - Write `topic_description`: brief summary of the point's focus.
-      - Write `narrative_guidance`: clear, actionable instruction for the writer (e.g., "Begin by summarizing the main findings as presented in the Results section").
+      - Create `topic`: concise title (e.g., "Síntese dos Principais Achados", "Implicações e Contribuições").
+      - Define `rhetorical_purpose` (e.g., "Synthesize findings", "Highlight contributions", "Acknowledge limitations", "Propose future research").
+      - Write `topic_description`: brief summary of the point's focus, integrating insights from both analysis tasks.
+      - Write `narrative_guidance`: clear, actionable instruction for the writer (e.g., "Comece sintetizando os resultados mais importantes e o que eles significam no contexto do estudo, utilizando os insights da discussão.").
 
     **Guidelines**:
     - Maintain a concise and concluding tone.
     - Ensure logical flow of points within the conclusion outline.
-    - Base content solely on the analysis summary and Results outline; do not introduce external information.
-    - Limit to 3-5 points for conciseness.
+    - Base content solely on the analysis summaries; do not introduce external information.
+    - Limit to 3-5 points for conciseness and impact.
 
     **Restrictions**:
     - Do not perform detailed interpretations or comparisons to literature.
     - Do not invent new data or claims.
     - Do not include long narrative; guidance only.
+    - The `expected_output` must be a JSON with a specific structure.
 
     **Success Criteria**:
     - Returns a JSON with:
@@ -124,18 +162,17 @@ structure_conclusion_outline:
         - `rhetorical_purpose`
         - `topic_description`
         - `narrative_guidance`
+    - The outline is comprehensive, logically structured, and directly derived from the provided analysis summaries.
 
   expected_output: >
-    A structured outline for the "Results" subsection to guide the Writer Agent in producing a detailed, objective narrative. The output must include:
-    - `subsection_name`: Set to "Results"
-    - `discussion_topics`: A list of 3-5 items, each containing:
-      - `topic`: Concise title of the finding
-      - `rhetorical_purpose`: Always "Present findings"
-      - `topic_description`: Brief summary of the finding and its context
-      - `visual_elements`: Up to one element with metadata
-      - `numerical_results`: Up to one result with metadata
-      - `narrative_guidance`: Clear instructions to guide the Writer Agent
+    A structured outline for the "Conclusion" section to guide the Writer Agent in producing a detailed, objective narrative. The output must include:
+    - `subsection_name`: Set to "Conclusion"
+    - `conclusion_topics`: A list of 3-5 items, each containing:
+      - `topic`: Concise title of the conclusion point.
+      - `rhetorical_purpose`: The topic's rhetorical purpose (e.g., "Synthesize findings", "Highlight contributions").
+      - `topic_description`: Brief summary of the point's focus and key information.
+      - `narrative_guidance`: Clear instructions to guide the Writer Agent.
 
   agent: conclusion_outliner
-  context: [analyze_report_for_conclusion]
+  context: [analyze_report_for_conclusion, analyze_generated_sections_for_conclusion_context]
 

@@ -1,8 +1,8 @@
 from crewai import Agent, Crew, Task, Process
-from crewai.project import CrewBase, agent, crew, task, after_kickoff
+from crewai.project import CrewBase, agent, crew, task, after_kickoff, before_kickoff
 from crewai.llm import LLM
 from .pydantic_output.pydantic_output import ConclusionSectionOutline
-
+import json
 
 @CrewBase
 class COutlineCrew:
@@ -16,6 +16,11 @@ class COutlineCrew:
         max_tokens=128000,
         temperature=0.5
     )
+    
+    @before_kickoff
+    def input_formatting(self, inputs):
+        inputs['generated_sections_content'] = json.dumps(inputs['generated_sections_content'], indent=2)
+        return inputs
 
     @after_kickoff
     def final_formatting(self, result):
@@ -43,6 +48,12 @@ class COutlineCrew:
     def analyze_report_for_conclusion(self) -> Task:
         return Task(
             config=self.tasks_config['analyze_report_for_conclusion'],
+        )
+    
+    @task
+    def analyze_generated_sections_for_conclusion_context(self) -> Task:
+        return Task(
+            config=self.tasks_config['analyze_generated_sections_for_conclusion_context'],
         )
     
     @task

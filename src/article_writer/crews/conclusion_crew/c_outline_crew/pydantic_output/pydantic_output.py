@@ -13,7 +13,7 @@ class RhetoricalPurpose(str, Enum):
     PROVIDE_PERSPECTIVE = "Provide perspective"
     FINAL_REMARK = "Final remark"
 
-class SubSectionTitle(str, Enum):
+class SectionTitle(str, Enum):
     CONCLUSION = "Conclusion"
 
 class DiscussionTopic(BaseModel):
@@ -27,7 +27,7 @@ class DiscussionTopic(BaseModel):
     )
 
 class ConclusionSectionOutline(BaseModel):
-    subsection_name: SubSectionTitle = Field(
+    section_name: SectionTitle = Field(
         description="Name of the subsection (e.g., 'Results', 'Discussion'), indicating the subsection's purpose"
     )
     discussion_topics: List[DiscussionTopic] = Field(
