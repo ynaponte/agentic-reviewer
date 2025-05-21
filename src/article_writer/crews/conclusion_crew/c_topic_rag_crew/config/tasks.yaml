@@ -1,0 +1,147 @@
+conclusion_topic_reference_research:
+  description: >
+    Do research about "{conclusion_topic}" which is a conclusion topic for the "Conclusion" section of a scientific paper.
+    This topic has the role of {topic_description}. To do so, use your tool `QueryArticlesTool` to generate evidence-based insights 
+    focused on the argumentative foundation and significance, drawing from reference articles.
+
+    **Execution Steps**:
+      1. **Construct Search Query**:
+         - Use "{conclusion_topic}" and "{topic_description}" to generate a search query aligned with the topic's rhetorical purpose,
+           focusing on its broader scientific context, significance, and theoretical underpinnings.
+      2. **Configure `QueryArticlesTool`**:
+         - Set `doc_type` to ['reference'].
+         - Set `top_k` to 5 initially.
+      3. **Execute Search**:
+         - Run `QueryArticlesTool` with the constructed search query.
+      4. **Analyze Results**:
+         - Analyze the returned results from the execution of `QueryArticlesTool`
+           - If the results are insufficient, repeated, or with low relevance to the topic:
+             - Increase `top_k` to 10.
+             - Rerun `QueryArticlesTool` with the updated `top_k`, using the same search query as before.  
+           - Else, skip to step 5.         
+      5. **Synthesize Insights**:
+         - Write a 100-200 word text in Brazilian Portuguese, ensuring:
+           - Alignment with the topic's rhetorical purpose: {rhetorical_purpose}.
+           - Focus on the argumentative foundation, broader implications, and scientific significance derived from existing literature.
+           - Provides context for understanding the topic's importance in the field.
+
+    **Guidelines**:
+      - **Insights**: Focus on general scientific principles, existing theories, and the broader context that supports the topic's 
+        significance and argumentative role.
+      - **Evidence-Based**: Use only `QueryArticlesTool` results from 'reference' documents.
+
+    **Restrictions**:
+      - Search only in `doc_type`: ['reference'].
+      - Do not invent or modify information.
+      - Do not discuss author's specific experimental results or internal report details; focus on general principles.
+
+    **Success Criteria**:
+      - `QueryArticlesTool` returns relevant results from 'reference' documents.
+      - Output is a 100-200 word text in Brazilian Portuguese, providing key insights on the argumentative foundation and significance.
+
+  expected_output: >
+    A structured, evidence-based text, of 150-300 words in length, in Brazilian Portuguese, aligned with rhetorical purpose, providing key Insights
+    for writing about "{conclusion_topic}", formatted in markdown, without ```.
+  agent: topic_researcher
+
+conclusion_topic_report_draft_research:
+  description: >
+    Do research about "{conclusion_topic}" which is a conclusion topic for the "Conclusion" section of a scientific paper.
+    This topic has the role of {topic_description}. To do so, use your tool `QueryArticlesTool` to generate
+    evidence-based insights focused on the author's specific results and context, drawing from
+    the internal report and draft documents.
+
+    **Execution Steps**:
+      1. **Construct Search Query**:
+         - Use "{conclusion_topic}" and "{topic_description}" to generate a search query aligned with the topic's rhetorical purpose,
+           focusing on the study's specific outcomes, findings, and the internal context of the research.
+      2. **Configure `QueryArticlesTool`**:
+         - Set `doc_type` to ['report', 'draft'].
+         - Set `top_k` to 5 initially.
+      3. **Execute Search**:
+         - Run `QueryArticlesTool` with the `search_query`.
+         - If results are insufficient, increase `top_k` to 10, and retry.
+      4. **Synthesize Insights**:
+         - Write a 100-200 word text in Brazilian Portuguese, ensuring:
+           - Alignment with the topic's rhetorical purpose: {rhetorical_purpose}.
+           - Focus on insights directly related to the author's specific experimental results, methodologies, and internal context.
+           - Provides concrete details and findings from the study itself.
+
+    **Guidelines**:
+      - **Insights**: Focus on the specific results obtained by the author, the direct implications within the study's context, and how the study's findings directly support the conclusion point.
+      - **Evidence-Based**: Use only `QueryArticlesTool` results from 'report' and 'draft' documents.
+
+    **Restrictions**:
+      - Search only in `doc_type`: ['report', 'draft'].
+      - Do not invent or modify information.
+      - `top_k` must be ≥5 and ≤20.
+      - Do not introduce broad theoretical discussions or external literature comparisons; focus on the study's internal context.
+
+    **Success Criteria**:
+      - `QueryArticlesTool` returns relevant results from 'report' and 'draft' documents.
+      - Output is a 100-200 word text in Brazilian Portuguese, providing key insights on the author's results and context.
+  expected_output: >
+    A structured, evidence-based text, of 100-200 words in length, in Brazilian Portuguese, aligned with rhetorical purpose,
+    providing key Insights on the author's results and context for "{conclusion_topic}", formatted in markdown, without ```.
+  agent: topic_researcher
+
+write_conclusion_topic_text:
+  description: >
+    Write a detailed, argumentative, multi-paragraph text, in formal, precise, and academic Brazilian Portuguese, about the topic "{conclusion_topic}" for
+    the "Conclusion" section of a scientific paper, with the rhetorical purpose of {rhetorical_purpose}.
+    Base the text on insights from both `conclusion_topic_reference_research` and `conclusion_topic_report_draft_research`.
+    Structure the text by {narrative_guidance}, and shape the argument according to it's rhetorical purpose (e.g., synthesizing findings, discussing 
+    implications).
+
+    The text must be scientifically sound, coherent, and impactful, enabling readers to grasp the study's overall significance, its main contributions, 
+    and its implications for the field.
+
+    **Context on the insights**:
+    - **Research Inputs**:
+      - `conclusion_topic_reference_research`: Insights providing the argumentative foundation, broader significance, and theoretical context for the topic.
+      - `conclusion_topic_report_draft_research`: Insights providing specific context on the author's results, findings, and internal details of the 
+        study that support the topic.
+
+    **Execution steps:**
+    1. Review `conclusion_topic_reference_research` to understand the topic's broader context and argumentative foundation.
+    2. Review `conclusion_topic_report_draft_research` to understand the study's specific findings and internal context relevant to the topic.
+    3. Use all the provided context to compose a 200-400 word text in Brazilian Portuguese about {conclusion_topic}, following these steps:
+        - Structure paragraphs according to the narrative guidance: {narrative_guidance}.
+        - Seamlessly integrate insights from both research outputs, ensuring the final text is well-grounded in both broad scientific principles and the study's specific results.
+        - Prioritize clarity and conciseness, given it's a conclusion section.
+        - Align tone with a concise, formal, and conclusive style.
+    4. Ensure the text is continuous, coherent, consistent and maintains a formal, academic tone.
+    5. Format your response in a JSON with the keys "topic" with the conclusion topic "{conclusion_topic}" as its value, and "text" with the generated
+       text as its value.
+
+    **Writing Directives**:
+      - Write in formal, academic Brazilian Portuguese.
+      - Structure the text according to the narrative guidance, following its sequence, emphasis, and references.
+      - Use the rhetorical purpose to guide the argumentative intent (e.g., "Summarize results", "Highlight contributions").
+      - Integrate insights from `conclusion_topic_reference_research` to provide broader context and argumentative support.
+      - Integrate insights from `conclusion_topic_report_draft_research` to ground the discussion in the study's specific findings.
+      - Maintain a concise, formal, and conclusive tone throughout the text.
+      - Ensure continuous paragraphs, avoiding lists, bullet points, or enumerated structures.
+
+    **Constraints:**
+      - Do not perform new research or invent information; use only provided insights.
+      - The generated text must be 200-400 words. (Adjusted range, summing the two research outputs roughly)
+      - The topic must be identified exactly as "{conclusion_topic}" in the output.
+      - Write exclusively in Brazilian Portuguese.
+      - Do not introduce critiques, judgments or opinions.
+
+    **Success Criteria**:
+      - The text must be fully based on the provided insights from both research tasks.
+      - The text is about "{conclusion_topic}".
+      - The final response JSON has "{conclusion_topic}" for the key "topic" and the conclusion topic's text for the key "text".
+      - The language is Brazilian Portuguese.
+      - The writing is argumentative, coherent, and flowing without lists.
+  expected_output: >
+    Full multi-paragraph scientific text about the topic, with 150-300 words, written in brazilian portuguese, organized in a JSON
+    object with the following structure:
+    {
+      "topic": "{conclusion_topic}",
+      "text": 'Fully multi-paragraphed scientific text, with 150-300 words, in Brazilian Portuguese'.
+    }
+  agent: conclusion_writer
+  context: [conclusion_topic_reference_research, conclusion_topic_report_draft_research]
