@@ -7,11 +7,6 @@ from pydantic import BaseModel, Field
 from typing import List
 
 
-class ResearchOutput(BaseModel):
-    item_name: str = Field(description="Name of the researched item")
-    research_results: str = Field(description="The research results about the item")
-
-
 class TopicTextContent(BaseModel):
     topic: str = Field(description="Exact name of the topic that writing was requested upon")
     text: str = Field(
@@ -19,27 +14,6 @@ class TopicTextContent(BaseModel):
             "Full multi-paragraph scientific text about the topic, with 500+ words, "
             "written in brazilian portuguese"
         )
-    )
-
-
-class VisualElementsResearchOutput(BaseModel):
-    about_the_visual_elements: List[ResearchOutput]= Field(
-        default_factory=list,
-        description="List of researched visual elements and their respective research results"
-    )
-
-
-class NumericalResultsResearchOutput(BaseModel):
-    about_the_numerical_results: List[ResearchOutput] = Field(
-        default_factory=list,
-        description="List of researched numerical results and their respective research results"
-    )
-
-
-class TopicResearchOutput(BaseModel):
-    about_the_topic: ResearchOutput = Field(
-        default_factory=list,
-        description="Research results about the topic"
     )
 
 
