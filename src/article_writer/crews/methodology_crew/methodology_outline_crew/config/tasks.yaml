@@ -1,0 +1,324 @@
+analyze_report_for_methodology_components:
+  description: >
+    **Analytical Report** 
+
+    {report}  
+
+    Analyze the provided analytical report to extract key methodological components necessary for generating a structured summary for the "Methodology"
+    section of a scientific paper. Focus on identifying the core research design, experimental setups, materials, primary procedures, data collection and
+    initial data analysis methods directly described or clearly implied within the report. The goal is to provide a comprehensive summary of
+    the fundamental "how-to" aspects of the study based on the report.
+
+    **Input Detailing**:  
+    - **Analytical Report**
+      - Has the following five sections:  
+        1. Apresentação Clara dos Elementos Visuais (Presentation of Visual Elements)  
+        2. Análise dos Resultados (Analysis of Results)  
+        3. Interpretação Crítica (Critical Interpretation)  
+        4. Avaliação das Limitações do Estudo (Evaluation of Study Limitations)  
+        5. Contribuições (Contributions)  
+
+    **Execution Steps**:  
+    1. Review the **Analytical Report**, specifically scrutinizing sections 1, 2, and parts of 3 for explicit descriptions of experimental procedures,
+       data collection methods, materials used, initial analytical steps, and specific techniques.
+    2. Identify and categorize distinct methodological components. For each, extract:
+        - **Method Name/Description**: A concise name or description (e.g., "Síntese Química", "Microscopia Eletrônica de Varredura", "Pré-processamento de Imagens").
+        - **Purpose/Rationale**: Why this method was used in the study, as inferred from the report.
+        - **Key Parameters/Details**: Specifics like equipment models, software versions, sample sizes, durations, etc., if clearly stated.
+    3. Synthesize the extracted information into a structured Markdown summary. Each methodological component should be a distinct heading, with its 
+      details presented as sub-points.
+
+    **Guidelines**:  
+    - **Specificity**: Extract precise details about methodologies directly from the report.
+    - **Completeness**: Aim to cover all primary methods described or strongly implied for replication.
+    - **Objectivity**: Report methods as described, without adding external context or interpretations.
+    - **Traceability**: All extracted information must be directly verifiable within the provided analytical report.
+
+    **Restrictions**:  
+    - Do not invent methods or details not mentioned in the analytical report.  
+    - Do not include interpretations of results, discussions of findings, or explicit links to conclusions; focus only on the methods themselves as 
+      presented in the report.  
+    - Do not generate prose or narrative beyond describing the methods; output must be structured Markdown.  
+    - Do not assume methods based on typical scientific practices if not mentioned in the report.
+
+    **Success Criteria**:  
+    - Returns a Markdown formatted text containing a comprehensive and structured summary of identified methodological components from the analytical report.  
+    - Each component includes its name/description, purpose, and key parameters/details, clearly delineated in Markdown.
+  expected_output: >
+    A structured text summary, formatted in Markdown, without ```, containing the core methodological components, following the structure:
+
+    **Componentes Metodológicos do Relatório Analítico**:
+    - **[Nome/Descrição do Método 1]**:
+        - **Propósito**: [Breve descrição do objetivo ou justificativa do método no estudo].
+        - **Parâmetros/Detalhes Chave**:
+            - [Detalhe 1: Ex: Equipamento: Espectrômetro de Massas X].
+            - [Detalhe 2: Ex: Condições: 180°C por 6 horas].
+            - [Detalhe 3: Ex: Software: Xcalibur v4.1].
+    - **[Nome/Descrição do Método 2]**:
+        - **Propósito**: [Breve descrição do objetivo ou justificativa do método no estudo].
+        - **Parâmetros/Detalhes Chave**:
+            - [Detalhe 1].
+            - [Detalhe 2].
+  agent: report_analyst
+
+analyze_sections_for_methodological_context:
+  description: >
+    **Generated Section Contents:**
+
+    {generated_sections_content}
+
+    Analyze the provided content from previously generated sections (Results and Discussion, Conclusion) to extract and summarize
+    methodological context. The goal is to identify how specific methods or experimental approaches are discussed in relation to
+    the study's findings, interpretations, and conclusions, providing contextual links that enrich the methodology section.
+    Focus on methodological implications, validation mentions, limitations tied to methods, or specific procedural explanations
+    that were elaborated upon in these sections.
+
+    **Input Detailing**:
+    - **Generated Section Contents**: A JSON list where each element is an object that contains the full content of "Results and Discussion"
+      and "Conclusion" sections, respectivaly. The objects are structured as follows:
+      - `section_name` (string): The name of the section.
+      - `topics` (list of objects): A list of topic objects, each representing a specific topic within the section and its corresponding 
+        textual content. Each topic object includes:
+        - `topic` (string): The name of the specific topic.
+        - `text_content` (string): The generated text content for that topic.
+        - `subsection` (string): Name of the subsection of which the topic belongs. If 'main', means that the topic belongs directly to 
+          the main section (i.e., not part of a named subsection).
+
+    **Execution Steps**:
+      1. Carefully iterate through each object containing a section, analysing each of it's topics text content, making sure to:
+         - Identify any mentions of methodological aspects, their implications, validations, limitations, or procedural elaborations.
+         - Pay attention to how methods are *contextualized* in relation to the specific results or conclusions of that topic.
+         - Extract key phrases or summarized points that link methods to outcomes.
+      2. Synthesize the identified contextual methodological information into a structured Markdown summary. Organize by section and then by topic,
+         highlighting the methodological nuances derived from the interpretation or final statements.
+
+    **Guidelines**:
+      - **Contextual Focus**: Emphasize how methods are discussed in relation to *what was found* or *concluded*, rather than just listing methods.
+      - **Traceability**: All extracted information must be directly attributable to the `text_content` of the input sections.
+      - **No Redundancy**: Avoid simply repeating methodological details already expected from the analytical report; focus on contextual insights.
+      - **Clarity**: Ensure the summary clearly outlines the methodological *context* provided by the generated text.
+
+    **Restrictions**:
+      - Do not invent methodological context or details. All of your findings must be traceable back to the generated sections in the input.
+      - Do not summarize the findings or conclusions themselves; focus on the methodological links.
+      - Do not generate prose or narrative beyond structuring the summary; output must be structured Markdown.
+
+    **Success Criteria**:
+      - Returns a Markdown formatted text containing a comprehensive and structured summary of methodological context derived from the generated section 
+        contents.
+      - The summary is organized by section and topic, providing specific insights into how methods are discussed in relation to outcomes.
+  expected_output: >
+    A structured text summary, formatted in Markdown, without ```, containing the methodological context from previously generated sections, following 
+    the structure:
+
+    **Contexto Metodológico das Seções Geradas**:
+    - **Seção: [Nome da Seção 1]**:
+        - **Tópico: [Nome do Tópico 1.1]**:
+            - **Contexto Metodológico**: [Resumo da implicação metodológica, validação, limitação ou elaboração procedural encontrada no texto gerado 
+              do tópico, relacionada ao método e aos resultados/conclusões].
+        - **Tópico: [Nome do Tópico 1.2]**:
+            - **Contexto Metodológico**: [Resumo do contexto metodológico].
+    - **Seção: [Nome da Seção 2]**:
+        - **Tópico: [Nome do Tópico 2.1]**:
+            - **Contexto Metodológico**: [Resumo do contexto metodológico].
+  agent: report_analyst 
+
+define_methodology_subsections:
+  description: >
+    Analyze the extracted core methodological components and their contextual discussions, provided from the tasks 
+    `analyze_report_for_methodology_components` and `analyze_sections_for_methodological_context` outputs, to define a logical structure of 
+    subsections for the "Methodology" section of a scientific paper. The primary goal is to categorize the methodological information into 
+    coherent, distinct subsections. The first subsection MUST be named "Introduction", serving as an overview for the Methodology section, 
+    summarizing the general research approach and the rationale behind the chosen methods. Subsequent subsections should logically group 
+    related experimental procedures, materials, data collection, and analysis methods.
+
+    **Execution Steps**:
+    1. Review the detailed methodological components and contextual insights provided from previous analysis tasks.
+    2. Identify overarching categories or stages within the research methodology.
+    3. Define subsection names that are clear, concise, and accurately represent these categories.
+    4. Ensure the first subsection is always "Introduction". For this "Introduction" subsection, synthesize a `subsection_description` that 
+       briefly introduces the study's overall methodological approach and the rationale for using specific methods, drawing from the general 
+       methodological scope identified in the input.
+    5. For all subsequent subsections, create a `subsection_name` and a `subsection_description` that briefly outlines what will be covered 
+       within that subsection, based on the methodological components identified.
+    6. Ensure the order of subsections follows a logical flow, typically from general design to specific procedures and analysis.
+    7. Assemble your response into a JSON object, with two keys:
+      - `section_name` (string): Set to "Methodology".
+      - `subsections` (list): A list of objects, where each object represents a defined subsection, with the keys:
+        - `subsection_name` (string): A concise title for the subsection.
+        - `subsection_description` (string): A brief summary outlining the key elements that will be covered within this subsection.
+        - `discussion_topics` (list):  An empty list `[]`, as topics of discussion are not generated in this task.
+
+    **Guidelines**:
+    - **Completeness**: All major methodological aspects derived from the inputs should be logically accommodated within the defined subsections.
+    - **Clarity**: Subsection names should be intuitive and indicative of their content.
+    - **Logical Flow**: The sequence of subsections should guide the reader through the methodology step-by-step.
+    - **Traceability**: All defined subsections must be justified by the content of the input methodological components and context.
+    - **"Introduction" Subsection**: This subsection is mandatory and should provide a high-level overview of the methodological strategy.
+
+    **Restrictions**:
+    - Do not create specific discussion topics within this task; focus only on defining the subsections and their brief descriptions.
+    - Do not invent methodological details not present in the input.
+    - Do not generate prose or narrative beyond the subsection names and descriptions; output must be structured JSON.
+    - Do not generate more than 5-7 subsections, aiming for a concise and logical structure.
+
+    **Success Criteria**:
+    - The output is a valid JSON object.
+    - The JSON object contains a key `section_name` with the value "Methodology".
+    - The JSON object contains a key `subsections` which is a **list** of subsection objects.
+    - The first object in the `subsections` list has `subsection_name` set to "Introduction".
+    - Each object in the `subsections` list has `subsection_name` (string) and `subsection_description` (string).
+    - The `discussion_topics` list for each subsection is present but **empty**.
+    - All major methodological categories implied by the input data are represented by distinct subsections.
+    - The logical flow of subsections is maintained (e.g., from general design to specific methods).
+    - The number of subsections is between 3 and 7, ensuring appropriate granularity without being overly detailed or too broad.
+
+  expected_output: >
+    A JSON object representing the outline for the "Methodology" section, structured as follows:
+
+    - **`section_name`** (string): Must be "Methodology".
+    - **`subsections`** (list of objects): A list containing definitions for each subsection. Each object in this list must contain:
+      - **`subsection_name`** (string): A concise title for the subsection (e.g., "Introduction","Research Design", "Instrumentation").
+      - **`subsection_description`** (string): A brief summary outlining the key elements that will be covered within this subsection.
+      - **`discussion_topics`** (list): An empty list `[]`, as topics are not generated in this step.
+
+    **The output must satisfy the following criteria**:
+      - The JSON object is valid and strictly adheres to the described structure.
+      - The `section_name` is exactly "Methodology".
+      - The `subsections` list is not empty and contains between 3 and 7 subsection objects.
+      - The first object in the `subsections` list has `subsection_name` set to "Introdução".
+      - Every subsection object includes both `subsection_name` and `subsection_description`.
+      - The `discussion_topics` list for every subsection object is an empty list `[]`.
+      - All major methodological categories identified from the input analyses are logically represented by distinct subsections.
+      - The order of subsections follows a clear and logical flow, typically from general research design to specific procedures and analysis.
+
+  agent: methodology_outliner
+  context: [analyze_report_for_methodology_components, analyze_sections_for_methodological_context]
+
+expand_methodology_subsections:
+  description: >
+    For each defined subsection from the output of `define_methodology_subsections`, define detailed discussion topics to be later expanded in their text 
+    content. The primary goal is to break down each `subsection_description` into actionable writing points (topics) that fully encapsulate all aspects 
+    of the study's methodology within that specific area, ensuring clarity, replicability, and direct relevance to the research. To aid in your task, 
+    use the core methodological components and methodological context provided from `analyze_report_for_methodology_components` and 
+    `analyze_sections_for_methodological_context` tasks, respectivaly, as information to help defining the discussion topics. 
+    For each topic, you must create a concise title, assign a rhetorical purpose, write a detailed topic description integrating both core methodological 
+    details and contextual insights, and provide clear narrative guidance for a Writer Agent.
+
+    **Input Detailing**:
+      - Output of `define_methodology_subsections`:
+        - A JSON object representing the outline for the "Methodology" section, structured as follows:
+          - **`section_name`** (string): Title of the main section, i.e, "Methodology".
+          - **`subsections`** (list of objects): A list containing the assinged subsections of the main section and their definitions, as objects. Each 
+            object in this list contains:
+            - **`subsection_name`** (string): A concise title for the subsection (e.g., "Introduction","Research Design", "Instrumentation").
+            - **`subsection_description`** (string): A brief summary outlining the key elements that will be covered within this subsection.
+            - **`discussion_topics`** (list): An empty list `[]`, as topics were not yet generated and designated when assembling the outline.
+      - **Core Methodological Components**: A structured text summary, formatted in Markdown, containing the core methodological components.
+      - **Methodological Context**: A structured text summary, formatted in Markdown, containing the methodological context from previously generated 
+        sections.
+
+    **Execution Steps**:
+    1. Parse the `define_methodology_subsections` output to retrieve the pre-defined subsection names and their descriptions.
+    2. For the "Introduction" subsection:
+      - Considering its `subsection_description`, create a single discussion topic (`topic`) that summarizes this high-level strategy.
+      - Assign it's rhetorical purpose as "Describe research design"
+      - Write a topic description that concisely outlines the research design and the rationale for the chosen methods.
+      - Provide narrative guidance that instructs a writer to broadly introduce the study's methodological approach and its justification.
+    3. For all other subsections:
+      - Using the `subsection_description` as a primary guide, systematically review the Core Methodological Components from 
+        `analyze_report_for_methodology_components` and Methodological Context from `analyze_sections_for_methodological_context` to identify specific 
+        details, procedures, materials, or analytical steps that logically belong to the subsection.
+      - For each identified methodological element/step, formulate a concise `topic` title.
+      - Assign the most appropriate `rhetorical_purpose` from the list below to each `topic`.
+      - Develop a comprehensive `topic_description` for each `topic`. This description *must* thoroughly integrate specific details (e.g., precise 
+        parameters, configurations, types of materials, steps in a procedure) from `Core Methodological Components` and all relevant contextual information 
+        (e.g., reasons for methodological choices, observed performance, known limitations, connections to study outcomes) from `Methodological Context`. 
+        Ensure the `topic_description` directly elaborates on aspects mentioned or implied by the `subsection_description`.
+      - Craft detailed `narrative_guidance` for a Writer Agent. This guidance should explicitly specify the precise information to include in the final 
+        text to enable another researcher to replicate the study. Additionally, instruct how to articulate the method's significance, its relationship to 
+        the study's findings, implications, or broader academic context.
+    4. Assemble each defined topic into a JSON object of it's own, with the keys:
+      - `topic`(string): A concise title for the discussion topic.
+      - `rhetorical_purpose` (string): The rhetorical purpose of the topic.
+      - `topic_description` (string): A detailed description of the topic, integrating information from both `Core Methodological Components` and 
+        `Methodological Context`.
+      - `narrative_guidance` (string): Explicit instructions for a Writer Agent on what specific information to include and how to articulate it to ensure 
+        clarity, replicability, and contextual relevance.
+    5. Update the `discussion_topics` list for each subsection object in the parsed `define_methodology_subsections` output with the generated topic 
+       objects.
+    6. Ensure the final output is a single JSON object that strictly conforms to the structure:
+      - **`section_name`** (string): Title of the main section, i.e, "Methodology".
+          - **`subsections`** (list of objects): A list containing the assinged subsections of the main section and their definitions, as objects. Each 
+            object in this list contains:
+            - **`subsection_name`** (string): A concise title for the subsection (e.g., "Introduction","Research Design", "Instrumentation").
+            - **`subsection_description`** (string): A brief summary outlining the key elements that will be covered within this subsection.
+            - **`discussion_topics`** (list): A list with the assigned topics for the subsection as objects, each object with the before mentioned key:
+              `topic`, `rhetorical_purpose`, `topic_description` and `narrative_guidance`.
+    
+    **List of allowed rhetorical purposes**:
+      - "Describe research design"
+      - "Describe experimental setup"
+      - "Describe materials and equipment"
+      - "Describe procedure step"
+      - "Describe data collection"
+      - "Describe data analysis"
+      - "Describe validation or calibration"
+      - "Discuss methodological limitations"
+      - "Discuss methodological implications"
+      - "Provide contextual background"
+      - "Explain rationale for method choice"
+
+    **Guidelines**:
+    - **Leverage `subsection_description`**: The `subsection_description` is paramount for defining the scope and focus of topics within that subsection.
+    - **Information Synthesis**: Each `topic_description` must be a rich synthesis of both raw methodological details and their contextual implications, 
+      providing sufficient information for a writer.
+    - **Actionable Guidance**: `narrative_guidance` must be clear, specific, and directly usable by a Writer Agent to produce replicable and coherent text.
+    - **Completeness**: Every significant methodological detail and contextual insight from the input analyses must be covered by at least one topic.
+    - **Logical Consistency**: Topics within each subsection should be logically ordered and contribute to a coherent flow.
+
+    **Restrictions**:
+    - Do not invent any methodological details, procedures, or contextual information that are not explicitly present or directly derivable from the provided input analyses.
+    - Do not generate prose or narrative content beyond the structured JSON output.
+    - Avoid redundancy: each generated topic should cover a distinct aspect of the methodology.
+
+    **Success Criteria**:
+    - The output is a valid JSON object.
+    - The JSON object is valid and strictly adheres to the described structure.
+    - The `section_name` is exactly "Metodologia".
+    - The `subsections` list is not empty.
+    - All `discussion_topics` lists within each subsection are populated with at least one topic.
+    - Every `discussion_topic` object includes `topic`, `rhetorical_purpose`, `topic_description`, and `narrative_guidance` as non-empty strings.
+    - The `rhetorical_purpose` for each topic is chosen exclusively from the "List of allowed rhetorical purposes" list provided in the task description.
+    - The `topic_description` for each topic effectively synthesizes details from both `Core Methodological Components` and `Methodological Context` 
+      inputs, and **directly supports and elaborates on the scope outlined in the parent `subsection_description`**.
+    - The `narrative_guidance` provides clear, specific, and actionable instructions for a writer to ensure replicability and to link methods to 
+      findings/conclusions.
+    - All significant methodological components and contextual insights identified in the preceding analysis tasks are accounted for and covered by at 
+      least one topic across all subsections.
+    - No invented methodological details or topics are present in the output.
+    - The "Introdução" subsection contains exactly one `discussion_topic` that provides a high-level summary of the overall methodological strategy, as 
+      described in its `topic_description`.
+
+  expected_output: >
+    A JSON object representing the complete outline for the "Metodologia" section.
+    The object must contain two main keys:
+    - **`section_name`** (string): Must be "Metodologia".
+    - **`subsections`** (list of objects): A list containing fully populated subsection definitions. Each object in this list must contain:
+        - **`subsection_name`** (string): The concise title for the subsection (e.g., "Introduction","Research Design", "Instrumentation").
+        - **`subsection_description`** (string): A brief summary outlining the key elements covered in this subsection.
+        - **`discussion_topics`** (list of objects): A populated list of discussion topics for the subsection. Each object in this list must contain:
+            - **`topic`** (string): A concise title or description of a specific methodological point or aspect (e.g., "Configuração Experimental", 
+              "Processamento de Dados", "Análise Estatística").
+            - **`rhetorical_purpose`** (string): The rhetorical purpose of this topic, which *must* be one of the "Allowed Rhetorical Purposes" 
+              explicitly listed in the task description (e.g., "Describe experimental setup", "Describe data analysis").
+            - **`topic_description`** (string): A comprehensive summary of the method's focus, including all relevant parameters, specific configurations, 
+              types of materials, or procedural steps. This description *must* integrate both the core methodological details and any contextual relevance 
+              (such as the method's rationale, observed effectiveness, limitations, or connections to preliminary findings) from the input data. It should 
+              contain sufficient information for a writer to elaborate without needing further consultation.
+            - **`narrative_guidance`** (string): Clear, specific, and actionable instructions for a Writer Agent on how to elaborate on this particular 
+              method in the final paper. This guidance *must* specify critical details to include for ensuring replicability of the study and direct the 
+              writer on how to articulate the method's significance or its connection to the study's outcomes, implications, or broader academic context.
+
+  agent: methodology_outliner
+  context: [define_methodology_subsections, analyze_report_for_methodology_components, analyze_sections_for_methodological_context]
