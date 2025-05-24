@@ -59,9 +59,3 @@ class RDSubSectionOutline(BaseModel):
     discussion_topics: List[DiscussionTopic] = Field(
         description="Structured outline of the subsection as a list of topics"
     )
-
-class ConclusionSectionOutline(RDSubSectionOutline):
-    word_count_guidance: str = Field(
-        default="200-300 words per topic",
-        description="Guidance for topic text length, reflecting Conclusion's concise nature"
-    )
