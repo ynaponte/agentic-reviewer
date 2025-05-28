@@ -1,0 +1,232 @@
+extract_theoretical_context_from_report_and_methodology:
+  description: >
+    **Analytical Report**:
+
+    {report}
+
+    **Methodology Section Outline**:
+
+    {methodology_outline}
+
+    Analyze the provided **Analytical Report** and the **Methodology Section Outline** to extract key theoretical concepts,
+    definitions, models, and background information relevant for constructing the "Theoretical Foundation" section of a
+    scientific paper.
+
+    **Input Detailing**:
+    - **Analytical Report**:
+      - Has the following five sections:
+        1. Apresentação Clara dos Elementos Visuais (Presentation of Visual Elements)
+        2. Análise dos Resultados (Analysis of Results)
+        3. Interpretação Crítica (Critical Interpretation)
+        4. Avaliação das Limitações do Estudo (Evaluation of Study Limitations)
+        5. Contribuições (Contributions)
+    - **Methodology Section Outline**: A JSON object detailing the structure of the Methodology section, including
+      subsections, descriptions, and discussion topics.
+
+    **Execution Steps**:
+    1.  Review the **Analytical Report**, particularly sections 2 (Análise dos Resultados), 3 (Interpretação Crítica),
+        and 5 (Contribuições), looking for:
+        - Explicit mentions of theories, models, or established principles.
+        - Definitions of key terms used in the study.
+        - Citations or references to foundational literature (even if not fully detailed).
+        - Underlying assumptions or theoretical frameworks that justify the research questions or approach.
+    2.  Review the **Methodology Section Outline** (specifically subsection descriptions, topic names and topic descriptions)
+        for:
+        - Theoretical justifications for chosen methods or procedures.
+        - Mentions of concepts that require prior theoretical explanation for the reader to understand the methodology.
+        - Any implicit theoretical underpinnings of the experimental design or data analysis techniques.
+    3.  Categorize and synthesize the extracted information. For each theoretical element, note:
+        - **Concept/Theory Name**: A clear name or description (e.g., "Teoria da Carga Cognitiva", "Modelo Transteórico", "Conceito de Usabilidade").
+        - **Source/Context**: Where it was mentioned (e.g., "Report - Interpretação Crítica", "Methodology Outline - subsection 'Data Analysis' justification").
+        - **Relevance**: A brief note on why this concept is important for the study's theoretical foundation.
+    4.  Consolidate the findings into a structured Markdown summary.
+
+    **Guidelines**:
+    - **Focus on Foundations**: Prioritize concepts that underpin the research problem, objectives, or methodology.
+    - **Traceability**: All extracted information must be directly verifiable within the provided inputs.
+    - **Avoid Duplication from Methodology**: If a concept is purely methodological and explained there, only note its theoretical link if substantial.
+
+    **Restrictions**:
+    - Do not invent theories or concepts not present in the inputs.
+    - Do not summarize results or methodological procedures themselves; focus on the *theoretical basis* or *context*.
+    - Output must be structured Markdown.
+
+    **Success Criteria**:
+    - Returns a Markdown formatted text summarizing key theoretical concepts, their sources within the inputs, and their relevance.
+  expected_output: >
+    A structured text summary, formatted in Markdown, without ```, containing the core theoretical elements, following a structure like:
+
+    **Elementos Teóricos Identificados**:
+    - **[Nome do Conceito/Teoria 1]**:
+        - **Fonte/Contexto**: [Ex: Relatório Analítico - Contribuições; Outline da Metodologia - Justificativa da Análise Estatística].
+        - **Relevância para a Fundamentação**: [Breve descrição da importância do conceito para embasar o estudo].
+    - **[Nome do Conceito/Teoria 2]**:
+        - **Fonte/Contexto**: [...].
+        - **Relevância para a Fundamentação**: [...].
+  agent: theoretical_concept_extractor
+
+define_theoretical_foundation_subsections:
+  description: >
+    Analyze the extracted theoretical elements (from the output of `extract_theoretical_context_from_report_and_methodology`)
+    to define a logical structure of subsections for the "Theoretical Foundation" section of a scientific paper.
+    The primary goal is to categorize the theoretical information into coherent, distinct subsections that build a
+    compelling argument or provide necessary background. The first subsection MUST be named "Introduction", serving as an overview 
+    that outlines the scope of the theoretical review and its importance to the current study.
+
+    **Execution Steps**:
+    1.  Review the summarized theoretical elements.
+    2.  Identify overarching themes, schools of thought, key definitions, or chronological/logical progressions among the concepts.
+    3.  Define subsection names that are clear, concise, and accurately represent these thematic groupings.
+    4.  Ensure the first subsection is "Introduction". For this, synthesize a `subsection_description`
+        that briefly introduces the main theoretical areas to be covered and why they are relevant to the research problem
+        and objectives.
+    5.  For all subsequent subsections, create a `subsection_name` and a `subsection_description` that briefly outlines
+        the specific theoretical aspects or concepts that will be detailed within that subsection.
+    6.  Ensure the order of subsections follows a logical flow, often starting from broader concepts and moving to more
+        specific ones, or following a historical or thematic development.
+    7.  Assemble your response into a JSON object, with two keys:
+        - `section_name` (string): Set to "Fundamentação Teórica".
+        - `subsections` (list): A list of objects, where each object represents a defined subsection, with the keys:
+          - `subsection_name` (string).
+          - `subsection_description` (string).
+          - `discussion_topics` (list): An empty list `[]`.
+
+    **Guidelines**:
+    - **Logical Coherence**: Subsections should group related theories and concepts.
+    - **Clarity**: Subsection names should be intuitive.
+    - **Narrative Flow**: The sequence should guide the reader effectively through the theoretical landscape.
+    - **Traceability**: Defined subsections must be justified by the extracted theoretical elements.
+    - **"Introduction" Subsection**: Mandatory, providing an overview.
+
+    **Restrictions**:
+    - Do not create specific discussion topics yet.
+    - Do not invent theoretical details not present in the input.
+    - Output must be structured JSON.
+    - Aim for a balanced number of subsections (e.g., 3-6) to ensure depth and readability.
+
+    **Success Criteria**:
+    - Output is a valid JSON object.
+    - `section_name` is "Fundamentação Teórica".
+    - `subsections` list contains 3-6 subsection objects.
+    - First subsection is "Introduction".
+    - Each subsection object has `subsection_name`, `subsection_description`, and an empty `discussion_topics` list.
+    - All major theoretical themes from the input are logically grouped into subsections.
+  expected_output: >
+    A JSON object representing the outline for the "Theoretical Foundation" section, structured as follows:
+
+    {
+      "section_name": "Fundamentação Teórica",
+      "subsections": [
+        {
+          "subsection_name": "Introduction",
+          "subsection_description": "Breve panorama da relevância do arcabouço teórico para o estudo, delineando as principais áreas conceituais que serão abordadas e sua conexão com os objetivos da pesquisa.",
+          "discussion_topics": []
+        },
+        {
+          "subsection_name": "[Nome da Subseção Teórica 1]",
+          "subsection_description": "[Breve resumo dos conceitos ou teorias chave a serem cobertos nesta subseção].",
+          "discussion_topics": []
+        },
+        {
+          "subsection_name": "[Nome da Subseção Teórica 2]",
+          "subsection_description": "[Breve resumo dos conceitos ou teorias chave a serem cobertos nesta subseção].",
+          "discussion_topics": []
+        }
+        // ... more subsections if needed
+      ]
+    }
+  agent: theoretical_foundation_outliner
+  context: [extract_theoretical_context_from_report_and_methodology]
+
+expand_theoretical_foundation_subsections:
+  description: >
+    For each defined subsection from the output of `define_theoretical_foundation_subsections`, define detailed
+    discussion topics to be later expanded into text content. The primary goal is to break down each
+    `subsection_description` into actionable writing points (topics) that thoroughly explore the relevant
+    theories, concepts, definitions, and their significance to the research. Use the extracted theoretical
+    elements from `extract_theoretical_context_from_report_and_methodology` as the primary source for defining these topics.
+    For each topic, create a concise title, assign a rhetorical purpose, write a detailed topic description
+    integrating the core theoretical information, and provide clear narrative guidance for a Writer Agent.
+
+    **Input Detailing**:
+      - Output of `define_theoretical_foundation_subsections` (JSON outline).
+      - Output of `extract_theoretical_context_from_report_and_methodology` (Markdown summary of theoretical elements).
+
+    **Execution Steps**:
+    1.  Parse the `define_theoretical_foundation_subsections` output for subsection names and descriptions.
+    2.  Parse the `extract_theoretical_context_from_report_and_methodology` output for specific theoretical elements.
+    3.  For the "Introdução à Fundamentação Teórica" subsection:
+        - Create a single discussion topic (`topic`) that summarizes the scope and importance of the theoretical review.
+        - Assign its rhetorical purpose as "Outline theoretical scope and relevance".
+        - Write a topic description that briefly introduces the main theoretical areas and their connection to the study's objectives.
+        - Provide narrative guidance for a Writer Agent to set the stage for the theoretical discussion.
+    4.  For all other subsections:
+        - Using the `subsection_description` as a guide, select relevant theoretical elements from the parsed context.
+        - For each key concept, theory, or group of related ideas within the subsection's scope, formulate a concise `topic` title.
+        - Assign the most appropriate `rhetorical_purpose` from the "List of allowed rhetorical purposes for Theoretical Foundation" below.
+        - Develop a comprehensive `topic_description` for each `topic`. This description *must* detail the concept/theory,
+          its main tenets, proponents (if known from input), and its specific relevance or application to the current study,
+          drawing directly from the `extract_theoretical_context_from_report_and_methodology` output.
+        - Craft detailed `narrative_guidance` for a Writer Agent. This should specify what to explain (e.g., define the term,
+          explain the model's components, discuss its historical development briefly, link to the research problem).
+          Instruct the writer to cite sources appropriately (though actual citation insertion is by the writer).
+    5.  Assemble each defined topic into a JSON object with keys: `topic`, `rhetorical_purpose`, `topic_description`, `narrative_guidance`.
+    6.  Update the `discussion_topics` list for each subsection object in the parsed `define_theoretical_foundation_subsections` output.
+    7.  Ensure the final output is a single JSON object.
+
+    **List of allowed rhetorical purposes for Theoretical Foundation**:
+      - "Define key concept/term"
+      - "Explain core theory/model"
+      - "Review foundational literature on a specific aspect"
+      - "Discuss historical context of a theory/concept"
+      - "Compare and contrast related theories/concepts"
+      - "Identify theoretical gap or debate"
+      - "Justify the chosen theoretical framework/lens for the study"
+      - "Link theory to research objectives/questions"
+      - "Outline theoretical scope and relevance"
+      - "Introduce a school of thought"
+
+    **Guidelines**:
+    - **Information Synthesis**: Each `topic_description` must be a rich synthesis of the theoretical elements identified.
+    - **Actionable Guidance**: `narrative_guidance` must be clear and specific for the Writer Agent.
+    - **Completeness**: All significant theoretical aspects identified in `extract_theoretical_context_from_report_and_methodology`
+      and relevant to a subsection should be covered by a topic.
+    - **Logical Flow within Subsections**: Topics should be ordered logically.
+
+    **Restrictions**:
+    - Do not invent theoretical details not present in the source inputs.
+    - Output must be structured JSON.
+
+    **Success Criteria**:
+    - Output is a valid JSON object.
+    - `section_name` is "Fundamentação Teórica".
+    - `discussion_topics` lists are populated.
+    - Each `discussion_topic` object has non-empty `topic`, `rhetorical_purpose` (from the allowed list),
+      `topic_description`, and `narrative_guidance`.
+    - `topic_description` directly uses information from `extract_theoretical_context_from_report_and_methodology`.
+    - `narrative_guidance` is actionable for a writer.
+    - The "Introdução à Fundamentação Teórica" subsection has one topic outlining scope and relevance.
+  expected_output: >
+    A JSON object representing the complete outline for the "Fundamentação Teórica" section.
+    The object must contain two main keys:
+    - **`section_name`**: "Fundamentação Teórica".
+    - **`subsections`**: A list of objects, each containing:
+        - **`subsection_name`**: (string).
+        - **`subsection_description`**: (string).
+        - **`discussion_topics`**: A list of objects, each containing:
+            - **`topic`**: (string) Concise title of the theoretical point.
+            - **`rhetorical_purpose`**: (string) From the allowed list for Theoretical Foundation.
+            - **`topic_description`**: (string) Detailed summary of the concept/theory, its relevance,
+              drawing from extracted context.
+            - **`narrative_guidance`**: (string) Specific instructions for the Writer Agent on how to elaborate,
+              what to include (e.g., definitions, key aspects of a model, link to research problem).
+
+    Example of a discussion topic object:
+    {
+      "topic": "Definição e Componentes da Teoria X",
+      "rhetorical_purpose": "Explain core theory/model",
+      "topic_description": "A Teoria X, proposta por Autor (Ano), postula que [principais postulados]. Seus componentes centrais são [componente A], [componente B], e [componente C]. Esta teoria é relevante para o presente estudo porque [justificativa da relevância, baseada no contexto extraído].",
+      "narrative_guidance": "Explique detalhadamente a Teoria X, começando por sua definição e origem. Descreva cada um de seus componentes principais. Discuta como esta teoria se aplica ou informa a questão de pesquisa central deste trabalho. Se houver críticas ou limitações conhecidas (baseadas no input), mencione-as brevemente."
+    }
+  agent: theoretical_foundation_outliner
+  context: [define_theoretical_foundation_subsections, extract_theoretical_context_from_report_and_methodology]

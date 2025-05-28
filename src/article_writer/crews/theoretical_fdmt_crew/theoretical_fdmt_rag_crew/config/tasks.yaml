@@ -1,0 +1,212 @@
+theoretical_topic_external_literature_research:
+  description: >
+    Conduct research for the "Theoretical Foundation" topic: "{theoretical_foundation_topic_title}"
+    (part of subsection "{theoretical_foundation_subsection_name}"), which is detailed as:
+    "{theoretical_foundation_topic_description}".
+    The rhetorical purpose of this topic is: "{theoretical_foundation_rhetorical_purpose}".
+    Use your `QueryArticlesTool` to find established definitions, explanations, core tenets, historical context,
+    key proponents, criticisms, or relevant discussions for the theory/concept "{theoretical_foundation_topic_title}"
+    from 'reference' literature. The primary goal is to gather comprehensive information from external scholarly sources
+    to explain the topic thoroughly.
+
+    **Execution Steps**:
+      1. **Construct Search Query**:
+         - Based on "{theoretical_foundation_topic_title}", "{theoretical_foundation_topic_description}",
+           and "{theoretical_foundation_rhetorical_purpose}", generate a focused search query. The query
+           should aim to find comprehensive explanations, definitions, or discussions of the topic.
+      2. **Configure `QueryArticlesTool`**:
+         - Set `doc_type` to ['reference'].
+         - Set `top_k` to 5 initially. If results are insufficient (e.g., not finding a clear definition,
+           explanation, or relevant scholarly discussion), increase `top_k` to 8 (max 12) and retry,
+           possibly refining the query for broader or more specific aspects.
+      3. **Execute Search & Analyze Results**:
+         - Run `QueryArticlesTool`. Critically evaluate the retrieved chunks for direct relevance to
+           explaining, defining, or discussing "{theoretical_foundation_topic_title}" as understood in
+           academic literature.
+      4. **Synthesize Insights**:
+         - Write a 150-300 word text in Brazilian Portuguese. This text must:
+           - Provide a comprehensive summary of the key information found in the 'reference' literature
+             regarding "{theoretical_foundation_topic_title}". This could include definitions,
+             main arguments of a theory, components of a model, significant authors associated with it,
+             or relevant academic debates.
+           - Be strictly factual and based on the retrieved information from 'reference' documents.
+
+    **Guidelines**:
+      - **Focus**: Established knowledge, definitions, theoretical explanations, scholarly discussions from
+        *external* 'reference' literature.
+      - **Evidence-Based**: All synthesized information MUST come from the `QueryArticlesTool` results using
+        `doc_type`: ['reference'].
+      - **Comprehensiveness**: Aim to capture the most important aspects of the theory/concept as presented
+        in the literature to enable a thorough explanation.
+
+    **Restrictions**:
+      - Search *only* in `doc_type`: ['reference'].
+      - Do not invent, infer beyond what's stated, or modify information from the documents.
+      - Do not discuss the author's specific study or results here; focus solely on the general theory/concept
+        as described in the external literature.
+      - `top_k` must be ≥5 and ≤12.
+
+    **Success Criteria**:
+      - `QueryArticlesTool` returns relevant, informative details from 'reference' documents pertaining to
+        "{theoretical_foundation_topic_title}".
+      - The output is a 150-300 word text in Brazilian Portuguese, providing a solid theoretical foundation
+        for the given topic based on external literature.
+
+  expected_output: >
+    A structured, evidence-based text, 150-300 words in length, in Brazilian Portuguese, providing
+    comprehensive information (definitions, explanations, key aspects) on "{theoretical_foundation_topic_title}",
+    based on 'reference' literature. Must be formatted in markdown, without ```.
+  agent: theoretical_foundation_researcher
+
+theoretical_topic_internal_context_research:
+  description: >
+    Conduct research for the "Theoretical Foundation" topic: "{theoretical_foundation_topic_title}"
+    (part of subsection "{theoretical_foundation_subsection_name}"), which is detailed as:
+    "{theoretical_foundation_topic_description}".
+    The rhetorical purpose of this topic is: "{theoretical_foundation_rhetorical_purpose}".
+    Use your `QueryArticlesTool` to extract insights on how the theory/concept
+    "{theoretical_foundation_topic_title}" is being interpreted, applied, linked to, or deemed relevant by
+    the author(s) **within the context of their current study**. Focus on connections made in the 'report'
+    (e.g., in "Interpretação Crítica", "Contribuições") or in the 'draft' document.
+
+    **Execution Steps**:
+      1. **Construct Search Query**:
+         - Based on "{theoretical_foundation_topic_title}", "{theoretical_foundation_topic_description}",
+           and "{theoretical_foundation_rhetorical_purpose}", generate a search query. The query should aim
+           to find how this specific theory/concept relates to the author's work, interpretations, or arguments.
+      2. **Configure `QueryArticlesTool`**:
+         - Set `doc_type` to ['report', 'draft'].
+         - Set `top_k` to 4 initially. If results are insufficient or lack specificity regarding the author's
+           connection to the theory, increase `top_k` to 7 (max 10) and retry.
+      3. **Execute Search & Analyze Results**:
+         - Run `QueryArticlesTool`. Critically evaluate the retrieved chunks for direct relevance to how the
+           author links "{theoretical_foundation_topic_title}" to their research findings, objectives,
+           or overall argument.
+      4. **Synthesize Insights**:
+         - Write a 100-200 word text in Brazilian Portuguese. This text must:
+           - Summarize any explicit connections, interpretations, or applications of
+             "{theoretical_foundation_topic_title}" made by the author in their 'report' or 'draft'.
+           - Highlight the specific relevance of the theory/concept to *this particular study*,
+             from the author's perspective as found in the internal documents.
+           - If no direct link is found, state that the internal documents do not provide a specific
+             contextualization for this theory/concept in relation to the study.
+
+    **Guidelines**:
+      - **Specificity**: Focus on extracting the author's specific viewpoint, linkage, or application of the
+        theory/concept within their study.
+      - **Evidence-Based**: All synthesized information MUST come from the `QueryArticlesTool` results using
+        `doc_type`: ['report', 'draft'].
+      - **Author's Perspective**: The goal is to understand how the *author* is using or relating to this theory.
+
+    **Restrictions**:
+      - Search *only* in `doc_type`: ['report', 'draft'].
+      - Do not invent, infer beyond what's stated, or modify information from the documents.
+      - Do not extract general descriptions of the theory here; focus only on its connection to the author's work.
+      - `top_k` must be ≥4 and ≤10.
+
+    **Success Criteria**:
+      - `QueryArticlesTool` returns relevant details from 'report' or 'draft' documents pertaining to the
+        author's specific linkage or interpretation of "{theoretical_foundation_topic_title}" for their study.
+      - The output is a 100-200 word text in Brazilian Portuguese, providing insights into the author's
+        contextualization of the theory/concept.
+
+  expected_output: >
+    A structured, evidence-based text, 100-200 words in length, in Brazilian Portuguese, providing details
+    on how the author connects or interprets "{theoretical_foundation_topic_title}" within their specific study,
+    based on 'report' and 'draft' documents. If no such connection is found, it should state so.
+    Must be formatted in markdown, without ```.
+  agent: theoretical_foundation_researcher
+
+write_theoretical_foundation_topic_text:
+  description: >
+    Write a detailed, explanatory, and argumentative multi-paragraph text in formal, precise, and
+    academic Brazilian Portuguese for the "Theoretical Foundation" topic: "{theoretical_foundation_topic_title}".
+    This topic belongs to subsection "{theoretical_foundation_subsection_name}" ({theoretical_foundation_subsection_description}).
+    The specific role of this topic is: "{theoretical_foundation_topic_description}".
+    Its rhetorical purpose is: "{theoretical_foundation_rhetorical_purpose}".
+    Follow the narrative structure guided by: "{theoretical_foundation_narrative_guidance}".
+
+    Base the text on the synthesized insights from:
+    1. `theoretical_topic_external_literature_research` (Output: `insights_external_literature`):
+       Provides established definitions, explanations, and scholarly discussions about the theory/concept
+       from 'reference' literature.
+    2. `theoretical_topic_internal_context_research` (Output: `insights_internal_context`):
+       Provides context on how the author interprets, applies, or links this theory/concept to their
+       current study, based on 'report' and 'draft' documents.
+
+    The final text must be academically sound, clear, well-supported, and effectively explain the
+    theory/concept and its relevance to the study.
+
+    **Input Context**:
+    - `insights_external_literature`: Output from `theoretical_topic_external_literature_research`.
+    - `insights_internal_context`: Output from `theoretical_topic_internal_context_research`.
+
+    **Execution steps:**
+    1. Thoroughly review `insights_external_literature` to grasp the core definitions, explanations,
+       and key aspects of the theory/concept from general academic literature.
+    2. Thoroughly review `insights_internal_context` to understand how the author connects this
+       theory/concept to their specific research problem, objectives, or arguments, or if such a
+       connection is not explicitly stated in internal documents.
+    3. Carefully consider "{theoretical_foundation_topic_title}", "{theoretical_foundation_topic_description}",
+       "{theoretical_foundation_rhetorical_purpose}", and critically,
+       "{theoretical_foundation_narrative_guidance}".
+    4. Compose a 200-500 word text in Brazilian Portuguese, ensuring that you:
+        - Directly address the topic's title ("{theoretical_foundation_topic_title}") and its detailed description.
+        - Structure the paragraphs and content flow according to the provided narrative guidance.
+        - Primarily use details from `insights_external_literature` to explain the theory/concept
+          in a general sense (definitions, models, proponents, etc.).
+        - Integrate information from `insights_internal_context` judiciously to:
+            - Frame the relevance of the theory/concept to the current study.
+            - Highlight any specific interpretations or applications the author intends, if available.
+            - If `insights_internal_context` states no specific link was found, the text should focus on
+              a clear general explanation of the theory, and the narrative guidance might suggest
+              how to subtly bridge it to the broader research area without fabricating direct authorial intent.
+        - Ensure the explanation is clear, accurate, and supported by the provided insights.
+        - Adhere to the topic's rhetorical purpose, e.g., "{theoretical_foundation_rhetorical_purpose}".
+    5. Ensure the text is continuous, coherent, uses precise terminology, and maintains a formal,
+       objective, academic tone.
+    6. Format your response in a JSON object with the keys "topic_title"
+       (value: "{theoretical_foundation_topic_title}") and "generated_text" (value: the written text).
+
+    **Writing Directives**:
+      - Write in formal, academic Brazilian Portuguese.
+      - Strictly follow the narrative guidance for structure, content inclusion, and emphasis.
+      - Use the rhetorical purpose of the topic to shape the explanation and argumentation.
+      - Prioritize information from `insights_external_literature` for defining and explaining the core
+        theory/concept.
+      - Use `insights_internal_context` to establish relevance to the current study or show the author's
+        perspective, where available and appropriate.
+      - Maintain an objective, analytical, and precise tone.
+      - Ensure paragraphs are well-developed and flow logically. Avoid lists unless specified by
+        narrative guidance.
+
+    **Constraints:**
+      - Do not perform new research or invent/assume information beyond the provided insights and
+        outline guidance.
+      - The generated text should be between 200 and 500 words, varying by topic complexity.
+      - The output JSON must correctly use the keys "topic_title" and "generated_text".
+      - Write exclusively in Brazilian Portuguese.
+      - Avoid subjective statements unless reporting on a documented debate or perspective found in the insights.
+
+    **Success Criteria**:
+      - The generated text is fully based on the provided insights and adheres to all guiding inputs
+        from the outline phase.
+      - The text accurately and clearly explains the theoretical aspect of "{theoretical_foundation_topic_title}"
+        and its relevance.
+      - The text appropriately handles situations where internal contextualization might be sparse, focusing
+        on a strong general explanation of the theory/concept.
+      - The text is 200-500 words, in Brazilian Portuguese, and written in appropriate academic style.
+      - The output is a valid JSON object with "topic_title" and "generated_text" keys.
+
+  expected_output: >
+    A JSON object containing the theoretical foundation topic title and the generated multi-paragraph
+    academic text for that topic.
+    The text will be 200-500 words, in Brazilian Portuguese, explanatory, analytical, and suitable
+    for a "Theoretical Foundation" section.
+    Example structure:
+    {
+      "topic_title": "{theoretical_foundation_topic_title}",
+      "generated_text": "A [Teoria/Conceito X], conforme delineada por [Autor(es) proeminente(s) da literatura de referência], postula que [explicação central da teoria/conceito baseada em insights_external_literature]. Esta perspectiva é particularmente relevante para o presente estudo pois [conexão com o estudo atual, informada por insights_internal_context, ou uma ponte lógica se o contexto interno for geral]..."
+    }
+  agent: theoretical_foundation_writer
+  context: [theoretical_topic_external_literature_research, theoretical_topic_internal_context_research]
