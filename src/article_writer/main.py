@@ -36,7 +36,7 @@ class ArticleWriterFlow(Flow[ArticleWriterState]):
       source='Relatorio.pdf', metadata_only=False
     )
   
-  #@listen(start_flow)
+  @listen(start_flow)
   def res_and_disc_outline_generation(self): 
     subsections_outline = RDOutlineCrew().crew().kickoff(
         inputs={
@@ -48,7 +48,7 @@ class ArticleWriterFlow(Flow[ArticleWriterState]):
       "subsections": subsections_outline
     }
   
-  @listen(start_flow)
+  #@listen(start_flow)
   def dev_res_and_disc_outline_generation(self):
     outline_file_path = './outlines/res_and_disc_outline.json'
     try:
@@ -60,7 +60,7 @@ class ArticleWriterFlow(Flow[ArticleWriterState]):
       res_and_disc_outline = self.res_and_disc_outline_generation()
     return res_and_disc_outline
   
-  @listen(dev_res_and_disc_outline_generation)
+  @listen(res_and_disc_outline_generation)
   async def res_and_disc_chapter_generation(self, results_discussion_outline):
     # Função para permitir chamada assincrona da crew de escrita dos tópicos
     async def acall_write_topic_crew(
@@ -345,6 +345,13 @@ class ArticleWriterFlow(Flow[ArticleWriterState]):
     self.state.sections_and_content.append(theoretical_fdmt_outline)
     return theoretical_fdmt_section
     
+  @listen(theoretical_fdmt_chapter_generation)
+  def save_results(self):
+    print("Resultado:\n")
+    print(self.state.sections_and_content)
+    print("\nSalvando Resultados...")
+    with open("resultados.json", "w", encoding="utf-8") as json_file:
+      json.dump(self.state.sections_and_content, json_file, ensure_ascii=False, indent=4)
 
 def kickoff():
     article_flow = ArticleWriterFlow()
