@@ -1,0 +1,214 @@
+methodology_topic_internal_research:
+  description: >
+    Conduct research for the methodology topic "{methodology_topic_title}" (part of subsection "{methodology_subsection_name}"), which is detailed as: 
+    "{methodology_topic_description}".
+    The rhetorical purpose of this topic is: "{methodology_rhetorical_purpose}".
+    Use your `QueryArticlesTool` to extract highly specific, evidence-based insights about **how this methodological step was executed within the current 
+    study**. Focus on precise parameters, procedures, equipment, materials, software versions, configurations, and any specific observations or challenges 
+    encountered by the author(s) related to this methodological aspect, drawing **exclusively** from the internal 'report' and 'draft' documents.
+
+    **Execution Steps**:
+      1. **Construct Search Query**:
+        - Based on "{methodology_topic_title}", "{methodology_topic_description}", and "{methodology_rhetorical_purpose}", the topic's title, 
+          description, and rhetorical purpose, respectivaly, generate a focused search query. The query should aim to find exact details of the 
+          **procedure or method as implemented** avoiding terms that might pull in results or interpretations.
+      2. **Configure `QueryArticlesTool`**:
+        - Set `doc_type` to ['report', 'draft'].
+        - Set `top_k` to 5 initially. If results are insufficient or lack specificity, increase `top_k` to 10 (max 15 if still needed) and retry.
+      3. **Execute Search & Analyze Results**:
+        - Run `QueryArticlesTool`. Critically evaluate the retrieved chunks for direct relevance to the **specific execution details and procedural 
+          aspects** of the topic's title: "{methodology_topic_title}". **Filter out any information related to study outcomes or data obtained.**
+      4. **Synthesize Insights**:
+        - Write a 150-250 word text in Brazilian Portuguese. This text must:
+          - Directly address the topic's title ("{methodology_topic_title}") and its role as described here: 
+            "{methodology_topic_description}".
+          - Detail the *specifics* of **what was done and how it was done** in the author's study (e.g., exact parameter values used as inputs or 
+            settings, equipment models/manufacturers if mentioned in the report, specific procedural sequences, software names and version numbers if 
+            provided for execution, key configurations or operational settings).
+          - Be strictly factual, **procedural**, and based on the retrieved information from 'report' and 'draft' documents.
+
+    **Guidelines**:
+      - **Specificity**: Focus on extracting concrete, verifiable details of the **methodology as implemented** (e.g., "The solution was stirred at 300 rpm 
+        for 2 hours at 50°C", "Participants completed a survey instrument containing X items, measured on a Y-point Likert scale", "The algorithm was 
+        trained for 100 epochs with a batch size of 32").
+      - **Evidence-Based**: All synthesized information MUST come from the `QueryArticlesTool` results using `doc_type`: ['report', 'draft'].
+      - **Exclusion**: Explicitly exclude details of experimental outcomes, data values observed, or interpretations of results.
+
+
+    **Restrictions**:
+      - Search *only* in `doc_type`: ['report', 'draft'].
+      - Do not invent, infer beyond what's stated, or modify information from the documents.
+      - Do not include general descriptions of methods or justifications from external literature here; focus solely on the author's specific 
+        implementation.
+      - `top_k` must be ≥5 and ≤15.
+      - **The synthesized insights must not contain any study results or findings.**
+
+    **Success Criteria**:
+      - `QueryArticlesTool` returns relevant, specific details from 'report' or 'draft' documents pertaining to the execution of the constructed search 
+        querry to the topic "{methodology_topic_title}".
+      - The output is a 150-250 word text in Brazilian Portuguese, providing precise, factual insights about the author's specific methodological 
+        execution for the given topic.
+
+  expected_output: >
+    A structured, evidence-based text, 150-250 words in length, in Brazilian Portuguese, providing precise details on the author's specific execution 
+    of "{methodology_topic_title}", based on internal documents. Must be formatted in markdown, without ```.
+  agent: methodology_researcher
+
+methodology_topic_external_context_research:
+  description: >
+    Conduct research for the methodology topic: "{methodology_topic_title}" (part of subsection "{methodology_subsection_name}"), which is detailed as: 
+    "{methodology_topic_description}".
+    The rhetorical purpose of this topic is: "{methodology_rhetorical_purpose}".
+    Use your `QueryArticlesTool` to find contextual information from 'reference' literature. **standard descriptions of the method/technique/equipment, 
+    or citable sources for established protocols or tools**. This helps in defining or briefly contextualizing a chosen method if it's a standard one.
+    This could include:
+    - Standard definitions or descriptions of the general method, technique, or equipment mentioned in "{methodology_topic_title}".
+    - Citations for widely accepted or foundational protocols, software, or theoretical models underpinning the method (not justifying its choice for 
+      *this specific study*, but describing the method itself).
+    - If the method is common, brief information on its typical applications or general principles can be noted, but the focus should be on descriptive 
+      elements.
+    **This task should AVOID searching for or synthesizing extensive justifications for *why* the author chose this method over others for their 
+    specific study.**
+
+    **Execution Steps**:
+      1. **Construct Search Query**:
+        - Based on "{methodology_topic_title}", "{methodology_topic_description}", and "{methodology_rhetorical_purpose}", the topic's title, 
+          description, and rhetorical purpose respectivaly, generate a search query. 
+        - Aim for queries that find **definitions, standard procedures, or foundational descriptions** of the method or tool. (e.g., "standard protocol 
+          for X technique", "definition of Y equipment", "principles of Z algorithm").
+      2. **Configure `QueryArticlesTool`**:
+        - Set `doc_type` to ['reference'].
+        - Set `top_k` to 4 initially. If results are insufficient (e.g., not finding a citable description), increase `top_k` to 7 (max 10) and retry 
+          with potentially broadened queries.
+      3. **Execute Search & Analyze Results**:
+        - Run `QueryArticlesTool`. Evaluate retrieved chunks for relevance to **standard descriptions, definitions, or citable sources** for the method. 
+          Filter out extensive justifications for use in specific contexts or comparisons of methods.
+      4. **Synthesize Insights**:
+        - Write a 100-150 word text in Brazilian Portuguese. This text must:
+          - Provide concise, **descriptive context** (e.g., a standard definition, the origin of a technique, or its general principle) for 
+            "{methodology_topic_title}" based on the reference literature.
+          - Highlight key citable aspects that help define or classify the method/tool, if found.
+          - If the method is highly novel and no standard description is found, this should be stated. The insight might then briefly summarize any 
+            foundational principles it likely builds upon if such information was found, or simply state that no standard external description was 
+            identified.
+          - **The synthesized text should NOT be an argument justifying the choice of the method for this particular study.**
+
+    **Guidelines**:
+      - **Focus**: Standard definitions, general principles, or citable descriptions of the method/tool from *external* literature.
+      - **Evidence-Based**: All synthesized information MUST come from the `QueryArticlesTool` results using `doc_type`: ['reference'].
+      - **Descriptive, Not Justificatory**: The aim is to provide background information that defines or describes a method, not to argue for its 
+        selection in this specific research.
+
+    **Restrictions**:
+      - Search *only* in `doc_type`: ['reference'].
+      - Do not invent or modify information.
+      - **Do not synthesize text that primarily justifies the *choice* of the method for the current study.** Focus on *describing* the method generally 
+        or citing its standard form.
+      - Do not discuss the author's specific results or their unique implementation details here.
+      - `top_k` must be ≥3 and ≤7.
+
+    **Success Criteria**:
+      -**Success Criteria**:
+      - `QueryArticlesTool` returns relevant results from 'reference' documents that provide **standard descriptions, definitions, or citable context** 
+        for "{methodology_topic_title}".
+      - The output is a 100-150 word text in Brazilian Portuguese, providing useful **descriptive external context** for the methodological topic, 
+        **not primarily justifications for its use in this study**.
+
+  expected_output: >
+    A structured, evidence-based text, 100-150 words in length, in Brazilian Portuguese, providing **general descriptive context, standard definitions, 
+    or citable information** for "{methodology_topic_title}" from reference literature, **and not focused on justifying its specific selection for this 
+    study**. Formatted in markdown, without ```.
+  agent: methodology_researcher
+
+write_methodology_topic_text:
+  description: >
+    Write a detailed, **strictly descriptive**, multi-paragraph text in formal, precise, and academic Brazilian Portuguese for the methodology topic 
+    "{methodology_topic_title}".
+    This topic belongs to subsection "{methodology_subsection_name}" ({methodology_subsection_description}).
+    The specific role of this topic is: "{methodology_topic_description}".
+    Its rhetorical purpose is: "{methodology_rhetorical_purpose}".
+    Follow the narrative structure guided by the narrative guidance: "{methodology_narrative_guidance}".
+
+    The text must **focus exclusively on describing what was done and how it was done**.
+    Base the text on:
+    1. `insights_internal_research`: Provides **specific procedural details** of how this method was executed in *this* study. This is the primary 
+       source for content.
+    2. `insights_external_context`: Provides **general descriptions or citable definitions** for standard methods/tools from reference literature. Use 
+       this sparingly, only to define a standard term or cite a standard protocol if guided.
+
+    The final text must be scientifically sound, clear, precise, and provide sufficient detail for another researcher to understand and **replicate the 
+    described procedure**, **without including results, extensive justifications, or discussion of implications.**
+
+    **Input Context**:
+    - `insights_internal_research`: Output from `methodology_topic_internal_research`.
+    - `insights_external_context`: Output from `methodology_topic_external_context_research`.
+
+    **Execution steps:**
+    1. Thoroughly review `insights_internal_research` to grasp all **specific procedural details** of the author's implementation. This is your main 
+       content.
+    2. Review `insights_external_context`. Identify if it provides a concise, standard definition or citable protocol that the methodology narrative 
+       guidance suggests incorporating for clarity. **Avoid using any justificatory language from this insight unless the narrative guidance explicitly 
+      and narrowly asks for a brief factual basis of a non-standard choice.**
+    3. Carefully consider "{methodology_topic_title}", "{methodology_topic_description}", "{methodology_rhetorical_purpose}", and critically, 
+       "{methodology_narrative_guidance}", which are the topic's title, description, rhetorical purpose, and narrative guidance, respectively.
+    4. Compose a 200-500 word text in Brazilian Portuguese, ensuring that you:
+        - Directly address the topic's title ("{methodology_topic_title}") and its detailed description.
+        - Structure the paragraphs and content flow according to the provided narrative guidance.
+        - **Almost exclusively use details from `insights_internal_research` to describe *what was done and how it was done*.**
+        - **Sparingly integrate information from `insights_external_context` ONLY to:**
+            - Provide a standard definition of a technique or tool if it's essential for understanding and guided by the narrative (e.g., "Method X 
+              [cite StandardRef], a technique for Y, was employed as follows...").
+            - Cite a standard protocol that was followed.
+            - **DO NOT incorporate general justifications for choosing the method from `insights_external_context` unless explicitly directed by the 
+              narrative guidance for a very specific, non-standard choice, and even then, keep it brief and factual.**
+        - Ensure all necessary details for replicability (parameters, equipment specifications, software details, steps) are clearly stated based on 
+          `insights_internal_research`.
+        - Adhere to the topic's rhetorical purpose of {methodology_rhetorical_purpose}, interpreting it in a **strictly descriptive procedural context.** 
+          (e.g., if purpose is "Explain rationale for method choice", this should translate to "Briefly state factual basis of selection if non-standard 
+          and information is available", not a lengthy justification).
+    5. Ensure the text is continuous, coherent, uses precise terminology, and maintains a formal, objective, **strictly descriptive** academic tone.
+    6. Format your response in a JSON object with the keys "topic_title" (value: "{methodology_topic_title}") and "generated_text" (value: the written 
+       methodology text).
+
+    **Writing Directives**:
+      - Write in formal, academic Brazilian Portuguese.
+      - Strictly follow the narrative guidance for structure, content inclusion, and emphasis.
+      - **Interpret all rhetorical purposes within a descriptive framework suitable for a Methodology section.**
+      - **Prioritize and heavily rely on `insights_internal_research` for describing the actual execution.**
+      - Use `insights_external_context` extremely selectively, primarily for definitions or citing standard protocols if truly necessary and guided.
+      - Maintain an objective, **descriptive, and procedural** tone.
+      - Ensure paragraphs are well-developed and flow logically, detailing steps and setups.
+      - **Absolutely AVOID: results, data values, findings, interpretations of data, discussion of implications, or extensive justifications.**
+
+    **Constraints:**
+      - Do not perform new research or invent/assume information beyond the provided insights and outline guidance.
+      - The generated text should be between 200 and 500 words, varying by topic complexity.
+      - The output JSON must correctly use the keys "topic_title" and "generated_text".
+      - Write exclusively in Brazilian Portuguese.
+      - **The text must be purely methodological, describing procedures, materials, and analytical steps, not outcomes or justifications.**
+
+    **Success Criteria**:
+      - The generated text is fully based on the provided insights and adheres to all guiding inputs from the outline phase.
+      - The text accurately, clearly, and **procedurally** describes the methodological aspect of "{methodology_topic_title}".
+      - **The text is free of results, findings, interpretations, discussion of implications, and extensive justifications.**
+      - The text appropriately handles information from `insights_external_context`, using it only for brief, standard definitions or protocol citations 
+        if essential and guided, not for general justifications.
+      - The text is 200-500 words, in Brazilian Portuguese, and written in an appropriate academic style for a Methodology section.
+      - The output is a valid JSON object with "topic_title" and "generated_text" keys.
+      - The text provides enough detail to contribute to the replicability of the method described.
+
+  expected_output: >
+    A JSON object containing the methodology topic title and the generated multi-paragraph scientific text for that topic.
+    The text will be 200-500 words, in Brazilian Portuguese, **strictly descriptive of procedures, materials, and methods**, suitable for a "Methodology" 
+    section, **and devoid of results, justifications, or discussion.**
+    Example structure:
+    {
+      "topic_title": "{methodology_topic_title}",
+      "generated_text": "Para investigar [aspecto do tópico], foi empregado o seguinte delineamento experimental. Os materiais X foram preparados conforme 
+      o protocolo Y. As medições foram realizadas utilizando o equipamento Z (Modelo A, Fabricante B) com os seguintes parâmetros de configuração: 
+      [parâmetro 1 = valor1, parâmetro 2 = valor2]. A coleta de dados seguiu [descrever os passos da coleta]. Subsequentemente, os dados brutos foram 
+      processados utilizando o software W (versão V) através de [descrever etapas do processamento]. A análise estatística principal consistiu em 
+      [descrever o teste ou método analítico]."
+    }
+  agent: methodology_writer
+  context: [methodology_topic_internal_research, methodology_topic_external_context_research]

@@ -17,7 +17,7 @@ class SectionTitle(str, Enum):
     CONCLUSION = "Conclusion"
 
 class DiscussionTopic(BaseModel):
-    topic: str = Field(description="Description of the topic to be discussed")
+    topic_title: str = Field(description="Description of the topic to be discussed")
     rhetorical_purpose: RhetoricalPurpose = Field(
         description="Rhetorical purpose of the topic (e.g., 'present_finding' for Results)"
     )

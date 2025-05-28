@@ -216,7 +216,7 @@ structure_discussion_outline:
         - last topic covers future directions
         - all are distinct and cover literature, implications or limitations.
       3. For each topic:
-        - Create `topic`: concise title (e.g., "Comparison with Previous Studies").
+        - Create `topic_title`: concise title (e.g., "Comparison with Previous Studies").
         - Define `rhetorical_purpose` (e.g., "Compare findings", "Discuss implications").
         - Write `topic_description`: summary of the topic's focus and key points.
         - Include up to 1 `visual_element` from summary with metadata:
@@ -243,7 +243,7 @@ structure_discussion_outline:
         - `subsection_name`: "Discussion"
         - `subsection_flow`: ordered string of topic titles
         - `discussion_topics`: list of 3-5 items, each with:
-          - `topic`
+          - `topic_title`
           - `rhetorical_purpose`
           - `topic_description`
           - `visual_elements`

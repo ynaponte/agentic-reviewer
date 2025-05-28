@@ -2,25 +2,13 @@ from pydantic import BaseModel, Field
 from typing import List, Optional, Literal
 from enum import Enum
 
-class RhetoricalPurpose(str, Enum):
-    DESCRIBE_RESEARCH_DESIGN = "Describe research design"
-    DESCRIBE_EXPERIMENTAL_SETUP = "Describe experimental setup"
-    DESCRIBE_MATERIALS_EQUIPMENT = "Describe materials and equipment"
-    DESCRIBE_PROCEDURE_STEP = "Describe procedure step"
-    DESCRIBE_DATA_COLLECTION = "Describe data collection"
-    DESCRIBE_DATA_ANALYSIS = "Describe data analysis"
-    DESCRIBE_VALIDATION_CALIBRATION = "Describe validation or calibration"
-    DISCUSS_METHODOLOGICAL_LIMITATIONS = "Discuss methodological limitations"
-    DISCUSS_METHODOLOGICAL_IMPLICATIONS = "Discuss methodological implications"
-    PROVIDE_CONTEXTUAL_BACKGROUND = "Provide contextual background"
-    EXPLAIN_RATIONALE_METHOD_CHOICE = "Explain rationale for method choice"
 
 class SectionTitle(str, Enum):
     METHODOLOGY = "Methodology"
 
 class DiscussionTopic(BaseModel):
-    topic: str = Field(description="Concise title or description of the methodological topic (e.g., 'Preparação de Amostras', 'Análise Estatística').")
-    rhetorical_purpose: RhetoricalPurpose = Field(
+    topic_title: str = Field(description="Concise title or description of the methodological topic (e.g., 'Preparação de Amostras', 'Análise Estatística').")
+    rhetorical_purpose: str = Field(
         description="Rhetorical purpose of the methodological topic (e.g., 'Describe research design', 'Detail experimental procedure')."
     )
     topic_description: str = Field(
@@ -38,6 +26,7 @@ class MethodologySubSection(BaseModel):
         description="A brief summary outlining the key elements that will be covered within this subsection."
     )
     discussion_topics: List[DiscussionTopic] = Field(
+        default_factory=list,
         description="List of topics to be discussed in the subsection."
     )
 
